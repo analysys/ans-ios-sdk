@@ -7,7 +7,7 @@ Pod::Spec.new do |s|
   s.license      = { :type => "MIT", :file => "LICENSE" } 
   s.author       = { "dushaochong" => "dushaochong@analysys.com.cn" }
   s.platform     = :ios, "7.0"
-  s.source_files = "AnalysysSDK", "AnalysysSDK/IDFA/*"
+  s.ios.vendored_frameworks = 'AnalysysSDK/IDFA/*.framework'
   s.frameworks   = 'UIKit', 'Foundation', 'SystemConfiguration', 'CoreTelephony', 'AdSupport'
   s.libraries    = 'z', 'sqlite3', 'icucore'
 
