@@ -8,7 +8,7 @@
 
 
 // ********************************
-// ***** 当前 SDK 版本号：4.1.0 *****
+// ***** 当前 SDK 版本号：4.1.1 *****
 // ********************************
 
 
@@ -22,9 +22,9 @@
  - AnalysysDebugButTrack: 打开Debug模式，并入库计算
 */
 typedef NS_ENUM(NSInteger, AnalysysDebugMode) {
-    AnalysysDebugOff,
-    AnalysysDebugOnly,
-    AnalysysDebugButTrack
+    AnalysysDebugOff = 0,
+    AnalysysDebugOnly = 1,
+    AnalysysDebugButTrack = 2
 };
 
 /**
@@ -251,7 +251,7 @@ typedef NS_ENUM(NSInteger, AnalysysPushProvider) {
  添加事件及附加属性
 
  @param event 事件标识，同 track: 接口
- @param properties 自定义参数，允许添加以下类型：NSString/NSNumber/NSArray/NSSet/NSDate/NSURL；
+ @param properties 自定义参数，允许添加以下类型：NSString/NSNumber/NSArray<NSString*>/NSSet<NSString*>/NSDate/NSURL；
  且key为字符串，同 track: 接口事件标识限制，最大长度是125字符
  */
 + (void)track:(NSString *)event properties:(NSDictionary *)properties;
@@ -272,7 +272,7 @@ typedef NS_ENUM(NSInteger, AnalysysPushProvider) {
  页面跟踪及附加属性
 
  @param pageName 页面标识，最大长度是255字符
- @param properties 自定义参数，允许添加以下类型：NSString/NSNumber/NSArray/NSSet/NSDate/NSURL；
+ @param properties 自定义参数，允许添加以下类型：NSString/NSNumber/NSArray<NSString*>/NSSet<NSString*>/NSDate/NSURL；
  且key为字符串，同 track: 接口事件标识限制，最大长度是125字符
  */
 + (void)pageView:(NSString *)pageName properties:(NSDictionary *)properties;
@@ -314,9 +314,9 @@ typedef NS_ENUM(NSInteger, AnalysysPushProvider) {
  
  约束信息：
  - 属性名称：必须以字母或'$'开头，只能包含：字母、数字、下划线和$，字母不区分大小写，$开头为预置事件/属性，最大长度是125字符，不支持乱码和中文
- - 属性值：类型必须为以下类型：NSString/NSNumber/NSArray/NSDate
+ - 属性值：类型必须为以下类型：NSString/NSNumber/NSArray<NSString*>/NSSet<NSString*>/NSDate/NSURL
  - 当用户自定义的Properties，superProperties和SDK自动采集的设备Properties具有相同key时，优先级如下：
- Properties > superProperties > devProperties
+ Properties > superProperties > 设备Properties
  - 当此接口多次调用时，具有相同key的value将被覆盖，不同key的value将会merge，例如：
  第一次设置为：{@"key1":@"1",@"key2":@"2"}
  第二次设置为：{@"key1":@"abc",@"key3":@"efd"}
@@ -331,7 +331,7 @@ typedef NS_ENUM(NSInteger, AnalysysPushProvider) {
 /**
  添加单个通用属性
  
- - value类型必须为以下类型：NSString/NSNumber/NSArray/NSDate。
+ - value类型必须为以下类型：NSString/NSNumber/NSArray<NSString*>/NSSet<NSString*>/NSDate/NSURL。
  
  @param superPropertyName key值
  @param superPropertyValue value对象
@@ -394,7 +394,7 @@ typedef NS_ENUM(NSInteger, AnalysysPushProvider) {
  用户属性设置，字典若无特殊说明，具有以下约束：
 
  - 字典key为字符串，必须以字母或'$'开头，只能包含：字母、数字、下划线和$，字母不区分大小写，$开头为预置事件/属性，最大长度是125字符，不支持乱码和中文
- - 允许添加value类型为非自定义对象类型，通常为 NSString/NSNumber/NSArray/NSDate
+ - 允许添加value类型为非自定义对象类型，通常为 NSString/NSNumber/NSArray<NSString*>/NSSet<NSString*>/NSDate/NSURL
  - 属性字典中最多允许100个键值对
  */
 
@@ -448,7 +448,7 @@ typedef NS_ENUM(NSInteger, AnalysysPushProvider) {
 + (void)profileAppend:(NSString *)propertyName value:(id)propertyValue;
 
 /** NSSet 的元素必须是 NSString 类型，否则，会忽略 */
-+ (void)profileAppend:(NSString *)propertyName propertyValue:(NSSet *)propertyValue;
++ (void)profileAppend:(NSString *)propertyName propertyValue:(NSSet<NSString *> *)propertyValue;
 
 
 /**

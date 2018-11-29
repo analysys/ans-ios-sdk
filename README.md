@@ -1,24 +1,26 @@
-# PAAS iOS SDK v4.1.0 使用说明
+# iOS SDK 使用说明
 
-SDK 适用场景：用于 iOS 原生 App
-
-<!--最新版本：[analysys_iOS_v4.1.0](https://ark.analysys.cn/sdk/v2/analysys_iOS_v4.1.0_20180918.zip)-->
-
-> 更新时间：2018/09/18
->
-> 更新内容：
-> 在初始化配置中新增`encryptType`参数，提供对上传数据可选是否进行加密功能
-> 
+该 SDK 适用于 iOS 原生 App。
 
 ## 1. 集成准备
 
-### 1.1 基本工程配置
+### 1.1 下载 SDK
+
+> 更新时间：2018/11/16
+>
+> 更新内容：
+> 1. 日志提示更加丰富；
+> 2. 修复部分bug；
+
+### 1.2 集成 SDK
+
+#### 1.2.1 基本工程配置
 
 1. 选择 工程 - 右键 - `Add Files to "ProjectName"`
 2. 选择 `AnalysysAgent.framework`文件
 3. 勾选 `Copy items if needed`、`Create groups` - `Add` 完成添加类库
 
-<img src="http://imguserradar.analysys.cn/fangzhou/img/2018/08/201808281734462542.jpg" width="500" align=center />
+![ ](http://imguserradar.analysys.cn/fangzhou/img/2018/09/201809200956237718.jpg)
 
 * 添加依赖框架。选择工程 - `Targets` - “项目名称” - `Build Phase` - `Link Binary With Libraries` 依赖库如下：
 
@@ -29,15 +31,15 @@ SDK 适用场景：用于 iOS 原生 App
 | `CoreTelephony.framework` | 获取运营商标识 |
 | `SystemConfiguration.framework` | 获取当前网络状态  |
 | `libz.tbd` | 数据压缩（Xcode7以下:libz.dylib） |
-| `libicucore.tbd` | 数据压缩 |
+| `libicucore.tbd` | 网络连接 |
 
-<img src="http://imguserradar.analysys.cn/fangzhou/img/2018/08/201808281741466579.jpg" width="600" align=center />
+![ ](http://imguserradar.analysys.cn/fangzhou/img/2018/09/201809200956235706.jpg)
 
 * `Targets` - “项目名称” - `Build Settings` - `Other Linker Flags`，添加`-ObjC`选项<font color=red>（注意大小写）</font>
 
-<img src="http://imguserradar.analysys.cn/fangzhou/img/2018/08/201808281741460205.jpg" width="600" align=center />
+![ ](http://imguserradar.analysys.cn/fangzhou/img/2018/09/201809200956231392.jpg)
 
-### 1.2 Swift 集成配置
+#### 1.2.2 swift 集成配置
 
 若使用 `Swift` 语言工程开发集成，则除 1.2.1 配置外还需要添加桥接文件，该文件可以使用以下两种方式之一创建：
 
@@ -47,7 +49,7 @@ SDK 适用场景：用于 iOS 原生 App
 创建完成之后，在 `XXX-Bridging-Header.h` 文件并引入类库：
 `#import <AnalysysAgent/AnalysysAgent.h>`
 
-## 2. SDK初始化
+## 2. SDK 初始化
 
 ### 2.1 初始化接口
 
@@ -60,12 +62,11 @@ SDK 适用场景：用于 iOS 原生 App
 ```
 
 > `AnalysysAgentConfig` 类为配置信息类。参数如下：
-
-> * appKey: 网站获取，唯一标识
-> * channel: 应用下发渠道
-> * baseURL: 设置 URL 地址(只支持域名，如：`growth.analysys.cn`，则默认使用的上行数据地址`https://growth.analysys.cn`，websocket 地址使用的是`wss://growth.analysys.cn`。如果需要上传数据使用`http`协议或者 websocket 使用的是`ws`协议，此处可赋值为空，调用接口 [`setUploadURL(4.1.1)`](#setUploadURL)/[`setVisitorDebugURL(4.1.2)`](#setVisitorDebugURL)/[`setVisitorConfigURL(4.1.2)`](#setVisitorConfigURL) 设置即可)
-> * autoProfile: 设置是否追踪新用户的首次属性。NO: 不追踪新用户首次属性；YES：追踪新用户首次属性（默认）
-> * encryptType: 设置数据上传时的加密方式，目前只支持AES加密（AnalysysEncryptAES）；如不设置此参数，数据上传不加密。
+> * appKey：网站获取，唯一标识
+> * channel：应用下发渠道
+> * baseURL：设置 URL 地址(只支持域名，如：`growth.analysys.cn`，则默认使用的上行数据地址`https://growth.analysys.cn`，websocket 地址使用的是`wss://growth.analysys.cn`。如果需要上传数据使用`http`协议或者 websocket 使用的是 `ws` 协议，此处可赋值为空，调用接口 [`setUploadURL(4.1.1)`](#setUploadURL)/[`setVisitorDebugURL(4.1.2)`](#setVisitorDebugURL)/[`setVisitorConfigURL(4.1.2)`](#setVisitorConfigURL) 设置即可)
+> * autoProfile：设置是否追踪新用户的首次属性。NO：不追踪新用户首次属性；YES：追踪新用户首次属性（默认）
+> * encryptTyp：设置数据上传时的加密方式，目前只支持AES加密（AnalysysEncryptAES）；如不设置此参数，数据上传不加密。
 
 示例：
 
@@ -82,10 +83,14 @@ SDK 适用场景：用于 iOS 原生 App
     AnalysysConfig.baseUrl = @"growth.analysys.cn";
     //  AnalysysConfig.autoProfile = YES;  //  默认为YES
     //  AnalysysConfig.encryptType = AnalysysEncryptAES;
-    
     //  使用配置信息初始化SDK
     [AnalysysAgent startWithConfig:AnalysysConfig];
 
+    #ifdef DEBUG
+    //  debug模式下查看日志
+    [AnalysysAgent setDebugMode:AnalysysDebugOnly];
+    #endif
+        
     return YES;
 }
 ```
@@ -109,26 +114,26 @@ func application(_ application: UIApplication, didFinishLaunchingWithOptions lau
     AnalysysAgentConfig.shareInstance().encryptType = .AES
     //  使用配置信息初始化SDK
     AnalysysAgent.start(with: AnalysysAgentConfig.shareInstance())
-                           
+
 }
 ```
 
-<font color="red">注意：默认SDK为非调试模式，不能查看日志，若要查看日志请调用 setDebugMode: 方法设置。请在正式发布 App 时使用 AnalysysDebugOff 模式！</font>
+<font color="red">注意：默认 SDK 为非调试模式，不能查看日志，若要查看日志请调用 setDebugMode: 方法设置。请在正式发布 App 时使用 AnalysysDebugOff 模式！</font>
 
 ## 3. 基础接口介绍
 
 ### 3.1 Debug 模式
 
-Debug主要用于开发者测试，设置Debug模式。接口如下:
+Debug 主要用于开发者测试，设置 Debug 模式。接口如下:
 
 ```objectivec
 + (void)setDebugMode:(AnalysysDebugMode)debugMode;
 ```
 
-* debugMode：debug 模式，默认关闭状态。<font color=red>注意：发布版本时debugMode模式设置为 `AnalysysDebugOff`。</font>
+* debugMode：debug 模式，默认关闭状态。<font color=red>注意：发布版本时 debugMode 模式设置为 `AnalysysDebugOff`。</font>
   * `AnalysysDebugOff`：表示关闭
-  * `AnalysysDebugOnly`：表示打开Debug模式，但该模式下发送的数据仅用于调试，不计入平台数据统计
-  * `AnalysysDebugButTrack`：表示打开Debug模式，该模式下发送的数据可计入平台数据统计
+  * `AnalysysDebugOnly`：表示打开 Debug 模式，但该模式下发送的数据仅用于调试，不计入平台数据统计
+  * `AnalysysDebugButTrack`：表示打开 Debug 模式，该模式下发送的数据可计入平台数据统计
 
 示例：
 
@@ -144,7 +149,7 @@ AnalysysAgent.setDebugMode(.off)
 
 ### 3.2 统计页面
 
-页面跟踪，SDK默认设置跟踪所有页面(继承自`UIViewController`的控制器)，支持自定义页面信息。接口如下:
+页面跟踪，SDK 默认设置跟踪所有页面(继承自`UIViewController`的控制器)，支持自定义页面信息。接口如下:
 
 ```objectivec
 + (void)pageView:(NSString *)pageName;
@@ -152,8 +157,8 @@ AnalysysAgent.setDebugMode(.off)
 + (void)pageView:(NSString *)pageName properties:(NSDictionary *)properties;
 ```
 
-* pageName：页面标识，为字符串，以字母或`$`开头，只能包括字母、数字、下划线和`$`，字母不区分大小写，`$`开头为预置事件/属性，最大长度255字符，不支持乱码和中文
-* properties：页面信息，properties最多包含100条，且key以字母或`$`开头，只能包括字母、数字、下划线和`$`，字母不区分大小写，`$`开头为预置事件/属性，不支持乱码和中文；value支持类型：String/Number/集合/数组，若为字符串，最大长度255字符
+* pageName：页面标识，为字符串，以字母或 `$` 开头，只能包括字母、数字、下划线和 `$`，字母不区分大小写，`$` 开头为预置事件/属性，最大长度 255字符，不支持乱码和中文
+* properties：页面信息，properties 最多包含 100条，且 key 以字母或 `$` 开头，只能包括字母、数字、下划线和 `$`，字母不区分大小写，`$` 开头为预置事件/属性，不支持乱码和中文；value 支持类型：`NSString`/`NSNumber`/`NSArray<NSString *>`/`NSSet<NSString *>`/`NSDate`/`NSURL`，若为字符串，最大长度 255字符
 
 示例1：
 
@@ -164,7 +169,7 @@ AnalysysAgent.setDebugMode(.off)
 
 示例2：
 
-```
+```objectivec
 // 访问手机活动页面，活动页面内容为优惠出售iPhone手机，手机价格为5000元
 NSDictionary *properties = @{@"commodityName": @"iPhone", @"commodityPrice": @5000};
 [AnalysysAgent pageView:@"商品页" properties:properties];
@@ -233,8 +238,8 @@ AnalysysAgent.setIgnoredAutomaticCollectionControllers(["NextViewController"]);
 + (void)track:(NSString *)event properties:(NSDictionary *)properties;
 ```
 
-* event：事件名称，以字母或`$`开头，只能包含字母、数字、下划线和`$`，字母不区分大小写，`$`开头为预置事件/属性，最大长度99字符，不支持乱码和中文
-* properties：自定义属性，用于对事件描述。eventInfo最多包含100条，且key以字母或`$`开头，只能包含字母、数字、下划线和`$`，字母不区分大小写，`$`开头为预置事件/属性，最大长度125字符，不支持乱码和中文；value支持类型：String/Number/集合/数组，若为字符串，最大长度255字符
+* event：事件名称，以字母或 `$` 开头，只能包含字母、数字、下划线和 `$`，字母不区分大小写，`$` 开头为预置事件/属性，最大长度 99字符，不支持乱码和中文
+* properties：自定义属性，用于对事件描述。eventInfo最多包含 100条，且 key 以字母或 `$` 开头，只能包含字母、数字、下划线和 `$`，字母不区分大小写，`$` 开头为预置事件/属性，最大长度 125字符，不支持乱码和中文；value 支持类型：`NSString`/`NSNumber`/`NSArray<NSString *>`/`NSSet<NSString *>`/`NSDate`/`NSURL`，若为字符串，最大长度 255字符
 
 示例：
 
@@ -265,14 +270,14 @@ AnalysysAgent.track("pay", properties: properties)
 
 ### 3.4 用户关联
 
-用户id关联接口。将aliasID和originalId关联，计算时会认为是一个用户的行为。接口如下：
+用户 id 关联接口。将 aliasID 和 originalId 关联，计算时会认为是一个用户的行为。接口如下：
 
 ```objectivec
 + (void)alias:(NSString *)aliasId originalId:(NSString *)originalId;
 ```
 
-* aliasId ： 新的唯一用户id。 长度大于0,且小于255字符
-* originalId ： 待关联的用户id，可以是现在使用也可以是历史使用的id,不局限于本地正使用的Id。 可以为空值，若为空时使用本地的distinctId。长度大于0且小于255字符
+* aliasId：新的唯一用户 id。 长度大于 0 且小于 255字符
+* originalId：待关联的用户 id，可以是现在使用也可以是历史使用的 id,不局限于本地正使用的 Id。 可以为空值，若为空时使用本地的 distinctId。长度大于 0 且小于 255字符
 
 示例：
 
@@ -294,19 +299,19 @@ AnalysysAgent.alias("zhangsan", originalId: "lisi")
 
 ### 3.5 用户属性设置
 
->用户属性是一个标准的K-V结构，K和V均有相应的约束条件，如不符合则丢弃该次操作。
+>用户属性是一个标准的 K-V 结构，K 和 V 均有相应的约束条件，如不符合则丢弃该次操作。
 
 约束条件如下：
 
 * <h6 id="userPropertyKey">属性名称</h6>
 
-    以字母或`$`开头，只能包含字母、数字、下划线和`$`，字母不区分大小写，`$`开头为预置事件/属性，最大长度125字符，不支持乱码和中文
+    以字母或 `$` 开头，只能包含字母、数字、下划线和 `$`，字母不区分大小写，`$` 开头为预置事件/属性，最大长度 125字符，不支持乱码和中文
 
 * <h6 id="userPropertyValue">属性值</h6>
 
-    支持部分类型：String/Number/集合/数组；
-    若为字符串，则最大长度255字符；
-    若为数组或集合，则最多包含100条，且key约束条件与[属性名称](#userPropertyKey)一致，value最大长度255字符
+    支持部分类型：`NSString`/`NSNumber`/`NSArray<NSString *>`/`NSSet<NSString *>`/`NSDate`/`NSURL`；
+    若为字符串，则最大长度 255字符；
+    若为数组或集合，则最多包含 100条，且 key 约束条件与[属性名称](#userPropertyKey)一致，value 最大长度 255字符
 
 给用户设置单个或多个属性，如果之前不存在，则新建，否则覆盖。接口如下：
 
@@ -316,9 +321,9 @@ AnalysysAgent.alias("zhangsan", originalId: "lisi")
 + (void)profileSet:(NSString *)propertyName value:(id)propertyValue;
 ```
 
-* propertyName ：属性名称，约束见[属性名称](#userPropertyKey)
-* propertyValue ：属性值，约束见[属性值](#userPropertyValue)
-* property ：属性列表，约束见[属性名称](#userPropertyKey)，[属性值](#userPropertyValue)
+* propertyName：属性名称，约束见[属性名称](#userPropertyKey)
+* propertyValue：属性值，约束见[属性值](#userPropertyValue)
+* property：属性列表，约束见[属性名称](#userPropertyKey)，[属性值](#userPropertyValue)
 
 示例1：
 
@@ -353,7 +358,7 @@ AnalysysAgent.profileSet(["nickName": "小叮当", "hobby": ["Singing", "Dancing
 + (void)setUploadURL:(NSString *)uploadURL;
 ```
 
-* uploadURL：数据上传地址，格式为`scheme://host + :port`(不包含`/`后的内容)。**scheme**必须以`http://`或`https://`开头，**host**只支持域名和IP，长度小于255字符，**port**端口号必须携带
+* uploadURL：数据上传地址，格式为 `scheme://host + :port`(不包含 `/` 后的内容)。**scheme** 必须以 `http://` 或 `https://` 开头，**host** 只支持域名和 IP，长度小于 255字符，**port** 端口号必须携带
 
 示例：
 
@@ -370,7 +375,7 @@ AnalysysAgent.setUploadURL("http://growth.analysys.cn:8089")
 
 #### 4.1.2 设置可视化埋点上报地址
 
-##### <span id = "setVisitorDebugURL">设置可视化调试阶段连接的 Websocket 服务器地址
+**<span id = "setVisitorDebugURL">设置可视化调试阶段连接的 Websocket 服务器地址**
 
 接口如下：
 
@@ -378,7 +383,7 @@ AnalysysAgent.setUploadURL("http://growth.analysys.cn:8089")
 + (void)setVisitorDebugURL:(NSString *)visitorDebugURL;
 ```
 
-* visitorDebugURL：websocket服务器地址，格式为`scheme://host + :port`(不包含`/`后的内容)。**scheme**必须以`ws://`或`wss://`开头，**host**只支持域名和IP，长度小于255字符，**port**端口号必须携带
+* visitorDebugURL：websocket服务器地址，格式为 `scheme://host + :port`(不包含 `/` 后的内容)。**scheme** 必须以 `ws://` 或 `wss://` 开头，**host** 只支持域名和 IP，长度小于 255字符，**port** 端口号必须携带
 
 示例：
 
@@ -393,7 +398,7 @@ Swift示例:
 AnalysysAgent.setVisitorDebugURL("ws://growth.analysys.cn:9091")
 ```
 
-##### <span id = "setVisitorConfigURL">设置可视化请求埋点配置的服务器地址
+**<span id = "setVisitorConfigURL">设置可视化请求埋点配置的服务器地址**
 
 接口如下：
 
@@ -418,7 +423,7 @@ AnalysysAgent.setVisitorConfigURL("http://growth.analysys.cn:8089")
 
 ### 4.2 用户属性
 
-#### 4.2.1 用户ID设置
+#### 4.2.1 用户 ID 设置
 
 唯一身份标识设置，接口如下：
 
@@ -426,7 +431,7 @@ AnalysysAgent.setVisitorConfigURL("http://growth.analysys.cn:8089")
 + (void)identify:(NSString *)distinctId;
 ```
 
-* distinctId ： 唯一身份标识，长度大于0且小于255字符
+* distinctId：唯一身份标识，长度大于 0 且小于 255字符
 
 示例：
 
@@ -459,9 +464,9 @@ AnalysysAgent.identify("fangke009901")
 + (void)profileSetOnce:(NSString *)propertyName propertyValue:(id)propertyValue;
 ```
 
-* propertyName ：属性名称，约束见[`属性名称(4.2.2)`](#GeneralPNameLimit) 
-* propertyValue ：属性值，约束见[`属性值(4.2.2)`](#GeneralPValueLimit) 
-* property ：集合类型属性值，约束见[`属性名称(4.2.2)`](#GeneralPNameLimit) 、[`属性值(4.2.2)`](#GeneralPValueLimit)
+* propertyName：属性名称，约束见[`属性名称(4.2.2)`](#GeneralPNameLimit)
+* propertyValue：属性值，约束见[`属性值(4.2.2)`](#GeneralPValueLimit)
+* property：集合类型属性值，约束见[`属性名称(4.2.2)`](#GeneralPNameLimit) 、[`属性值(4.2.2)`](#GeneralPValueLimit)
 
 示例1：统计用户的出生日期
 
@@ -487,7 +492,7 @@ AnalysysAgent.profileSetOnce(["activationTime": "1521594686781"])
 
 #### 4.2.3 设置用户属性相对变化值
 
-设置用户属性的相对变化值(相对增加，减少)，只能对数值型属性进行操作，如果这个Profile之前不存在，则初始值为0。接口如下：
+设置用户属性的相对变化值(相对增加，减少)，只能对数值型属性进行操作，如果这个 Profile 之前不存在，则初始值为 0。接口如下：
 
 ```objectivec
 //  多个属性
@@ -497,9 +502,9 @@ AnalysysAgent.profileSetOnce(["activationTime": "1521594686781"])
 + (void)profileIncrement:(NSString *)propertyName propertyValue:(NSNumber *)propertyValue;
 ```
 
-* propertyName ：属性名称，约束见[`属性名称(4.2.2)`](#GeneralPNameLimit) 
-* propertyValue ：属性值，约束见[`属性值(4.2.2)`](#GeneralPValueLimit) 
-* property ：集合类型属性值，约束见[`属性名称(4.2.2)`](#GeneralPNameLimit) 、[`属性值(4.2.2)`](#GeneralPValueLimit)
+* propertyName：属性名称，约束见[`属性名称(4.2.2)`](#GeneralPNameLimit)
+* propertyValue：属性值，约束见[`属性值(4.2.2)`](#GeneralPValueLimit)
+* property：集合类型属性值，约束见[`属性名称(4.2.2)`](#GeneralPNameLimit) 、[`属性值(4.2.2)`](#GeneralPValueLimit)
 
 示例1：
 
@@ -539,9 +544,9 @@ AnalysysAgent.profileIncrement(["UseCount": 1])
 + (void)profileAppend:(NSString *)propertyName propertyValue:(NSSet *)propertyValue;
 ```
 
-* propertyName ：属性名称，约束见[`属性名称(4.2.2)`](#GeneralPNameLimit) 
-* propertyValue ：属性值，约束见[`属性值(4.2.2)`](#GeneralPValueLimit) 
-* property ：集合类型属性值，约束见[`属性名称(4.2.2)`](#GeneralPNameLimit) 、[`属性值(4.2.2)`](#GeneralPValueLimit)
+* propertyName：属性名称，约束见[`属性名称(4.2.2)`](#GeneralPNameLimit)
+* propertyValue：属性值，约束见[`属性值(4.2.2)`](#GeneralPValueLimit)
+* property：集合类型属性值，约束见[`属性名称(4.2.2)`](#GeneralPNameLimit) 、[`属性值(4.2.2)`](#GeneralPValueLimit)
 
 示例1：
 
@@ -575,9 +580,9 @@ AnalysysAgent.profileAppend("Books", propertyValue: ["红楼梦", "水浒传"])
 + (void)profileDelete;
 ```
 
-* propertyName ：属性名称，约束见[`属性名称(4.2.2)`](#GeneralPNameLimit)
+* propertyName：属性名称，约束见[`属性名称(4.2.2)`](#GeneralPNameLimit)
 
-示例1： 
+示例1：
 
 ```objectivec
 //  删除已设置的`hobby`用户属性
@@ -601,7 +606,7 @@ AnalysysAgent.profileDelete()
 
 ### 4.3 通用属性
 
-> 通用属性是每次上传事件信息都会带有的属性，通用属性是一个标准的K-V结构，K和V均有相应的约束条件，如不符合则丢弃该次操作。
+> 通用属性是每次上传事件信息都会带有的属性，通用属性是一个标准的 K-V 结构，K 和 V 均有相应的约束条件，如不符合则丢弃该次操作。
 
 约束条件如下:
 
@@ -611,9 +616,9 @@ AnalysysAgent.profileDelete()
 
 * <h6 id="GeneralPValueLimit">属性值</h6>
 
-    支持部分类型：String/Number/集合/数组；
-    若为字符串，则最大长度255字符；
-    若为数组或集合,则最多包含100条，且key约束条件与[属性名称](#GeneralPNameLimit)一致，value最大长度255字符
+    支持部分类型：`NSString`/`NSNumber`/`NSArray<NSString *>`/`NSSet<NSString *>`/`NSDate`/`NSURL`；
+    若为字符串，则最大长度 255字符；
+    若为数组或集合,则最多包含 100条，且 key 约束条件与[属性名称](#GeneralPNameLimit)一致，value 最大长度 255字符
 
 #### 4.3.1 注册通用属性
 
@@ -627,9 +632,9 @@ AnalysysAgent.profileDelete()
 + (void)registerSuperProperty:(NSString *)superPropertyName value:(id)superPropertyValue;
 ```
 
-* superPropertyName ：属性名称，约束见[`属性名称(4.2.2)`](#GeneralPNameLimit) 
-* superPropertyValue ：属性值，约束见[`属性值(4.2.2)`](#GeneralPValueLimit) 
-* superProperties ：集合类型属性值，满足[`属性名称(4.2.2)`](#GeneralPNameLimit) 和[`属性值(4.2.2)`](#GeneralPValueLimit)约束
+* superPropertyName：属性名称，约束见[`属性名称(4.2.2)`](#GeneralPNameLimit)
+* superPropertyValue：属性值，约束见[`属性值(4.2.2)`](#GeneralPValueLimit)
+* superProperties：集合类型属性值，满足[`属性名称(4.2.2)`](#GeneralPNameLimit) 和[`属性值(4.2.2)`](#GeneralPValueLimit)约束
 
 示例：
 
@@ -710,7 +715,7 @@ AnalysysAgent.clearSuperProperties()
 + (NSDictionary *)getSuperProperties;
 ```
 
-* superPropertyName ：属性名称，约束见[`属性名称(4.2.2)`](#GeneralPNameLimit) 
+* superPropertyName：属性名称，约束见[`属性名称(4.2.2)`](#GeneralPNameLimit)
 
 示例1：
 
@@ -734,11 +739,11 @@ AnalysysAgent.getSuperProperty("Hobby")
 AnalysysAgent.getSuperProperties()
 ```
 
-### 4.4 SDK发送策略
+### 4.4 SDK 发送策略
 
 #### 4.4.1 设置上传间隔时间
 
-上传间隔时间设置，在debug模式关闭后生效。当事件触发间隔时间大于等于设置时间，则上传数据；默认SDK上传时间隔为15s，设置后以设置为准，接口如下：
+上传间隔时间设置，在 debug 模式关闭后生效。当事件触发间隔时间大于等于设置时间，则上传数据；默认 SDK 上传时间隔为 15s，设置后以设置为准，接口如下：
 
 ```objectivec
 + (void)setIntervalTime:(NSInteger)flushInterval;
@@ -760,15 +765,15 @@ AnalysysAgent.setIntervalTime(10)
 
 #### 4.4.2 设置事件最大上传条数
 
-上传条数设置，在debug模式关闭后生效；当数据库内事件条数大于设置条数则上传数据，默认上传的条数为10条。接口如下：
+上传条数设置，在 debug 模式关闭后生效；当数据库内事件条数大于设置条数则上传数据，默认上传的条数为 10条。接口如下：
 
 ```objectivec
 + (void)setMaxEventSize:(NSInteger)size;
 ```
 
-* size：上传条数，size必须值大于等于1
+* size：上传条数，size 必须值大于等于 1
 
-示例：设置上传条数为20条:
+示例：设置上传条数为 20条:
 
 ```objectivec
 // 修改为每缓存 20 条数据，触发一次上传
@@ -783,7 +788,7 @@ AnalysysAgent.setMaxEventSize(20)
 
 #### 4.4.3 本地缓存上限值
 
-SDK 本地默认缓存数据的上限值为10000条，当达到此阈值值将会删除最早10条数据。可以通过 `setMaxCacheSize` 方法来设定缓存数据的上限值（参数单位/条）。接口如下：
+SDK 本地默认缓存数据的上限值为 10000条，当达到此阈值值将会删除最早 10条数据。可以通过 `setMaxCacheSize` 方法来设定缓存数据的上限值（参数单位/条）。接口如下：
 
 ```objectivec
 + (void)setMaxCacheSize:(NSInteger)size;
@@ -791,7 +796,7 @@ SDK 本地默认缓存数据的上限值为10000条，当达到此阈值值将�
 
 * size：本地最多数据缓存条数
 
-示例：设置本地数据缓存上限值为2000条
+示例：设置本地数据缓存上限值为 2000条
 
 ```objectivec
 [AnalysysAgent setMaxCacheSize:2000];
@@ -865,7 +870,7 @@ AnalysysAgent.reset()
 ```
 
 * provider 推送提供方标识，目前只 `AnalysysPushProvider` 枚举中的类型
-* pushID 第三方推送标识。如：极光的`registrationID`，个推的`clientId`，百度的`channelid`，小米的`xmRegId`
+* pushID 第三方推送标识。如：极光的 `registrationID`，个推的 `clientId`，百度的 `channelid`，小米的 `xmRegId`
 
 调用方法，以极光为例：
 
@@ -879,11 +884,11 @@ Swift示例:
 AnalysysAgent.setPushProvider(.jiGuang, pushID: "191e35f7e01617e5181")
 ```
 
-### 5.2.1 极光推送
+#### 5.2.1 极光推送
 
-请下载最新的极光推送SDK，并根据[《iOS SDK 集成指南》](https://docs.jiguang.cn/jpush/client/iOS/ios_guide_new/)将SDK集成至开发者App中。并集成并初始化方舟SDK。
+请下载最新的极光推送 SDK，并根据[《iOS SDK 集成指南》](https://docs.jiguang.cn/jpush/client/iOS/ios_guide_new/)将SDK集成至开发者App中。并集成并初始化方舟SDK。
 
-在 iOS App 中，首先获取 APNs 的 Device Token，然后注册极光推送，成功后极光推送会返回 `registrationID`，将此 `registrationID` 回传方舟SDK即可。
+在 iOS App 中，首先获取 APNs 的 Device Token，然后注册极光推送，成功后极光推送会返回 `registrationID`，将此 `registrationID` 回传方舟 SDK 即可。
 
 ```objectivec
 @interface AppDelegate () <JPUSHRegisterDelegate>
@@ -914,11 +919,11 @@ AnalysysAgent.setPushProvider(.jiGuang, pushID: "191e35f7e01617e5181")
 }
 ```
 
-### 5.2.2 百度推送
+#### 5.2.2 百度推送
 
-请下载最新的百度推送SDK，并根据[《百度Push服务SDK用户手册（iOS版）》](http://push.baidu.com/doc/ios/api)将SDK集成至开发者App中。并集成并初始化方舟SDK。
+请下载最新的百度推送 SDK，并根据[《百度Push服务SDK用户手册（iOS版）》](http://push.baidu.com/doc/ios/api)将 SDK 集成至开发者App中。并集成并初始化方舟SDK。
 
-在 iOS App 中，首先获取 APNs 的 Device Token，然后注册百度推送，成功后百度推送会返回 `channelid`，将此 `channelid` 回传方舟SDK即可。
+在 iOS App 中，首先获取 APNs 的 Device Token，然后注册百度推送，成功后百度推送会返回 `channelid`，将此 `channelid` 回传方舟 SDK 即可。
 
 ```objectivec
 @interface AppDelegate () <UIApplicationDelegate,UNUserNotificationCenterDelegate>
@@ -954,11 +959,11 @@ AnalysysAgent.setPushProvider(.jiGuang, pushID: "191e35f7e01617e5181")
 }
 ```
 
-### 5.2.3 小米推送
+#### 5.2.3 小米推送
 
-请下载最新的小米推送SDK，并根据[《小米推送服务iOS客户端SDK使用指南》](https://dev.mi.com/console/doc/detail?pId=98)将SDK集成至开发者App中。并集成并初始化方舟SDK。
+请下载最新的小米推送 SDK，并根据[《小米推送服务iOS客户端SDK使用指南》](https://dev.mi.com/console/doc/detail?pId=98)将 SDK 集成至开发者 App 中。并集成并初始化方舟SDK。
 
-在 iOS App 中，首先获取 APNs 的 Device Token，然后注册小米推送，成功后小米推送会返回 `regid`，将此 `regid` 回传方舟SDK即可。
+在 iOS App 中，首先获取 APNs 的 Device Token，然后注册小米推送，成功后小米推送会返回 `regid`，将此 `regid` 回传方舟 SDK 即可。
 
 ```objectivec
 @interface AppDelegate () <MiPushSDKDelegate,UNUserNotificationCenterDelegate>
@@ -990,11 +995,11 @@ AnalysysAgent.setPushProvider(.jiGuang, pushID: "191e35f7e01617e5181")
 }
 ```
 
-### 5.2.4 个推推送
+#### 5.2.4 个推推送
 
-请下载最新的个推推送SDK，并根据[《iOS端 > Xcode集成》](http://docs.getui.com/getui/mobile/ios/xcode/)将SDK集成至开发者App中。并集成并初始化方舟SDK。
+请下载最新的个推推送 SDK，并根据[《iOS端 > Xcode集成》](http://docs.getui.com/getui/mobile/ios/xcode/)将 SDK 集成至开发者 App 中。并集成并初始化方舟 SDK。
 
-在 iOS App 中，首先获取 APNs 的 Device Token，然后注册个推推送，成功后个推推送会返回 `clientId`，将此 `clientId` 回传方舟SDK即可。
+在 iOS App 中，首先获取 APNs 的 Device Token，然后注册个推推送，成功后个推推送会返回 `clientId`，将此 `clientId` 回传方舟 SDK 即可。
 
 ```objectivec
 @interface AppDelegate () <UIApplicationDelegate, GeTuiSdkDelegate, UNUserNotificationCenterDelegate>
@@ -1031,15 +1036,15 @@ AnalysysAgent.setPushProvider(.jiGuang, pushID: "191e35f7e01617e5181")
 + (void)trackCampaign:(id)userInfo isClick:(BOOL)isClick userCallback:(void(^)(id campaignInfo))userCallback;
 ```
 
-* userInfo 推送携带的参数信息
-* isClick YES：用户点击通知  NO：接收到消息通知
-* userCallback 将解析后的用户下发活动信息回调用户
+* userInfo：推送携带的参数信息
+* isClick：YES：用户点击通知；NO：接收到消息通知
+* userCallback：将解析后的用户下发活动信息回调用户
 
 ### 5.4 三方推送平台 SDK 集成及示例代码
 
-首先，开发者需要在 App 中集成第三方推送系统的 SDK，并在 App 初始化过程中获取设备推送 ID，并保存在方舟分析的用户信息中。目前易观SDK支持极光、百度、小米、个推四家第三方推送统计的支持。以下简要说明集成第三方推送系统的集成方式。
+首先，开发者需要在 App 中集成第三方推送系统的 SDK，并在 App 初始化过程中获取设备推送 ID，并保存在方舟分析的用户信息中。目前易观 SDK 支持极光、百度、小米、个推四家第三方推送统计的支持。以下简要说明集成第三方推送系统的集成方式。
 
-### 5.4.1 极光推送
+#### 5.4.1 极光推送
 
 ```objectivec
 #pragma mark *** JPUSHRegisterDelegate ***
@@ -1091,7 +1096,7 @@ AnalysysAgent.setPushProvider(.jiGuang, pushID: "191e35f7e01617e5181")
 }
 ```
 
-### 5.4.2 百度推送
+#### 5.4.2 百度推送
 
 ```objectivec
 #pragma mark *** UNUserNotificationCenterDelegate ***
@@ -1143,7 +1148,7 @@ AnalysysAgent.setPushProvider(.jiGuang, pushID: "191e35f7e01617e5181")
 }
 ```
 
-### 5.4.3 小米推送
+#### 5.4.3 小米推送
 
 ```objectivec
 #pragma mark *** UNUserNotificationCenterDelegate ***
@@ -1195,7 +1200,7 @@ AnalysysAgent.setPushProvider(.jiGuang, pushID: "191e35f7e01617e5181")
 }
 ```
 
-### 5.4.4 个推推送
+#### 5.4.4 个推推送
 
 ```objectivec
 // iOS 10 Support, App Background
@@ -1241,7 +1246,6 @@ AnalysysAgent.setPushProvider(.jiGuang, pushID: "191e35f7e01617e5181")
 }
 ```
 
-
 注：iOS 10.0以下回调方法统一调用的方法：
 
 ```objectivec
@@ -1267,4 +1271,6 @@ AnalysysAgent.setPushProvider(.jiGuang, pushID: "191e35f7e01617e5181")
     }
 }
 ```
+
+
 
