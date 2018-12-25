@@ -28,15 +28,17 @@
     //  AnalysysAgent 配置信息
     AnalysysConfig.appKey = @"demobank631";
     AnalysysConfig.channel = @"App Store";
-    AnalysysConfig.baseUrl = @"arksdk.analysys.cn";
+    AnalysysConfig.baseUrl = @"sdk.analysys.cn";
     AnalysysConfig.autoProfile = YES;
     AnalysysConfig.encryptType = AnalysysEncryptAES;
     //  使用配置信息初始化SDK
     [AnalysysAgent startWithConfig:AnalysysConfig];
     
     
-    //  上App Store时记得删除此设置 或 设置为 AnalysysDebugOff
-    [AnalysysAgent setDebugMode:AnalysysDebugButTrack];
+    //  调试模式必须在SDK初始化后设置
+#ifdef DEBUG
+//    [AnalysysAgent setDebugMode:AnalysysDebugButTrack];
+#endif
 
     CFAbsoluteTime linkTime = (CFAbsoluteTimeGetCurrent() - startTime);
     NSLog(@"AnalysysAgent初始化执行时长： %f ms", linkTime *1000.0);
