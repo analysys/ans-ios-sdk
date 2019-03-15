@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>方舟B JS SDK Hybrid</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="./style/plugIn/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./style/plugIn/bootstrap/css/bootstrap-theme.min.css">
+    <style type="text/css">
+    h2 {
+        word-wrap: break-word;
+        width: 100%;
+    }
+    </style>
+    <script type="text/javascript" src="./style/js/app.js"></script>
+    <!-- <script type="text/javascript" src="./sdk/AnalysysAgent_JS_Hybrid_SDK.min.js"></script> -->
+    <script type="text/javascript">
+        (function(config) {
+        window.AnalysysAgent = window.AnalysysAgent || []
+        window.AnalysysAgent.methods = 'identify alias reset track profileSet profileSetOnce profileIncrement profileAppend profileUnset profileDelete registerSuperProperty registerSuperProperties unRegisterSuperProperty clearSuperProperties getSuperProperty getSuperProperties pageView debugMode auto appkey name uploadURL hash visitorConfigURL autoProfile'.split(' ');
+
+        function factory(b) {
+            return function() {
+                var a = Array.prototype.slice.call(arguments);
+                a.unshift(b);
+                window.AnalysysAgent.push(a);
+                return window.AnalysysAgent;
+            }
+        };
+        for (var i = 0; i < AnalysysAgent.methods.length; i++) {
+            var key = window.AnalysysAgent.methods[i];
+            AnalysysAgent[key] = factory(key);
+        }
+        for (var key in config) {
+            AnalysysAgent[key](config[key])
+        }
+        var date = new Date();
+        var time = new String(date.getFullYear()) + new String(date.getMonth() + 1) + new String(date.getDate());
+
+        var d = document,
+            c = d.createElement('script'),
+            n = d.getElementsByTagName('script')[0];
+        c.type = 'text/javascript';
+        c.async = true;
+        c.id = 'devSDK';
+        c.src = './sdk/AnalysysAgent_JS_Hybrid_SDK.min.js?v=' + time //方舟B SDK地址
+        n.parentNode.insertBefore(c, n);
+    })({
+        appkey: 'paastest', //APPKEY
+        debugMode: 1,
+        uploadURL: 'http://arkpaastest.analysys.cn:8089/',
+        visitorConfigURL: 'http://arkpaastest.analysys.cn:8089/'
+    })
+    </script>
+</head>
+
+<body>
+    <header class="navbar navbar-static-top bs-docs-nav bg-primary">
+        <h1 class="text-center">JS Hybrid SDK接入DEMO</h1>
+    </header>
+    <div class="container">
+        <div class="btn-group-vertical center-block" role="group">
+            <div class="panel panel-info">
+                <h2>获取是UA参数</h2>
+                <div class="panel-footer" style="word-wrap: break-word;">
+                    当前UA的值为<span id="uaContext"></span>
+                </div>
+                <h2>AnalysysAgent.pageView:页面事件</h2>
+                <div class="row">
+                    <div class="col-md-2 col-md-offset-1">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading text-center" onclick="pageView('活动页')">
+                                <a class="panel-title" href="javascript:void(0)">活动页</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-md-offset-1">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading text-center" onclick="pageView('商品页',{ 'commodityName': 'iPhone', 'commodityPrice': 8000 })">
+                                <a class="panel-title" href="javascript:void(0)">商品页</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer" style="word-wrap: break-word;">示例:正在开展某个活动,需要统计活动页面</div>
+                <div class="panel-footer" style="word-wrap: break-word;">
+                    <pre>// 添加页面
+AnalysysAgent.pageView("活动页");</pre>
+                </div>
+                <div class="panel-footer" style="word-wrap: break-word;">示例：购买一部iPhone手机,手机价格为8000元</div>
+                <div class="panel-footer" style="word-wrap: break-word;">
+                    <pre>// 添加页面并设置页面属性
+var pageInfo ={ "commodityName": "iPhone", "commodityPrice": 8000 };
+AnalysysAgent.pageView("商品页", pageInfo);</pre>
+                </div>
+                <!-- 点击事件 -->
+                <h2>AnalysysAgent.track:点击事件</h2>
+                <div class="row">
+                    <div class="col-md-2 col-md-offset-1">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading text-center" onclick="track('buttonClick')">
+                                <a class="panel-title" href="javascript:void(0)">添加事件</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-md-offset-1">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading text-center" onclick="track('buttonClick',{'money':'2000'})">
+                                <a class="panel-title" href="javascript:void(0)">添加事件并设置</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer" style="word-wrap: break-word;">示例：当用户从当前页面点击按钮时,需要统计该点击事件且无其他属性。</div>
+                <div class="panel-footer" style="word-wrap: break-word;">
+                    <pre>// 添加事件
+AnalysysAgent.track("buttonClick");</pre>
+                </div>
+                <div class="panel-footer" style="word-wrap: break-word;">示例：当用户从当前页面点击按钮时,需要统计该点击事件且无其他属性。</div>
+                <div class="panel-footer" style="word-wrap: break-word;">
+                    <pre>// 添加事件并设置事件属性
+var eventInfo = { "money":2000 };
+AnalysysAgent.track("buttonClick",eventInfo);</pre>
+                </div>
+                <!-- 通用属性 -->
+                <!-- 注册通用属性 -->
+                <h2>AnalysysAgent.registerSuperProperty/AnalysysAgent.registerSuperProperties:注册通用属性 </h2>
+                <div class="row">
+                    <div class="col-md-2 col-md-offset-1">
+                        <!--identify 设置identifyID -->
+                        <div class="panel panel-primary">
+                            <div class="panel-heading text-center" onclick="registerSuperProperty('member','VIP')">
+                                <a class="panel-title" href="javascript:void(0)">设置单个通用属性</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-md-offset-1">
+                        <!--identify 设置identifyID -->
+                        <div class="panel panel-primary">
+                            <div class="panel-heading text-center" onclick="registerSuperProperties({'age':20,'member':'VIP'})">
+                                <a class="panel-title" href="javascript:void(0)">设置多个通用属性</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer" style="word-wrap: break-word;">示例：购买一年腾讯会员，今年内只需设置一次即可</div>
+                <div class="panel-footer" style="word-wrap: break-word;">
+                    <pre>// 设置单个通用属性
+AnalysysAgent.registerSuperProperty("member","VIP");</pre>
+                </div>
+                <br>
+                <div class="panel-footer" style="word-wrap: break-word;">示例：购买了一年腾讯会员和设置了用户的年龄</div>
+                <div class="panel-footer" style="word-wrap: break-word;">
+                    <pre>// 设置多个通用属性
+var superProperty = { "age":20, "member":"VIP" };
+AnalysysAgent.registerSuperProperties(superProperty);</pre>
+                </div>
+                <!-- 删除通用属性 -->
+                <h2>AnalysysAgent.unRegisterSuperProperty/AnalysysAgent.clearSuperProperties():删除通用属性 </h2>
+                <div class="row">
+                    <div class="col-md-2 col-md-offset-1">
+                        <!--identify 设置identifyID -->
+                        <div class="panel panel-primary">
+                            <div class="panel-heading text-center" onclick="unRegisterSuperProperty('age')">
+                                <a class="panel-title" href="javascript:void(0)">删除单个通用属性</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-md-offset-1">
+                        <!--identify 设置identifyID -->
+                        <div class="panel panel-primary">
+                            <div class="panel-heading text-center" onclick="clearSuperProperties()">
+                                <a class="panel-title" href="javascript:void(0)">清除所有通用属性</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer" style="word-wrap: break-word;">示例：删除设置的用户年龄属性</div>
+                <div class="panel-footer" style="word-wrap: break-word;">
+                    <pre>// 删除单个通用属性
+AnalysysAgent.unRregisterSuperProperty("age");</pre>
+                </div>
+                <div class="panel-footer" style="word-wrap: break-word;">示例：清除所有已经设置的通用属性</div>
+                <div class="panel-footer" style="word-wrap: break-word;">
+                    <pre>// 清除所有通用属性
+AnalysysAgent.clearSuperProperties();</pre>
+                </div>
+                <!-- 获取通用属性 -->
+                <h2>AnalysysAgent.getSuperProperty/AnalysysAgent.getSuperProperties():获取通用属性 </h2>
+                <div class="row">
+                    <div class="col-md-2 col-md-offset-1">
+                        <!--identify 设置identifyID -->
+                        <div class="panel panel-primary">
+                            <div class="panel-heading text-center" onclick="getSuperProperty('age')">
+                                <a class="panel-title" href="javascript:void(0)">获取单个通用属性</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-md-offset-1">
+                        <!--identify 设置identifyID -->
+                        <div class="panel panel-primary">
+                            <div class="panel-heading text-center" onclick="getSuperProperties()">
+                                <a class="panel-title" href="javascript:void(0)">获取所有通用属性</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer" style="word-wrap: break-word;">单个通用属性age的值为：<span id="property"></span></div>
+                <div class="panel-footer" style="word-wrap: break-word;">所有通用属性为：<span id="properties"></span></div>
+                <div class="panel-footer" style="word-wrap: break-word;">示例：查看已经设置的“member”的通用属性</div>
+                <div class="panel-footer" style="word-wrap: break-word;">
+                    <pre>// 获取单个通用属性
+//显示所获取的单个通用属性值的方法
+function showSuperProperty(msg) {
+    document.getElementById('property').innerText= msg
+}
+AnalysysAgent.getSuperProperty("member",showSuperProperty);</pre>
+                </div>
+                <div class="panel-footer" style="word-wrap: break-word;">示例：查看所有已经设置的通用属性</div>
+                <div class="panel-footer" style="word-wrap: break-word;">
+                    <pre>// 获取所有通用属性
+//显示所获取的所有通用属性值的方法
+function showSuperProperties(msg) {
+    document.getElementById('properties').innerText= msg
+}
+AnalysysAgent.getSuperProperties("member",showSuperProperties);</pre>
+                </div>
+                <!-- 用户属性 -->
+                <!-- 用户ID设置 -->
+                <h2>AnalysysAgent.identify:用户ID设置 </h2>
+                <div class="row">
+                    <div class="col-md-2 col-md-offset-1">
+                        <!--identify 设置identifyID -->
+                        <div class="panel panel-primary">
+                            <div class="panel-heading text-center" onclick="identify('userName')">
+                                <a class="panel-title" href="javascript:void(0)">用户ID设置</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer" style="word-wrap: break-word;">示例：淘宝店铺使用该功能时，只关注访客用户或店铺会员，不关注设备信息</div>
+                <div class="panel-footer" style="word-wrap: break-word;">
+                    <pre>// 设置 distinctId
+AnalysysAgent.identify("userName");</pre>
+                </div>
+                <!-- 用户关联 -->
+                <h2>AnalysysAgent.alias:用户关联 </h2>
+                <div class="row">
+                    <div class="col-md-2 col-md-offset-1">
+                        <!--reset 清除所有ID 超级属性 profile设置 -->
+                        <div class="panel panel-primary">
+                            <div class="panel-heading text-center" onclick="alias('sanban','yiban')">
+                                <a class="panel-title" href="javascript:void(0)">关联</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer" style="word-wrap: break-word;">示例：一班同学升学时，调换班级到三班</div>
+                <div class="panel-footer" style="word-wrap: break-word;">
+                    <pre>// 设置 aliasId 和 originalId
+AnalysysAgent.alias("sanban","yiban");</pre>
+                </div>
+                <!--  用户属性设置 -->
+                <!--  设置用户属性 -->
+                <h2>AnalysysAgent.profileSet:设置用户属性 </h2>
+                <div class="row">
+                    <div class="col-md-2 col-md-offset-1">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading text-center" onclick="profileSet('Email','yonghu@163.com')">
+                                <a class="panel-title" href="javascript:void(0)">设置单个属性</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-md-offset-1">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading text-center" onclick="profileSet({'Email':'yonghu@163.com','WeChatID':'微信号'})">
+                                <a class="panel-title" href="javascript:void(0)">设置多个属性</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer" style="word-wrap: break-word;">示例：要统计分析使用邮箱登录的用户</div>
+                <div class="panel-footer" style="word-wrap: break-word;">
+                    <pre>// 设置单个属性
+AnalysysAgent.profileSet("Email","yonghu@163.com");</pre>
+                </div>
+                <br>
+                <div class="panel-footer" style="word-wrap: break-word;">示例：要统计用户的登录方式邮箱登录,微信登录</div>
+                <div class="panel-footer" style="word-wrap: break-word;">
+                    <pre>// 设置多个属性
+var profiles = { "Email" : "yonghu@163.com", "WeChatID" : "微信号" };
+AnalysysAgent.profileSet(profiles);</pre>
+                </div>
+                <!--  首次设置用户属性 -->
+                <h2>AnalysysAgent.profileSetOnce:首次设置用户属性</h2>
+                <div class="row">
+                    <div class="col-md-2 col-md-offset-1">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading text-center" onclick="profileSetOnce('activationTime','1521594686781')">
+                                <a class="panel-title" href="javascript:void(0)">激活时间 </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-md-offset-1">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading text-center" onclick="profileSetOnce({'activationTime':'1521594686781','loginTime':'1521594726781'})">
+                                <a class="panel-title" href="javascript:void(0)">激活与首次登陆时间 </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer" style="word-wrap: break-word;">示例：要统计用户的激活时间</div>
+                <div class="panel-footer" style="word-wrap: break-word;">
+                    <pre>// 设置单个属性
+var profiles = { "Email" : "yonghu@163.com", "WeChatID" : "微信号" };
+AnalysysAgent.profileSetOnce( "activationTime" , "1521594686781");</pre>
+                </div>
+                <br>
+                <div class="panel-footer" style="word-wrap: break-word;">示例：要统计激活时间和首次登陆时间</div>
+                <div class="panel-footer" style="word-wrap: break-word;">
+                    <pre>// 设置多个属性
+var setOnceProfiles = { "activationTime": "1521594686781", "loginTime": "1521594726781" };
+AnalysysAgent.profileSetOnce(setOnceProfiles);</pre>
+                </div>
+                <div class="row">
+                    <div class="col-md-2 col-md-offset-1">
+                    </div>
+                </div>
+                <!--  设置用户属性相对变化值 -->
+                <h2>AnalysysAgent.profileIncrement:设置用户属性相对变化值</h2>
+                <div class="row">
+                    <div class="col-md-2 col-md-offset-1">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading text-center" onclick="profileIncrement('age',20)">
+                                <a class="panel-title" href="javascript:void(0)">一个数值型属性 </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-md-offset-1">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading text-center" onclick="profileIncrement({'age':20,'integral':200})">
+                                <a class="panel-title" href="javascript:void(0)">多个数值型属性 </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer" style="word-wrap: break-word;">示例：要统计用户的激活时间</div>
+                <div class="panel-footer" style="word-wrap: break-word;">
+                    <pre>// 设置单个属性
+AnalysysAgent.profileIncrement( "age" , 20);</pre>
+                </div>
+                <br>
+                <div class="panel-footer" style="word-wrap: break-word;">示例：要统计使用产品用户年龄分析用户年龄占比和用户的积分情况</div>
+                <div class="panel-footer" style="word-wrap: break-word;">
+                    <pre>// 设置多个属性
+var profies = { "age":20 ,"integral":200 };
+AnalysysAgent.profileIncrement(profies);</pre>
+                </div>
+                <!--  设置列表类型的属性 -->
+                <h2>AnalysysAgent.profileAppend:设置列表类型的属性</h2>
+                <div class="row">
+                    <div class="col-md-2 col-md-offset-1">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading text-center" onclick="profileAppend('Movies','霸王别姬')">
+                                <a class="panel-title" href="javascript:void(0)">单个列表类型属性 </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-md-offset-1">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading text-center" onclick="profileAppend( {'Movies':'霸王别姬','Music':['一无所有','花房姑娘']})">
+                                <a class="panel-title" href="javascript:void(0)">设置多列表类型集合属性 </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-md-offset-1">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading text-center" onclick="profileAppend('Movies',['海上钢琴师','指环王'])">
+                                <a class="panel-title" href="javascript:void(0)">设置多列表类型属性 </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer" style="word-wrap: break-word;">示例：要统计用户喜欢的单个电影</div>
+                <div class="panel-footer" style="word-wrap: break-word;">
+                    <pre>// 设置单个列表类型属性
+var profies = { "age":20 ,"integral":200 };
+AnalysysAgent.profileAppend("Movies", "霸王别姬");</pre>
+                </div>
+                <br>
+                <div class="panel-footer" style="word-wrap: break-word;">示例：要统计用户喜欢的单个电影和多个音乐</div>
+                <div class="panel-footer" style="word-wrap: break-word;">
+                    <pre>// 设置单个列表类型属性
+var propertyObject = {"Movies":"霸王别姬","Music":["一无所有","花房姑娘"]};
+AnalysysAgent.profileAppend(propertyObject);</pre>
+                </div>
+                <div class="panel-footer" style="word-wrap: break-word;">示例：要统计用户喜欢的多个电影"海上钢琴师"、“指环王”</div>
+                <div class="panel-footer" style="word-wrap: break-word;">
+                    <pre>// 设置多列表类型属性
+var properties = ["海上钢琴师","指环王"];
+AnalysysAgent.profileAppend( "Movies", properties);</pre>
+                </div>
+                <!--  删除设置的属性 -->
+                <h2>AnalysysAgent.profileUnset/AnalysysAgent.profileDelete:删除设置的属性</h2>
+                <div class="row">
+                    <div class="col-md-2 col-md-offset-1">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading text-center" onclick="profileUnset('Movies')">
+                                <a class="panel-title" href="javascript:void(0)">删除单个用户属性 </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-md-offset-1">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading text-center" onclick="profileDelete()">
+                                <a class="panel-title" href="javascript:void(0)">清除所有属性 </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer" style="word-wrap: break-word;">示例：要删除已经设置的用户喜欢的电影这一用户属性</div>
+                <div class="panel-footer" style="word-wrap: break-word;">
+                    <pre>// 删除单个用户属性
+AnalysysAgent.profileUnset("Movies");</pre>
+                </div>
+                <div class="panel-footer" style="word-wrap: break-word;">示例：要清除已经设置的所有用户属性</div>
+                <div class="panel-footer" style="word-wrap: break-word;">
+                    <pre>// 清除所有属性
+AnalysysAgent.profileDelete();</pre>
+                </div>
+                <!--  清除本地设置 -->
+                <h2>AnalysysAgent.reset:清除本地设置</h2>
+                <div class="row">
+                    <div class="col-md-2 col-md-offset-1">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading text-center" onclick="reset()">
+                                <a class="panel-title" href="javascript:void(0)">清除本地设置 </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer" style="word-wrap: break-word;">示例：清除本地现有的用户属性,包括通用属性</div>
+                <div class="panel-footer" style="word-wrap: break-word;">
+                    <pre>// 清除所有属性
+AnalysysAgent.reset();</pre>
+                </div>
+            </div>
+        </div>
+</body>
+
+</html>
