@@ -44,7 +44,6 @@ iOS SDK 用于 iOS 原生 App
 3. 勾选 `Copy items if needed`、`Create groups` - `Add` 完成添加类库
 4. 添加`AnalysysAgent.bundle`资源文件：`Targets`->`ProjectName` -> `Build Phases` -> `Copy Bundle Resources` -> 添加文件
 
-<!--## CocoaPods集成
 * 安装CocoaPods
 * 工程目录下创建`Podfile`文件，并添加`pod 'AnalysysAgent'`，示例如下：
 
@@ -58,15 +57,7 @@ end
 ```
 * 关闭Xcode，在工程目录下执行`pod install`或`pod install --verbose --no-repo-update`，完成后打开xxx.xcworkspace工程
 
-其他功能
 
-| pod代码 | 功能说明 | 版本支持 |
-| --- | --- | --- |
-| pod 'AnalysysAgent', :subspecs => ['Visual'] | 集成SDK同时集成可视化模块 | 4.2.0及以后版本支持 |
-| pod 'AnalysysAgent', :subspecs => ['Push'] | 集成SDK同时集成推送模块 | 4.2.0及以后版本支持 |
-| pod 'AnalysysAgent', :subspecs => ['Visual','Push'] | 集成SDK同时集成可视化及推送模块 | 4.2.0及以后版本支持 |
-| pod 'AnalysysAgent', :subspecs => ['Visual','Push','CMB'] | 集成SDK同时集成可视化、推送及定制化模块 | 4.2.0及以后版本支持 |
--->
 ## Xcode配置
 * 若使用手动集成，请添加如下依赖框架：
 选择工程 - `Targets` - “项目名称” - `Build Phase` - `Link Binary With Libraries` 依赖库如下：

@@ -12,7 +12,7 @@ Pod::Spec.new do |s|
   s.frameworks   = 'UIKit', 'Foundation', 'SystemConfiguration', 'CoreTelephony', 'AdSupport'
   s.libraries    = 'z', 'sqlite3', 'icucore'
 
-  s.ios.vendored_frameworks = 'AnalysysSDK/AnalysysAgent.framework','AnalysysSDK/Analysys_CMB.framework','AnalysysSDK/AnalysysEncrypt.framework','AnalysysSDK/AnalysysVisual.framework','AnalysysSDK/AnalysysPush.framework'
+  s.ios.vendored_frameworks = 'AnalysysSDK/AnalysysAgent.framework','AnalysysSDK/AnalysysEncrypt.framework','AnalysysSDK/AnalysysVisual.framework','AnalysysSDK/AnalysysPush.framework'
 
   s.resource = 'AnalysysSDK/Resources/AnalysysAgent.bundle'
 
