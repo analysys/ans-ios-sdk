@@ -21,27 +21,31 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     
-    NSLog(@"Start");
-    
     CFAbsoluteTime startTime = CFAbsoluteTimeGetCurrent();
     
-    //  AnalysysAgent 配置信息
-    AnalysysConfig.appKey = @"demobank631";
+    [AnalysysAgent setUploadURL:@"https://arkpaastest.analysys.cn:4089"];
+    
+#if DEBUG
+    [AnalysysAgent setDebugMode:AnalysysDebugButTrack];
+#else
+    [AnalysysAgent setDebugMode:AnalysysDebugOff];
+#endif
+    
+    //  AnalysysAgent SDK配置信息
+    AnalysysConfig.appKey = @"heatmap0516";
     AnalysysConfig.channel = @"App Store";
-    AnalysysConfig.baseUrl = @"sdk.analysys.cn";
     AnalysysConfig.autoProfile = YES;
-    AnalysysConfig.encryptType = AnalysysEncryptAES;
+    //    AnalysysConfig.encryptType = AnalysysEncryptAES;
     //  使用配置信息初始化SDK
     [AnalysysAgent startWithConfig:AnalysysConfig];
     
-    
-    //  调试模式必须在SDK初始化后设置
-#ifdef DEBUG
-//    [AnalysysAgent setDebugMode:AnalysysDebugButTrack];
+#if DEBUG
+    [AnalysysAgent setVisitorDebugURL:@"wss://arkpaastest.analysys.cn:4091"];
 #endif
-
+    [AnalysysAgent setVisitorConfigURL:@"https://arkpaastest.analysys.cn:4089"];
+    
     CFAbsoluteTime linkTime = (CFAbsoluteTimeGetCurrent() - startTime);
-    NSLog(@"AnalysysAgent初始化执行时长： %f ms", linkTime *1000.0);
+    NSLog(@"The code execution time %f ms", linkTime *1000.0);
     
     return YES;
 }

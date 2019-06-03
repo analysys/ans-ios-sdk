@@ -14,7 +14,6 @@
 		1709D30920A0463A00F3C61E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1709D30720A0463A00F3C61E /* LaunchScreen.storyboard */; };
 		1709D31120A0465400F3C61E /* testViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1709D31020A0465400F3C61E /* testViewController.m */; };
 		1709D31420A0467800F3C61E /* libicucore.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 1709D2F620A0415300F3C61E /* libicucore.tbd */; };
-		170A5EDD21917DA2009B7135 /* AnalysysAgent.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 170A5EDC21917DA2009B7135 /* AnalysysAgent.framework */; };
 		178B225C2085BE5F00425E4D /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 178B225B2085BE5F00425E4D /* AppDelegate.m */; };
 		178B22622085BE5F00425E4D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 178B22602085BE5F00425E4D /* Main.storyboard */; };
 		178B22642085BE6000425E4D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 178B22632085BE6000425E4D /* Assets.xcassets */; };
@@ -33,7 +32,12 @@
 		178B22902085BF7B00425E4D /* EGTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 178B228A2085BF7B00425E4D /* EGTextField.m */; };
 		178B22972085BF8200425E4D /* UIView+MGO.m in Sources */ = {isa = PBXBuildFile; fileRef = 178B22912085BF8100425E4D /* UIView+MGO.m */; };
 		178B22982085BF8200425E4D /* NextViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 178B22932085BF8100425E4D /* NextViewController.m */; };
-		17D2051B21D1E2A2008CA916 /* AnalysysAgent.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 17D2051A21D1E2A2008CA916 /* AnalysysAgent.framework */; };
+		17AF9AFB22A4F11600F8A384 /* AnalysysPush.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 17AF9AF422A4F11600F8A384 /* AnalysysPush.framework */; };
+		17AF9AFC22A4F11600F8A384 /* AnalysysEncrypt.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 17AF9AF522A4F11600F8A384 /* AnalysysEncrypt.framework */; };
+		17AF9AFD22A4F11600F8A384 /* AnalysysAgent.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 17AF9AF722A4F11600F8A384 /* AnalysysAgent.bundle */; };
+		17AF9AFE22A4F11600F8A384 /* Analysys_CMB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 17AF9AF822A4F11600F8A384 /* Analysys_CMB.framework */; };
+		17AF9AFF22A4F11600F8A384 /* AnalysysAgent.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 17AF9AF922A4F11600F8A384 /* AnalysysAgent.framework */; };
+		17AF9B0022A4F11600F8A384 /* AnalysysVisual.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 17AF9AFA22A4F11600F8A384 /* AnalysysVisual.framework */; };
 		E81E987920FDBF060063FAA1 /* libicucore.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 1709D2F620A0415300F3C61E /* libicucore.tbd */; };
 		E8B2C01621070F2A00CAC239 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = E8B2C01521070F2A00CAC239 /* libz.tbd */; };
 		E8B2C01821070F3600CAC239 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E8B2C01721070F3600CAC239 /* AdSupport.framework */; };
@@ -47,7 +51,6 @@
 		E8BE05E0212D501D00DFFFC3 /* EGWKWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E8BE05C9212D501D00DFFFC3 /* EGWKWebViewController.m */; };
 		E8BE05E1212D501D00DFFFC3 /* EGWebViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E8BE05CC212D501D00DFFFC3 /* EGWebViewController.xib */; };
 		E8BE05E2212D501D00DFFFC3 /* EGWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E8BE05CD212D501D00DFFFC3 /* EGWebViewController.m */; };
-		E8BE05E4212D503B00DFFFC3 /* app in Resources */ = {isa = PBXBuildFile; fileRef = E8BE05E3212D503B00DFFFC3 /* app */; };
 		E8BE05E6212D514100DFFFC3 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E8BE05E5212D514100DFFFC3 /* WebKit.framework */; };
 		E8BE05E9212D52AC00DFFFC3 /* UIColor+Transform.m in Sources */ = {isa = PBXBuildFile; fileRef = E8BE05E7212D52AC00DFFFC3 /* UIColor+Transform.m */; };
 /* End PBXBuildFile section */
@@ -65,7 +68,6 @@
 		1709D30F20A0465400F3C61E /* testViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = testViewController.h; sourceTree = "<group>"; };
 		1709D31020A0465400F3C61E /* testViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = testViewController.m; sourceTree = "<group>"; };
 		1709D31220A0467000F3C61E /* EGAnalytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = EGAnalytics.framework; path = "../iOS SDK/EGAnalytics.framework"; sourceTree = "<group>"; };
-		170A5EDC21917DA2009B7135 /* AnalysysAgent.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AnalysysAgent.framework; sourceTree = "<group>"; };
 		178B22572085BE5F00425E4D /* AnalysysDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AnalysysDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		178B225A2085BE5F00425E4D /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		178B225B2085BE5F00425E4D /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -97,7 +99,12 @@
 		178B22922085BF8100425E4D /* UIView+MGO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+MGO.h"; sourceTree = "<group>"; };
 		178B22932085BF8100425E4D /* NextViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NextViewController.m; sourceTree = "<group>"; };
 		178B22962085BF8100425E4D /* NextViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NextViewController.h; sourceTree = "<group>"; };
-		17D2051A21D1E2A2008CA916 /* AnalysysAgent.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AnalysysAgent.framework; sourceTree = SOURCE_ROOT; };
+		17AF9AF422A4F11600F8A384 /* AnalysysPush.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AnalysysPush.framework; sourceTree = "<group>"; };
+		17AF9AF522A4F11600F8A384 /* AnalysysEncrypt.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AnalysysEncrypt.framework; sourceTree = "<group>"; };
+		17AF9AF722A4F11600F8A384 /* AnalysysAgent.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = AnalysysAgent.bundle; sourceTree = "<group>"; };
+		17AF9AF822A4F11600F8A384 /* Analysys_CMB.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Analysys_CMB.framework; sourceTree = "<group>"; };
+		17AF9AF922A4F11600F8A384 /* AnalysysAgent.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AnalysysAgent.framework; sourceTree = "<group>"; };
+		17AF9AFA22A4F11600F8A384 /* AnalysysVisual.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AnalysysVisual.framework; sourceTree = "<group>"; };
 		E8B2C01521070F2A00CAC239 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		E8B2C01721070F3600CAC239 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		E8B2C01921070F3E00CAC239 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
@@ -108,7 +115,6 @@
 		E8BE05CB212D501D00DFFFC3 /* EGWKWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EGWKWebViewController.h; sourceTree = "<group>"; };
 		E8BE05CC212D501D00DFFFC3 /* EGWebViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EGWebViewController.xib; sourceTree = "<group>"; };
 		E8BE05CD212D501D00DFFFC3 /* EGWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EGWebViewController.m; sourceTree = "<group>"; };
-		E8BE05E3212D503B00DFFFC3 /* app */ = {isa = PBXFileReference; lastKnownFileType = folder; path = app; sourceTree = "<group>"; };
 		E8BE05E5212D514100DFFFC3 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		E8BE05E7212D52AC00DFFFC3 /* UIColor+Transform.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Transform.m"; sourceTree = "<group>"; };
 		E8BE05E8212D52AC00DFFFC3 /* UIColor+Transform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+Transform.h"; sourceTree = "<group>"; };
@@ -123,7 +129,6 @@
 				E8B2C01A21070F3E00CAC239 /* CoreTelephony.framework in Frameworks */,
 				E8B2C01821070F3600CAC239 /* AdSupport.framework in Frameworks */,
 				E8B2C01621070F2A00CAC239 /* libz.tbd in Frameworks */,
-				170A5EDD21917DA2009B7135 /* AnalysysAgent.framework in Frameworks */,
 				1709D31420A0467800F3C61E /* libicucore.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -132,13 +137,17 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				17AF9AFF22A4F11600F8A384 /* AnalysysAgent.framework in Frameworks */,
+				17AF9AFB22A4F11600F8A384 /* AnalysysPush.framework in Frameworks */,
 				E8BE05E6212D514100DFFFC3 /* WebKit.framework in Frameworks */,
 				E8B2C02021070F8500CAC239 /* AdSupport.framework in Frameworks */,
-				17D2051B21D1E2A2008CA916 /* AnalysysAgent.framework in Frameworks */,
 				E8B2C01F21070F7900CAC239 /* SystemConfiguration.framework in Frameworks */,
 				E8B2C01D21070F7000CAC239 /* CoreTelephony.framework in Frameworks */,
 				E8B2C01E21070F7400CAC239 /* libz.tbd in Frameworks */,
+				17AF9AFC22A4F11600F8A384 /* AnalysysEncrypt.framework in Frameworks */,
 				E81E987920FDBF060063FAA1 /* libicucore.tbd in Frameworks */,
+				17AF9AFE22A4F11600F8A384 /* Analysys_CMB.framework in Frameworks */,
+				17AF9B0022A4F11600F8A384 /* AnalysysVisual.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -162,7 +171,6 @@
 		1709D2FD20A0463300F3C61E /* AnalysysSwiftDemo */ = {
 			isa = PBXGroup;
 			children = (
-				170A5EDB21917D84009B7135 /* IDFA */,
 				1709D2FE20A0463300F3C61E /* AppDelegate.swift */,
 				1709D30020A0463300F3C61E /* ViewController.swift */,
 				1709D30220A0463300F3C61E /* Main.storyboard */,
@@ -174,14 +182,6 @@
 				1709D30E20A0465400F3C61E /* AnalysysSwiftDemo-Bridging-Header.h */,
 			);
 			path = AnalysysSwiftDemo;
-			sourceTree = "<group>";
-		};
-		170A5EDB21917D84009B7135 /* IDFA */ = {
-			isa = PBXGroup;
-			children = (
-				170A5EDC21917DA2009B7135 /* AnalysysAgent.framework */,
-			);
-			path = IDFA;
 			sourceTree = "<group>";
 		};
 		178B224E2085BE5F00425E4D = {
@@ -206,7 +206,7 @@
 		178B22592085BE5F00425E4D /* AnalysysDemo */ = {
 			isa = PBXGroup;
 			children = (
-				17D2051A21D1E2A2008CA916 /* AnalysysAgent.framework */,
+				17AF9AF322A4F11600F8A384 /* AnalysysSDK */,
 				E8BE05AA212D501D00DFFFC3 /* Hybrid */,
 				178B225A2085BE5F00425E4D /* AppDelegate.h */,
 				178B225B2085BE5F00425E4D /* AppDelegate.m */,
@@ -252,16 +252,28 @@
 			path = HRKeyboardAnimation;
 			sourceTree = "<group>";
 		};
-		E8BE05AA212D501D00DFFFC3 /* Hybrid */ = {
+		17AF9AF322A4F11600F8A384 /* AnalysysSDK */ = {
 			isa = PBXGroup;
 			children = (
-				E8BE05E3212D503B00DFFFC3 /* app */,
-				E8BE05C7212D501D00DFFFC3 /* Hybrid */,
+				17AF9AF422A4F11600F8A384 /* AnalysysPush.framework */,
+				17AF9AF522A4F11600F8A384 /* AnalysysEncrypt.framework */,
+				17AF9AF622A4F11600F8A384 /* Resources */,
+				17AF9AF822A4F11600F8A384 /* Analysys_CMB.framework */,
+				17AF9AF922A4F11600F8A384 /* AnalysysAgent.framework */,
+				17AF9AFA22A4F11600F8A384 /* AnalysysVisual.framework */,
 			);
-			path = Hybrid;
+			path = AnalysysSDK;
+			sourceTree = SOURCE_ROOT;
+		};
+		17AF9AF622A4F11600F8A384 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				17AF9AF722A4F11600F8A384 /* AnalysysAgent.bundle */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
-		E8BE05C7212D501D00DFFFC3 /* Hybrid */ = {
+		E8BE05AA212D501D00DFFFC3 /* Hybrid */ = {
 			isa = PBXGroup;
 			children = (
 				E8BE05CB212D501D00DFFFC3 /* EGWKWebViewController.h */,
@@ -365,13 +377,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E8BE05E4212D503B00DFFFC3 /* app in Resources */,
 				E8BE05E1212D501D00DFFFC3 /* EGWebViewController.xib in Resources */,
 				178B22672085BE6000425E4D /* LaunchScreen.storyboard in Resources */,
 				E8BE05DF212D501D00DFFFC3 /* EGWKWebViewController.xib in Resources */,
 				178B22732085BF3F00425E4D /* DataSource.plist in Resources */,
 				178B227C2085BF6D00425E4D /* DemoCollectionHeaderView.xib in Resources */,
 				178B22642085BE6000425E4D /* Assets.xcassets in Resources */,
+				17AF9AFD22A4F11600F8A384 /* AnalysysAgent.bundle in Resources */,
 				178B22622085BE5F00425E4D /* Main.storyboard in Resources */,
 				178B227D2085BF6D00425E4D /* DemoCollectionViewCell.xib in Resources */,
 			);
@@ -645,6 +657,7 @@
 					"$(PROJECT_DIR)/AnalysysDemo",
 					"$(PROJECT_DIR)/AnalysysDemo/IDFA",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/AnalysysSDK",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/AnalysysDemo/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
@@ -670,6 +683,7 @@
 					"$(PROJECT_DIR)/AnalysysDemo",
 					"$(PROJECT_DIR)/AnalysysDemo/IDFA",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/AnalysysSDK",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/AnalysysDemo/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;

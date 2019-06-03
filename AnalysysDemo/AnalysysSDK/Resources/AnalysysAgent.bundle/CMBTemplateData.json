@@ -1,0 +1,35 @@
+{
+    "$startup":{
+        "xcontext":[
+            "$original_id",
+            "$location",
+            "$start_source",
+            "$start_source_detail",
+            "$idfa",
+            "$idfv"
+        ]
+    },
+    "$end":{
+        "xcontext":[
+            "$original_id",
+            "$location"
+        ]
+    },
+    "$track":{
+        "xcontext":[
+            "$original_id",
+            "$location"
+        ]
+    },
+    "$pageview":{
+        "xcontext":[
+            "$original_id",
+            "$location"
+        ]
+    },
+    "$alias":{
+        "xcontext":[
+            "$original_id"
+        ]
+    }
+}

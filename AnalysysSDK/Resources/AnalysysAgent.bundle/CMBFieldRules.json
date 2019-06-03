@@ -1,0 +1,34 @@
+{
+    "xcontext":{
+        "$original_id":{
+            "valueType":0,
+            "value":"Analysys_CMB.getOriginalId",
+            "required":true
+        },
+        "$location":{
+            "valueType":0,
+            "value":"Analysys_CMB.getLocationInfo",
+            "required":true
+        },
+        "$start_source":{
+            "valueType":0,
+            "value":"Analysys_CMB.getStartSource",
+            "required":true
+        },
+        "$start_source_detail":{
+            "valueType":0,
+            "value":"Analysys_CMB.getStartSourceDetail",
+            "required":true
+        },
+        "$idfa":{
+            "valueType":0,
+            "value":"Analysys_CMB.getIDFA",
+            "required":true
+        },
+        "$idfv":{
+            "valueType":0,
+            "value":"Analysys_CMB.getIDFV",
+            "required":true
+        }
+    }
+}

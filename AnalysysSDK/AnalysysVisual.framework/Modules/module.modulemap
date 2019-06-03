@@ -1,0 +1,6 @@
+framework module AnalysysVisual {
+  umbrella header "AnalysysVisual.h"
+
+  export *
+  module * { export * }
+}

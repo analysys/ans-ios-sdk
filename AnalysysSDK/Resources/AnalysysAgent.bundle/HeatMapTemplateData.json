@@ -1,0 +1,40 @@
+{
+    "$app_click":{
+        "propertyCheckList":[
+            "$element_content"
+        ],
+        "xcontext":[
+            "$channel",
+            "$time_zone",
+            "$manufacturer",
+            "$app_version",
+            "$model",
+            "$os",
+            "$os_version",
+            "$network",
+            "$carrier_name",
+            "$screen_width",
+            "$screen_height",
+            "$brand",
+            "$language",
+            "$is_first_day",
+            "$session_id",
+            
+            "$page_width",
+            "$page_height",
+            "$click_x",
+            "$click_y",
+            "$url",
+            "$element_x",
+            "$element_y",
+            "$element_path",
+            
+            "$element_id",
+            "$element_title",
+            "$element_name",
+            "$element_type",
+            "$element_content",
+            "$element_clickable"
+        ]
+    }
+}

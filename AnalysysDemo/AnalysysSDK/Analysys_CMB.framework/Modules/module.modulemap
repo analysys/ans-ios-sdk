@@ -1,0 +1,6 @@
+framework module Analysys_CMB {
+  umbrella header "Analysys_CMB.h"
+
+  export *
+  module * { export * }
+}
