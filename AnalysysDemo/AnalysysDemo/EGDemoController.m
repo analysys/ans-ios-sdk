@@ -155,48 +155,27 @@ static NSString *const kBackgroundColor = @"backgroundColor";
                 break;
             }
             case 1: {
-                //  设置debug模式
-                NSInteger debugMode = arc4random() % 3;
-                [AnalysysAgent setDebugMode:debugMode];
-                if (debugMode == 0) {
-                    [self showAlertView:@"非debug模式"];
-                } else if (debugMode == 1) {
-                    [self showAlertView:@"debugOnly模式"];
-                } else {
-                    [self showAlertView:@"debugTrack模式"];
-                }
-                break;
-            }
-            case 2: {
-                //  自定义服务器地址
-                //  可用于调试，请谨慎设置，或设置错误可能导致上传失败
-                NSString *serverUrl = @"https://serverDomain";
-                [AnalysysAgent setUploadURL:serverUrl];
-                [self showAlertView:[NSString stringWithFormat:@"修改上传服务器地址:%@",serverUrl]];
-                break;
-            }
-            case 3: {
                 //  设置上传间隔时间
                 NSInteger flushInterval = arc4random() % 10 + 5;
                 [AnalysysAgent setIntervalTime:flushInterval];
                 [self showAlertView:[NSString stringWithFormat:@"上传间隔:%ld",flushInterval]];
                 break;
             }
-            case 4: {
+            case 2: {
                 //  设置触发上传的事件累积条数
                 NSInteger bulkSize = arc4random() % 10 + 5;
                 [AnalysysAgent setMaxEventSize:bulkSize];
                 [self showAlertView:[NSString stringWithFormat:@"累积触发条数:%ld",bulkSize]];
                 break;
             }
-            case 5: {
+            case 3: {
                 //  设置本地最多缓存数据的条数
                 NSInteger cacheSize = arc4random() % 1000 + 5;
                 [AnalysysAgent setMaxCacheSize:cacheSize];
                 [self showAlertView:[NSString stringWithFormat:@"最多缓存条数:%ld",cacheSize]];
                 break;
             }
-            case 6: {
+            case 4: {
                 //  立即上传数据接口  flush
                 [AnalysysAgent track:[NSString stringWithFormat:@"randomEvent_%d",arc4random()%100]];
                 [AnalysysAgent flush];
@@ -330,16 +309,16 @@ static NSString *const kBackgroundColor = @"backgroundColor";
     } else if (indexPath.section == 4) {
         switch (indexPath.row) {
             case 0: {
-                //  为了方便查看现使用随机id做Demo
-                NSString *distinct_id = [NSString stringWithFormat:@"userName_%d",arc4random()%1000];
+                //  为了方便查看 现使用随机id做Demo
+                NSString *distinct_id = [NSString stringWithFormat:@"wechat_%d",arc4random()%1000];
                 [AnalysysAgent identify:distinct_id];
                 [self showAlertView:[NSString stringWithFormat:@"当前标识:%@",distinct_id]];
                 break;
             }
             case 1: {
-                //  一班同学升学时,调换班级到三班,
-                [AnalysysAgent alias:@"sanban" originalId:@"yiban"];
-                [self showAlertView:@"当前身份标识：sanban 原身份标识:yiban"];
+                //  由游客身份变为用户使用手机号登录
+                [AnalysysAgent alias:@"18699998888" originalId:nil];
+                [self showAlertView:@"当前身份标识：18699998888"];
                 break;
             }
             case 2: {

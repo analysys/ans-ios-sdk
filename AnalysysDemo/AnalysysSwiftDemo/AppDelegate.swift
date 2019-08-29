@@ -35,6 +35,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         AnalysysAgent.setDebugMode(.butTrack)
         
         
+        
+        
         return true
     }
 

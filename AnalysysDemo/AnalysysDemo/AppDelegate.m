@@ -10,7 +10,6 @@
 
 #import <AnalysysAgent/AnalysysAgent.h>
 
-
 @interface AppDelegate ()
 
 @end
@@ -21,9 +20,15 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     
-    CFAbsoluteTime startTime = CFAbsoluteTimeGetCurrent();
     
-    [AnalysysAgent setUploadURL:@"https://arkpaastest.analysys.cn:4089"];
+    [self _initAnalysysSDK];
+    
+    return YES;
+}
+
+- (void)_initAnalysysSDK {
+    
+    CFAbsoluteTime startTime = CFAbsoluteTimeGetCurrent();
     
 #if DEBUG
     [AnalysysAgent setDebugMode:AnalysysDebugButTrack];
@@ -31,27 +36,49 @@
     [AnalysysAgent setDebugMode:AnalysysDebugOff];
 #endif
     
+    [AnalysysAgent setUploadURL:<#url#>];
+    
     //  AnalysysAgent SDK配置信息
-    AnalysysConfig.appKey = @"heatmap0516";
+    AnalysysConfig.appKey = <#appkey#>;
     AnalysysConfig.channel = @"App Store";
     AnalysysConfig.autoProfile = YES;
-    //    AnalysysConfig.encryptType = AnalysysEncryptAES;
+    AnalysysConfig.autoInstallation =  YES;
+    AnalysysConfig.encryptType = AnalysysEncryptAES;
     //  使用配置信息初始化SDK
     [AnalysysAgent startWithConfig:AnalysysConfig];
     
 #if DEBUG
-    [AnalysysAgent setVisitorDebugURL:@"wss://arkpaastest.analysys.cn:4091"];
+    [AnalysysAgent setVisitorDebugURL:<#wsurl#>];
 #endif
-    [AnalysysAgent setVisitorConfigURL:@"https://arkpaastest.analysys.cn:4089"];
+    [AnalysysAgent setVisitorConfigURL:<#configurl#>];
     
     CFAbsoluteTime linkTime = (CFAbsoluteTimeGetCurrent() - startTime);
     NSLog(@"The code execution time %f ms", linkTime *1000.0);
     
-    return YES;
 }
 
 
+#pragma mark *** App跳转 ***
 
+/** 9.0及之前 */
+- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
+    NSLog(@"^^^^^^^^^^^ %s",__FUNCTION__);
+    
+    return YES;
+}
+
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
+    NSLog(@"^^^^^^^^^^^ %s",__FUNCTION__);
+    
+    return YES;
+}
+
+/** 9.0之后 */
+- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {
+    NSLog(@"^^^^^^^^^^^ %s",__FUNCTION__);
+    
+    return YES;
+}
 
 - (void)applicationWillResignActive:(UIApplication *)application {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.

@@ -40,11 +40,6 @@
             "value":"ANSHeatMapFunc.getElementID",
             "required":true
         },
-        "$element_title":{
-            "valueType":0,
-            "value":"ANSHeatMapFunc.getElementTitle",
-            "required":true
-        },
         "$element_name":{
             "valueType":0,
             "value":"ANSHeatMapFunc.getElementName",

@@ -8,106 +8,12 @@
 
 
 // ********************************
-// ***** 当前 SDK 版本号：4.3.2 *****
+// ***** 当前 SDK 版本号：4.3.4 *****
 // ********************************
 
 #import <Foundation/Foundation.h>
-
-/**
- Debug模式，上线时使用 AnalysysDebugOff
- 
- - AnalysysDebugOff: 关闭Debug模式
- - AnalysysDebugOnly: 打开Debug模式，但该模式下发送的数据仅用于调试，不进行数据导入
- - AnalysysDebugButTrack: 打开Debug模式，并入库计算
- */
-typedef NS_ENUM(NSInteger, AnalysysDebugMode) {
-    AnalysysDebugOff = 0,
-    AnalysysDebugOnly = 1,
-    AnalysysDebugButTrack = 2
-};
-
-/**
- 数据上传加密类型
- 
- - AnalysysEncryptAES: AES加密
- */
-typedef NS_ENUM(NSInteger, AnalysysEncryptType) {
-    AnalysysEncryptAES = 1,
-};
-
-/**
- 推送类型
- 
- - AnalysysPushJiGuang: 极光推送
- - AnalysysPushGeTui: 个推推送
- - AnalysysPushBaiDu: 百度推送
- - AnalysysPushXiaoMi: 小米推送
- */
-typedef NS_ENUM(NSInteger, AnalysysPushProvider) {
-    AnalysysPushJiGuang = 0,
-    AnalysysPushGeTui,
-    AnalysysPushBaiDu,
-    AnalysysPushXiaoMi
-};
-
-#define AnalysysConfig [AnalysysAgentConfig shareInstance]
-
-
-/**
- * @class
- * AnalysysAgentConfig
- *
- * @abstract
- * 初始化SDK时所需要的配置信息
- *
- * @discussion
- * 在使用SDK时，使用此类将SDK需要的配置进行设置
- */
-@interface AnalysysAgentConfig : NSObject
-
-
-/**
- 获取 AnalysysConfig 对象
- 
- @return AnalysysConfig 实例
- */
-+ (instancetype)shareInstance;
-
-/**
- 易观分配唯一标识
- */
-@property (nonatomic, copy) NSString *appKey;
-
-/**
- App发布的渠道标识，默认："App Store"
- */
-@property (nonatomic, copy) NSString *channel;
-
-/**
- 统一域名：包含数据上传和可视化
- 
- 只需填写域名或IP部分。
- 协议：数据上传及可视化数据配置地址默认 HTTPS 协议。
- 如：arkpaastest.analysys.cn
- */
-@property (nonatomic, copy) NSString *baseUrl;
-
-/**
- 是否追踪新用户的首次属性
- 
- 默认为 YES
- */
-@property (nonatomic, assign) BOOL autoProfile;
-
-/**
- 数据上传加密类型
- */
-@property (nonatomic, assign) AnalysysEncryptType encryptType;
-
-
-@end
-
-
+#import "ANSConst.h"
+#import "AnalysysAgentConfig.h"
 
 /**
  * @class
@@ -119,7 +25,6 @@ typedef NS_ENUM(NSInteger, AnalysysPushProvider) {
  * @discussion
  * 提供了包括基础配置、页面、事件、通用属性、用户属性、发送策略等相关功能。
  */
-
 @interface AnalysysAgent : NSObject
 
 
@@ -191,7 +96,7 @@ typedef NS_ENUM(NSInteger, AnalysysPushProvider) {
 /**
  设置上传间隔时间，单位：秒
  
- 仅AnalysysDebugOff模式或非WiFi环境下生效
+ 仅AnalysysDebugOff模式
  
  @param flushInterval 时间间隔(>=1)
  */
@@ -200,7 +105,7 @@ typedef NS_ENUM(NSInteger, AnalysysPushProvider) {
 /**
  数据累积"size"条数后触发上传
  
- 仅AnalysysDebugOff模式或非WiFi环境下生效
+ 仅AnalysysDebugOff模式
  
  @param size 数据条数(>=1)
  */
@@ -238,7 +143,7 @@ typedef NS_ENUM(NSInteger, AnalysysPushProvider) {
  添加事件及附加属性
  
  @param event 事件标识，同 track: 接口
- @param properties 自定义参数。key：同track:接口事件标识限制，最大长度是125字符；value：允许添加以下类型：NSString/NSNumber/NSArray<NSString*>/NSSet<NSString*>/NSDate/NSURL；
+ @param properties 自定义参数。key：同track:接口事件标识限制，最大长度是99字符；value：允许添加以下类型：NSString/NSNumber/NSArray<NSString*>/NSSet<NSString*>/NSDate/NSURL；
  */
 + (void)track:(NSString *)event properties:(NSDictionary *)properties;
 
@@ -294,7 +199,7 @@ typedef NS_ENUM(NSInteger, AnalysysPushProvider) {
  此部分属性将在所有触发事件中携带
  
  约束信息：
- 属性名：必须以字母或'$'开头，只能包含：字母、数字、下划线和$，字母不区分大小写，最大长度是125字符，不支持乱码和中文
+ 属性名：必须以字母或'$'开头，只能包含：字母、数字、下划线和$，字母不区分大小写，最大长度是 99 字符，不支持乱码和中文
  
  属性值：必须为以下类型：NSString/NSNumber/NSArray<NSString*>/NSSet<NSString*>/NSDate/NSURL
  
@@ -313,7 +218,7 @@ typedef NS_ENUM(NSInteger, AnalysysPushProvider) {
  
  value必须为以下类型：NSString/NSNumber/NSArray<NSString*>/NSSet<NSString*>/NSDate/NSURL。
  
- @param superPropertyName 最大长度是125字符
+ @param superPropertyName 最大长度是 99 字符
  @param superPropertyValue 属性值
  */
 + (void)registerSuperProperty:(NSString *)superPropertyName value:(id)superPropertyValue;
@@ -372,7 +277,7 @@ typedef NS_ENUM(NSInteger, AnalysysPushProvider) {
 
 /**
  用户属性若无特殊说明，具有以下约束：
- 属性名：必须以字母或'$'开头，只能包含：字母、数字、下划线和$，字母不区分大小写，最大长度是125字符，不支持乱码和中文
+ 属性名：必须以字母或'$'开头，只能包含：字母、数字、下划线和$，字母不区分大小写，最大长度是 99 字符，不支持乱码和中文
  属性值：必须为以下类型：NSString/NSNumber/NSArray<NSString*>/NSSet<NSString*>/NSDate/NSURL
  最多允许100个键值对
  */

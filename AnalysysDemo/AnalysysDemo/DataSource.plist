@@ -15,18 +15,6 @@
 			</dict>
 			<dict>
 				<key>interface</key>
-				<string>设置调试模式</string>
-				<key>backgroundColor</key>
-				<string>#A9A9A9</string>
-			</dict>
-			<dict>
-				<key>interface</key>
-				<string>设置服务器URL</string>
-				<key>backgroundColor</key>
-				<string>#A9A9A9</string>
-			</dict>
-			<dict>
-				<key>interface</key>
 				<string>设置上传间隔</string>
 				<key>backgroundColor</key>
 				<string>#A9A9A9</string>
@@ -86,12 +74,12 @@
 				<key>backgroundColor</key>
 				<string>#A9A9A9</string>
 			</dict>
-            <dict>
-                <key>interface</key>
-                <string>当前通用属性</string>
-                <key>backgroundColor</key>
-                <string>#A9A9A9</string>
-            </dict>
+			<dict>
+				<key>interface</key>
+				<string>当前通用属性</string>
+				<key>backgroundColor</key>
+				<string>#A9A9A9</string>
+			</dict>
 		</array>
 	</dict>
 	<dict>

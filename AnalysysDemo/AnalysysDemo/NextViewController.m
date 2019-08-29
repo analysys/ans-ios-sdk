@@ -8,6 +8,8 @@
 
 #import "NextViewController.h"
 #import <AnalysysAgent/AnalysysAgent.h>
+#import "PopViewController.h"
+#import "BaseNavViewController.h"
 
 @interface NextViewController ()
 @property (weak, nonatomic) IBOutlet UITextField *appKeyTF;
@@ -25,6 +27,10 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+-(void)dealloc {
+    NSLog(@"++++++++");
 }
 
 -(void)viewWillAppear:(BOOL)animated {
@@ -57,12 +63,18 @@
 }
 
 - (void)showTips {
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"tip" message:@"修改完成" preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        NSLog(@"OK");
-    }];
-    [alertController addAction:okAction];
-    [self presentViewController:alertController animated:YES completion:nil];
+    PopViewController *popVC = [[PopViewController alloc] init];
+    BaseNavViewController *popNav = [[BaseNavViewController alloc] initWithRootViewController:popVC];
+    [self addChildViewController:popNav.topViewController];
+    popVC.view.frame = self.view.frame;
+    [self.view addSubview:popVC.view];
+    
+//    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"tip" message:@"修改完成" preferredStyle:UIAlertControllerStyleAlert];
+//    UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+//        NSLog(@"OK");
+//    }];
+//    [alertController addAction:okAction];
+//    [self presentViewController:alertController animated:YES completion:nil];
 }
 
 /*

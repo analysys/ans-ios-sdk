@@ -4,7 +4,7 @@
         "finished":""
     },
     "Encrypt":{
-        "start":"ANSDataEncrypt.encryptJsonString:config:param:",
+        "start":"ANSDataEncrypt.encryptJsonString:param:",
         "finished":""
     },
     "VisualBase":{

@@ -30,7 +30,6 @@
             "$element_path",
             
             "$element_id",
-            "$element_title",
             "$element_name",
             "$element_type",
             "$element_content",

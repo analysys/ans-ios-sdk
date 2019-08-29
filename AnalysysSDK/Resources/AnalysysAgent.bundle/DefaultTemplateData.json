@@ -111,5 +111,25 @@
             "$idfa",
             "$idfv"
         ]
+    },
+    "$first_installation":{
+        "xcontext":[
+            "$channel",
+            "$time_zone",
+            "$manufacturer",
+            "$app_version",
+            "$model",
+            "$os",
+            "$os_version",
+            "$network",
+            "$carrier_name",
+            "$screen_width",
+            "$screen_height",
+            "$brand",
+            "$language",
+            "$is_first_day",
+            "$session_id",
+            "$is_time_calibrated"
+        ]
     }
 }

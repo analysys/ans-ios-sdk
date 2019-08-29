@@ -32,13 +32,9 @@
 		178B22902085BF7B00425E4D /* EGTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 178B228A2085BF7B00425E4D /* EGTextField.m */; };
 		178B22972085BF8200425E4D /* UIView+MGO.m in Sources */ = {isa = PBXBuildFile; fileRef = 178B22912085BF8100425E4D /* UIView+MGO.m */; };
 		178B22982085BF8200425E4D /* NextViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 178B22932085BF8100425E4D /* NextViewController.m */; };
-		17AF9AFB22A4F11600F8A384 /* AnalysysPush.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 17AF9AF422A4F11600F8A384 /* AnalysysPush.framework */; };
-		17AF9AFC22A4F11600F8A384 /* AnalysysEncrypt.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 17AF9AF522A4F11600F8A384 /* AnalysysEncrypt.framework */; };
-		17AF9AFD22A4F11600F8A384 /* AnalysysAgent.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 17AF9AF722A4F11600F8A384 /* AnalysysAgent.bundle */; };
-		17AF9AFE22A4F11600F8A384 /* Analysys_CMB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 17AF9AF822A4F11600F8A384 /* Analysys_CMB.framework */; };
-		17AF9AFF22A4F11600F8A384 /* AnalysysAgent.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 17AF9AF922A4F11600F8A384 /* AnalysysAgent.framework */; };
-		17AF9B0022A4F11600F8A384 /* AnalysysVisual.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 17AF9AFA22A4F11600F8A384 /* AnalysysVisual.framework */; };
 		E81E987920FDBF060063FAA1 /* libicucore.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 1709D2F620A0415300F3C61E /* libicucore.tbd */; };
+		E85239E022C4C8B300D8AEDA /* AnalysysAgent.bundle in Resources */ = {isa = PBXBuildFile; fileRef = E85239DF22C4C8B300D8AEDA /* AnalysysAgent.bundle */; };
+		E8851BE821D0CA31007C5BF2 /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8851BE721D0CA31007C5BF2 /* SecondViewController.swift */; };
 		E8B2C01621070F2A00CAC239 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = E8B2C01521070F2A00CAC239 /* libz.tbd */; };
 		E8B2C01821070F3600CAC239 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E8B2C01721070F3600CAC239 /* AdSupport.framework */; };
 		E8B2C01A21070F3E00CAC239 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E8B2C01921070F3E00CAC239 /* CoreTelephony.framework */; };
@@ -53,7 +49,29 @@
 		E8BE05E2212D501D00DFFFC3 /* EGWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E8BE05CD212D501D00DFFFC3 /* EGWebViewController.m */; };
 		E8BE05E6212D514100DFFFC3 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E8BE05E5212D514100DFFFC3 /* WebKit.framework */; };
 		E8BE05E9212D52AC00DFFFC3 /* UIColor+Transform.m in Sources */ = {isa = PBXBuildFile; fileRef = E8BE05E7212D52AC00DFFFC3 /* UIColor+Transform.m */; };
+		E8CAA5FE22A2490B00C226A7 /* AnalysysEncrypt.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E8CAA5F822A2490B00C226A7 /* AnalysysEncrypt.framework */; };
+		E8CAA60022A2490B00C226A7 /* AnalysysVisual.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E8CAA5FA22A2490B00C226A7 /* AnalysysVisual.framework */; };
+		E8CAA60122A2490B00C226A7 /* AnalysysAgent.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E8CAA5FB22A2490B00C226A7 /* AnalysysAgent.framework */; };
+		E8CAA60222A2490B00C226A7 /* AnalysysPush.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E8CAA5FC22A2490B00C226A7 /* AnalysysPush.framework */; };
+		E8E4974521C107B600C817A3 /* AnalysysAgent.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E8E4974421C107B600C817A3 /* AnalysysAgent.framework */; };
+		E8F43EC822437792000A16EF /* UINavigationController+SafeTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = E8F43EC722437792000A16EF /* UINavigationController+SafeTransition.m */; };
+		E8F43ECB224379A6000A16EF /* ANSLocationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E8F43ECA224379A6000A16EF /* ANSLocationManager.m */; };
+		E8F7E09122184B2B00095CCD /* PopViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E8F7E09022184B2B00095CCD /* PopViewController.m */; };
+		E8F7E0942219109F00095CCD /* BaseNavViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E8F7E0932219109F00095CCD /* BaseNavViewController.m */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		E8CAA56A22A1190F00C226A7 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		1709D2F620A0415300F3C61E /* libicucore.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libicucore.tbd; path = usr/lib/libicucore.tbd; sourceTree = SDKROOT; };
@@ -99,12 +117,9 @@
 		178B22922085BF8100425E4D /* UIView+MGO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+MGO.h"; sourceTree = "<group>"; };
 		178B22932085BF8100425E4D /* NextViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NextViewController.m; sourceTree = "<group>"; };
 		178B22962085BF8100425E4D /* NextViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NextViewController.h; sourceTree = "<group>"; };
-		17AF9AF422A4F11600F8A384 /* AnalysysPush.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AnalysysPush.framework; sourceTree = "<group>"; };
-		17AF9AF522A4F11600F8A384 /* AnalysysEncrypt.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AnalysysEncrypt.framework; sourceTree = "<group>"; };
-		17AF9AF722A4F11600F8A384 /* AnalysysAgent.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = AnalysysAgent.bundle; sourceTree = "<group>"; };
-		17AF9AF822A4F11600F8A384 /* Analysys_CMB.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Analysys_CMB.framework; sourceTree = "<group>"; };
-		17AF9AF922A4F11600F8A384 /* AnalysysAgent.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AnalysysAgent.framework; sourceTree = "<group>"; };
-		17AF9AFA22A4F11600F8A384 /* AnalysysVisual.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AnalysysVisual.framework; sourceTree = "<group>"; };
+		E85239DF22C4C8B300D8AEDA /* AnalysysAgent.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = AnalysysAgent.bundle; sourceTree = "<group>"; };
+		E8851BE721D0CA31007C5BF2 /* SecondViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondViewController.swift; sourceTree = "<group>"; };
+		E8996E7D222977E600FEA30A /* UINavigationController+SafeTransition.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UINavigationController+SafeTransition.h"; sourceTree = "<group>"; };
 		E8B2C01521070F2A00CAC239 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		E8B2C01721070F3600CAC239 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		E8B2C01921070F3E00CAC239 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
@@ -118,6 +133,18 @@
 		E8BE05E5212D514100DFFFC3 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		E8BE05E7212D52AC00DFFFC3 /* UIColor+Transform.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Transform.m"; sourceTree = "<group>"; };
 		E8BE05E8212D52AC00DFFFC3 /* UIColor+Transform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+Transform.h"; sourceTree = "<group>"; };
+		E8CAA5F822A2490B00C226A7 /* AnalysysEncrypt.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AnalysysEncrypt.framework; sourceTree = "<group>"; };
+		E8CAA5FA22A2490B00C226A7 /* AnalysysVisual.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AnalysysVisual.framework; sourceTree = "<group>"; };
+		E8CAA5FB22A2490B00C226A7 /* AnalysysAgent.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AnalysysAgent.framework; sourceTree = "<group>"; };
+		E8CAA5FC22A2490B00C226A7 /* AnalysysPush.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AnalysysPush.framework; sourceTree = "<group>"; };
+		E8E4974421C107B600C817A3 /* AnalysysAgent.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AnalysysAgent.framework; sourceTree = SOURCE_ROOT; };
+		E8F43EC722437792000A16EF /* UINavigationController+SafeTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UINavigationController+SafeTransition.m"; sourceTree = "<group>"; };
+		E8F43EC9224379A6000A16EF /* ANSLocationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ANSLocationManager.h; sourceTree = "<group>"; };
+		E8F43ECA224379A6000A16EF /* ANSLocationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ANSLocationManager.m; sourceTree = "<group>"; };
+		E8F7E08F22184B2B00095CCD /* PopViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PopViewController.h; sourceTree = "<group>"; };
+		E8F7E09022184B2B00095CCD /* PopViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PopViewController.m; sourceTree = "<group>"; };
+		E8F7E0922219109F00095CCD /* BaseNavViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BaseNavViewController.h; sourceTree = "<group>"; };
+		E8F7E0932219109F00095CCD /* BaseNavViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BaseNavViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -129,6 +156,7 @@
 				E8B2C01A21070F3E00CAC239 /* CoreTelephony.framework in Frameworks */,
 				E8B2C01821070F3600CAC239 /* AdSupport.framework in Frameworks */,
 				E8B2C01621070F2A00CAC239 /* libz.tbd in Frameworks */,
+				E8E4974521C107B600C817A3 /* AnalysysAgent.framework in Frameworks */,
 				1709D31420A0467800F3C61E /* libicucore.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -137,17 +165,16 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				17AF9AFF22A4F11600F8A384 /* AnalysysAgent.framework in Frameworks */,
-				17AF9AFB22A4F11600F8A384 /* AnalysysPush.framework in Frameworks */,
+				E8CAA60122A2490B00C226A7 /* AnalysysAgent.framework in Frameworks */,
 				E8BE05E6212D514100DFFFC3 /* WebKit.framework in Frameworks */,
 				E8B2C02021070F8500CAC239 /* AdSupport.framework in Frameworks */,
 				E8B2C01F21070F7900CAC239 /* SystemConfiguration.framework in Frameworks */,
 				E8B2C01D21070F7000CAC239 /* CoreTelephony.framework in Frameworks */,
 				E8B2C01E21070F7400CAC239 /* libz.tbd in Frameworks */,
-				17AF9AFC22A4F11600F8A384 /* AnalysysEncrypt.framework in Frameworks */,
+				E8CAA5FE22A2490B00C226A7 /* AnalysysEncrypt.framework in Frameworks */,
+				E8CAA60222A2490B00C226A7 /* AnalysysPush.framework in Frameworks */,
 				E81E987920FDBF060063FAA1 /* libicucore.tbd in Frameworks */,
-				17AF9AFE22A4F11600F8A384 /* Analysys_CMB.framework in Frameworks */,
-				17AF9B0022A4F11600F8A384 /* AnalysysVisual.framework in Frameworks */,
+				E8CAA60022A2490B00C226A7 /* AnalysysVisual.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -171,8 +198,10 @@
 		1709D2FD20A0463300F3C61E /* AnalysysSwiftDemo */ = {
 			isa = PBXGroup;
 			children = (
+				E8E4974421C107B600C817A3 /* AnalysysAgent.framework */,
 				1709D2FE20A0463300F3C61E /* AppDelegate.swift */,
 				1709D30020A0463300F3C61E /* ViewController.swift */,
+				E8851BE721D0CA31007C5BF2 /* SecondViewController.swift */,
 				1709D30220A0463300F3C61E /* Main.storyboard */,
 				1709D30520A0463A00F3C61E /* Assets.xcassets */,
 				1709D30720A0463A00F3C61E /* LaunchScreen.storyboard */,
@@ -206,10 +235,12 @@
 		178B22592085BE5F00425E4D /* AnalysysDemo */ = {
 			isa = PBXGroup;
 			children = (
-				17AF9AF322A4F11600F8A384 /* AnalysysSDK */,
+				E82E7E962216BF0100B5B735 /* AnalysysSDK */,
 				E8BE05AA212D501D00DFFFC3 /* Hybrid */,
 				178B225A2085BE5F00425E4D /* AppDelegate.h */,
 				178B225B2085BE5F00425E4D /* AppDelegate.m */,
+				E8F43EC9224379A6000A16EF /* ANSLocationManager.h */,
+				E8F43ECA224379A6000A16EF /* ANSLocationManager.m */,
 				178B22812085BF7A00425E4D /* EGBaseViewController.h */,
 				178B22872085BF7A00425E4D /* EGBaseViewController.m */,
 				178B22802085BF7A00425E4D /* EGDemoController.h */,
@@ -225,12 +256,18 @@
 				178B22792085BF6D00425E4D /* DemoCollectionViewCell.xib */,
 				178B22962085BF8100425E4D /* NextViewController.h */,
 				178B22932085BF8100425E4D /* NextViewController.m */,
+				E8F7E0922219109F00095CCD /* BaseNavViewController.h */,
+				E8F7E0932219109F00095CCD /* BaseNavViewController.m */,
+				E8F7E08F22184B2B00095CCD /* PopViewController.h */,
+				E8F7E09022184B2B00095CCD /* PopViewController.m */,
 				178B22922085BF8100425E4D /* UIView+MGO.h */,
 				178B22912085BF8100425E4D /* UIView+MGO.m */,
 				178B22892085BF7A00425E4D /* EGTextField.h */,
 				178B228A2085BF7B00425E4D /* EGTextField.m */,
 				E8BE05E8212D52AC00DFFFC3 /* UIColor+Transform.h */,
 				E8BE05E7212D52AC00DFFFC3 /* UIColor+Transform.m */,
+				E8996E7D222977E600FEA30A /* UINavigationController+SafeTransition.h */,
+				E8F43EC722437792000A16EF /* UINavigationController+SafeTransition.m */,
 				178B22822085BF7A00425E4D /* HRKeyboardAnimation */,
 				178B22632085BE6000425E4D /* Assets.xcassets */,
 				178B22602085BE5F00425E4D /* Main.storyboard */,
@@ -252,28 +289,27 @@
 			path = HRKeyboardAnimation;
 			sourceTree = "<group>";
 		};
-		17AF9AF322A4F11600F8A384 /* AnalysysSDK */ = {
+		E82E7E962216BF0100B5B735 /* AnalysysSDK */ = {
 			isa = PBXGroup;
 			children = (
-				17AF9AF422A4F11600F8A384 /* AnalysysPush.framework */,
-				17AF9AF522A4F11600F8A384 /* AnalysysEncrypt.framework */,
-				17AF9AF622A4F11600F8A384 /* Resources */,
-				17AF9AF822A4F11600F8A384 /* Analysys_CMB.framework */,
-				17AF9AF922A4F11600F8A384 /* AnalysysAgent.framework */,
-				17AF9AFA22A4F11600F8A384 /* AnalysysVisual.framework */,
+				E85239DF22C4C8B300D8AEDA /* AnalysysAgent.bundle */,
+				E8CAA5FB22A2490B00C226A7 /* AnalysysAgent.framework */,
+				E8CAA5F822A2490B00C226A7 /* AnalysysEncrypt.framework */,
+				E8CAA5FC22A2490B00C226A7 /* AnalysysPush.framework */,
+				E8CAA5FA22A2490B00C226A7 /* AnalysysVisual.framework */,
 			);
 			path = AnalysysSDK;
 			sourceTree = SOURCE_ROOT;
 		};
-		17AF9AF622A4F11600F8A384 /* Resources */ = {
+		E8BE05AA212D501D00DFFFC3 /* Hybrid */ = {
 			isa = PBXGroup;
 			children = (
-				17AF9AF722A4F11600F8A384 /* AnalysysAgent.bundle */,
+				E8BE05C7212D501D00DFFFC3 /* Hybrid */,
 			);
-			path = Resources;
+			path = Hybrid;
 			sourceTree = "<group>";
 		};
-		E8BE05AA212D501D00DFFFC3 /* Hybrid */ = {
+		E8BE05C7212D501D00DFFFC3 /* Hybrid */ = {
 			isa = PBXGroup;
 			children = (
 				E8BE05CB212D501D00DFFFC3 /* EGWKWebViewController.h */,
@@ -314,6 +350,7 @@
 				178B22542085BE5F00425E4D /* Frameworks */,
 				178B22552085BE5F00425E4D /* Resources */,
 				178B22A0208755B700425E4D /* ShellScript */,
+				E8CAA56A22A1190F00C226A7 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -379,11 +416,11 @@
 			files = (
 				E8BE05E1212D501D00DFFFC3 /* EGWebViewController.xib in Resources */,
 				178B22672085BE6000425E4D /* LaunchScreen.storyboard in Resources */,
+				E85239E022C4C8B300D8AEDA /* AnalysysAgent.bundle in Resources */,
 				E8BE05DF212D501D00DFFFC3 /* EGWKWebViewController.xib in Resources */,
 				178B22732085BF3F00425E4D /* DataSource.plist in Resources */,
 				178B227C2085BF6D00425E4D /* DemoCollectionHeaderView.xib in Resources */,
 				178B22642085BE6000425E4D /* Assets.xcassets in Resources */,
-				17AF9AFD22A4F11600F8A384 /* AnalysysAgent.bundle in Resources */,
 				178B22622085BE5F00425E4D /* Main.storyboard in Resources */,
 				178B227D2085BF6D00425E4D /* DemoCollectionViewCell.xib in Resources */,
 			);
@@ -412,6 +449,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E8851BE821D0CA31007C5BF2 /* SecondViewController.swift in Sources */,
 				1709D31120A0465400F3C61E /* testViewController.m in Sources */,
 				1709D30120A0463300F3C61E /* ViewController.swift in Sources */,
 				1709D2FF20A0463300F3C61E /* AppDelegate.swift in Sources */,
@@ -423,6 +461,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E8BE05E0212D501D00DFFFC3 /* EGWKWebViewController.m in Sources */,
+				E8F43EC822437792000A16EF /* UINavigationController+SafeTransition.m in Sources */,
 				178B228B2085BF7B00425E4D /* EGHomeViewController.m in Sources */,
 				178B22972085BF8200425E4D /* UIView+MGO.m in Sources */,
 				178B228F2085BF7B00425E4D /* EGDemoController.m in Sources */,
@@ -430,10 +469,13 @@
 				178B228D2085BF7B00425E4D /* UIView+KeyboardAnimation.m in Sources */,
 				178B226A2085BE6000425E4D /* main.m in Sources */,
 				E8BE05E2212D501D00DFFFC3 /* EGWebViewController.m in Sources */,
+				E8F7E0942219109F00095CCD /* BaseNavViewController.m in Sources */,
 				178B227A2085BF6D00425E4D /* DemoCollectionHeaderView.m in Sources */,
 				E8BE05E9212D52AC00DFFFC3 /* UIColor+Transform.m in Sources */,
+				E8F43ECB224379A6000A16EF /* ANSLocationManager.m in Sources */,
 				178B228E2085BF7B00425E4D /* EGBaseViewController.m in Sources */,
 				178B227B2085BF6D00425E4D /* DemoCollectionViewCell.m in Sources */,
+				E8F7E09122184B2B00095CCD /* PopViewController.m in Sources */,
 				178B225C2085BE5F00425E4D /* AppDelegate.m in Sources */,
 				178B22902085BF7B00425E4D /* EGTextField.m in Sources */,
 				178B228C2085BF7B00425E4D /* UIView+CustomLayout.m in Sources */,
@@ -488,7 +530,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/AnalysysSwiftDemo",
-					"$(PROJECT_DIR)/AnalysysSwiftDemo/IDFA",
+					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/AnalysysSwiftDemo/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -517,7 +559,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/AnalysysSwiftDemo",
-					"$(PROJECT_DIR)/AnalysysSwiftDemo/IDFA",
+					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/AnalysysSwiftDemo/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -650,12 +692,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				DEPLOYMENT_POSTPROCESSING = NO;
 				DEVELOPMENT_TEAM = 95YHL39M2F;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/AnalysysDemo",
-					"$(PROJECT_DIR)/AnalysysDemo/IDFA",
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/AnalysysSDK",
 				);
@@ -666,8 +709,9 @@
 					"@executable_path/Frameworks",
 				);
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_BUNDLE_IDENTIFIER = com.analysys.AnalysysDemo;
+				PRODUCT_BUNDLE_IDENTIFIER = com.analysys.FangZhou;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -676,12 +720,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				DEPLOYMENT_POSTPROCESSING = NO;
 				DEVELOPMENT_TEAM = 95YHL39M2F;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/AnalysysDemo",
-					"$(PROJECT_DIR)/AnalysysDemo/IDFA",
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/AnalysysSDK",
 				);
@@ -692,8 +737,9 @@
 					"@executable_path/Frameworks",
 				);
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_BUNDLE_IDENTIFIER = com.analysys.AnalysysDemo;
+				PRODUCT_BUNDLE_IDENTIFIER = com.analysys.FangZhou;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
