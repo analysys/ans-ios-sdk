@@ -15,7 +15,7 @@
 #import "EGTextField.h"
 
 
-@interface EGHomeViewController ()
+@interface EGHomeViewController ()<ANSAutoPageTracker>
 @property (weak, nonatomic) IBOutlet EGTextField *textField;
 @property (weak, nonatomic) IBOutlet EGTextField *custTF;
 @property (weak, nonatomic) IBOutlet EGTextField *keyTextField;
@@ -35,6 +35,16 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+#pragma mark *** ANSAutoPageTracker ***
+
+- (NSDictionary *)registerPageProperties {
+    return @{@"$title": @"自定义首页标题", @"tag": @[@"iphone", @"white"]};
+}
+
+- (NSString *)registerPageUrl {
+    return @"HomePage";
 }
 
 - (IBAction)buyAction:(id)sender {

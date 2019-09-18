@@ -44,38 +44,7 @@
 - (IBAction)backRootVC:(id)sender {
     [self.navigationController popToRootViewControllerAnimated:YES];
 }
-- (IBAction)modifyAppKeyAction:(id)sender {
-    if (self.appKeyTF.text.length > 0) {
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        [defaults setObject:self.appKeyTF.text forKey:@"EGAppKey"];
-        [defaults synchronize];
-        [self showTips];
-    }
-}
 
-- (IBAction)modifyDomainAction:(id)sender {
-    if (self.domainTF.text.length > 0) {
-//        [AnalysysAgent setUploadURL:[NSString stringWithFormat:@"http://%@",self.domainTF.text]];
-        [AnalysysAgent setVisitorDebugURL:[NSString stringWithFormat:@"ws://%@",self.domainTF.text]];
-//        [AnalysysAgent setVisitorConfigURL:[NSString stringWithFormat:@"http://%@",self.domainTF.text]];
-        [self showTips];
-    }
-}
-
-- (void)showTips {
-    PopViewController *popVC = [[PopViewController alloc] init];
-    BaseNavViewController *popNav = [[BaseNavViewController alloc] initWithRootViewController:popVC];
-    [self addChildViewController:popNav.topViewController];
-    popVC.view.frame = self.view.frame;
-    [self.view addSubview:popVC.view];
-    
-//    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"tip" message:@"修改完成" preferredStyle:UIAlertControllerStyleAlert];
-//    UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-//        NSLog(@"OK");
-//    }];
-//    [alertController addAction:okAction];
-//    [self presentViewController:alertController animated:YES completion:nil];
-}
 
 /*
 #pragma mark - Navigation

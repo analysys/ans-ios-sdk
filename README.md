@@ -44,8 +44,9 @@ iOS SDK 用于 iOS 原生 App
 3. 勾选 `Copy items if needed`、`Create groups` - `Add` 完成添加类库
 4. 添加`AnalysysAgent.bundle`资源文件：`Targets`->`ProjectName` -> `Build Phases` -> `Copy Bundle Resources` -> 添加文件
 
-* 安装CocoaPods
-* 工程目录下创建`Podfile`文件，并添加`pod 'AnalysysAgent'`，示例如下：
+## Cocoapods集成
+1. 安装CocoaPods
+2. 工程目录下创建`Podfile`文件，并添加`pod 'AnalysysAgent'`，示例如下：
 
 ```
 platform :ios, '8.0'
@@ -55,7 +56,7 @@ target 'YourApp' do
     pod 'AnalysysAgent'
 end
 ```
-* 关闭Xcode，在工程目录下执行`pod install`或`pod install --verbose --no-repo-update`，完成后打开xxx.xcworkspace工程
+3. 关闭Xcode，在工程目录下执行`pod install`或`pod install --verbose --no-repo-update`，完成后打开xxx.xcworkspace工程
 
 
 ## Xcode配置
@@ -303,6 +304,85 @@ Swift代码示例:
 AnalysysAgent.setIgnoredAutomaticCollectionControllers(["packageName.NextViewController"]);
 ```
 
+#### 自动采集添加自定义信息
+若用户开启页面自动采集功能，可将自定义页面信息添加至`$pageview`事件中。SDK对外提供一个协议`<ANSAutoPageTracker>`供继承至`UIViewController`的类使用，若类遵循该协议，则必须实现`getPageProperties`方法，并将自定义参数返回，SDK会将此部分信息添加至`$pageview`事件的自定义参数中，且自定义参数优先级高于自动采集参数（即：相同key情况下，用户key会覆盖自动采集key）。
+
+注意事项：
+* 前提：页面自动采集功能未手动关闭
+* 自定义参数只能获取页面生命周期`viewDidAppear:`及之前的参数，之后参数无法获取到。如：需要添加页面标题，但标题是通过网络请求获取，但响应时间较长，晚于页面生命周期`viewDidAppear:`才返回标题信息，则该信息无法添加至自动采集的页面属性中。
+
+接口如下：
+
+```
+/**
+ * @protocol
+ * 页面自动采集协议
+ *
+ * @abstract
+ * 页面自动采集时，追加页面自定义属性
+ *
+ * @discussion
+ * 继承至UIViewController的子类，若遵循该协议，可将自定义页面的属性信息增加至$pageview事件中
+ */
+@protocol ANSAutoPageTracker <NSObject>
+
+@optional
+- (NSDictionary *)getPageProperties;
+
+ /** 自定义页面标识，返回信息将覆盖$url字段 */
+- (NSString *)registerPageUrl;
+
+@end
+```
+
+示例：
+
+```objectivec
+/** 若使用SDK自动采集功能，且需要添加页面自定义参数，遵循protocol <ANSAutoPageTracker>*/
+@interface PageDetailViewController ()<ANSAutoPageTracker>
+
+@end
+
+@implementation PageDetailViewController
+
+/**
+ 实现ANSAutoPageTracker协议
+
+ @return 页面自定义参数信息
+ */
+- (NSDictionary *)getPageProperties {
+    //  $title/$url 为自动采集使用key，用户可覆盖
+    //  增加商品标识(productID)
+    return @{@"$title": @"详情页", @"$url": @"/homepage/detailpage", @"productID": @"1001"};
+}
+
+/**
+ 页面$url字段，将覆盖SDK默认字段
+
+ @return 页面标识
+ */
+- (NSString *)registerPageUrl {
+    return @"HomePage";
+}
+
+@end
+```
+
+Swift代码示例:
+
+```swift
+class PageDetailViewController: UIViewController, ANSAutoPageTracker {
+    
+    func getPageProperties() -> [AnyHashable : Any]! {
+        return ["$title": "详情页", "$url": "/homepage/detailpage", "productID": "1001"]
+    }
+    
+    func registerPageUrl() -> String! {
+        return "DetailPage"
+    }
+}
+```
+
 ## 统计事件接口
 
 用户行为追踪，可以设置自定义属性。接口如下：
@@ -394,10 +474,11 @@ Swift代码示例：
 AnalysysAgent.identify("fangke009901")
 ```
 
-## 匿名id获取
-获取用户通过identify接口设置或自动生成的id，优先级如下： 用户设置的id > 代码自动生成的id，接口如下：
+## 设备ID获取
 
-```objectiveC
+获取用户通过identify接口设置或自动生成的id，优先级如下： 用户设置的id &gt; 代码自动生成的id，接口如下：
+
+```objectivec
 + (NSString *)getDistinctId;
 ```
 
@@ -411,6 +492,25 @@ Swift代码示例：
 
 ```swift
 let distinctID = AnalysysAgent.getDistinctId() as String
+```
+
+## 获取预置属性
+获取SDK默认采集的一些预置属性信息，接口如下：
+
+```objectivec
++ (NSDictionary *)getPresetProperties;
+```
+
+示例：
+
+```objectivec
+NSDictionary *preProperties = [AnalysysAgent getPresetProperties];
+```
+
+Swift代码示例：
+
+```swift
+let presetProperties = AnalysysAgent.getPresetProperties()
 ```
 
 ## 用户属性设置

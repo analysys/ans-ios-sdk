@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="dBL-EO-CYt">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="dBL-EO-CYt">
     <device id="retina4_0" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -317,74 +317,14 @@
                                     <action selector="backRootVC:" destination="GKv-en-Z4j" eventType="touchUpInside" id="nnT-Ye-uax"/>
                                 </connections>
                             </button>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="输入AppKey" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="nWP-eD-RpV">
-                                <rect key="frame" x="40" y="28" width="240" height="30"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="jlj-68-a8B"/>
-                                </constraints>
-                                <nil key="textColor"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </textField>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="域名或IP，如：192.168.220.167" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="xtj-wG-YJv">
-                                <rect key="frame" x="40" y="130" width="240" height="30"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="Rmy-w9-8T4"/>
-                                </constraints>
-                                <nil key="textColor"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </textField>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="et8-Yz-OTC">
-                                <rect key="frame" x="40" y="72" width="240" height="30"/>
-                                <color key="backgroundColor" red="0.61297830809999998" green="0.3328515198" blue="0.69800001379999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="msa-PQ-PGk"/>
-                                </constraints>
-                                <state key="normal" title="修改AppKey">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="modifyAppKeyAction:" destination="GKv-en-Z4j" eventType="touchUpInside" id="ZKF-jB-RvV"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XI0-fX-Vmm">
-                                <rect key="frame" x="40" y="174" width="240" height="30"/>
-                                <color key="backgroundColor" red="0.61297830809999998" green="0.3328515198" blue="0.69800001379999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="2Hn-5c-dDX"/>
-                                </constraints>
-                                <state key="normal" title="修改可视化地址">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="modifyDomainAction:" destination="GKv-en-Z4j" eventType="touchUpInside" id="yRp-0x-Tse"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="XI0-fX-Vmm" firstAttribute="top" secondItem="xtj-wG-YJv" secondAttribute="bottom" constant="14" id="2Mn-gh-Aty"/>
-                            <constraint firstAttribute="trailing" secondItem="nWP-eD-RpV" secondAttribute="trailing" constant="40" id="6mK-ZJ-nfe"/>
-                            <constraint firstItem="XI0-fX-Vmm" firstAttribute="leading" secondItem="6JR-My-uty" secondAttribute="leading" constant="40" id="6tC-vf-bDd"/>
-                            <constraint firstItem="xtj-wG-YJv" firstAttribute="leading" secondItem="6JR-My-uty" secondAttribute="leading" constant="40" id="72i-2w-riL"/>
                             <constraint firstItem="0RW-kF-2Ep" firstAttribute="centerY" secondItem="6JR-My-uty" secondAttribute="centerY" id="EeA-iv-SVX"/>
-                            <constraint firstAttribute="trailing" secondItem="et8-Yz-OTC" secondAttribute="trailing" constant="40" id="GdS-a7-tX0"/>
-                            <constraint firstItem="et8-Yz-OTC" firstAttribute="leading" secondItem="6JR-My-uty" secondAttribute="leading" constant="40" id="OMM-on-17N"/>
-                            <constraint firstItem="nWP-eD-RpV" firstAttribute="top" secondItem="UaF-f9-duW" secondAttribute="bottom" constant="8" id="c19-0V-Wce"/>
-                            <constraint firstAttribute="trailing" secondItem="xtj-wG-YJv" secondAttribute="trailing" constant="40" id="dJe-oL-qx1"/>
-                            <constraint firstAttribute="trailing" secondItem="XI0-fX-Vmm" secondAttribute="trailing" constant="40" id="emC-Gn-SSp"/>
-                            <constraint firstItem="xtj-wG-YJv" firstAttribute="top" secondItem="et8-Yz-OTC" secondAttribute="bottom" constant="28" id="gB7-vb-sFz"/>
-                            <constraint firstItem="nWP-eD-RpV" firstAttribute="leading" secondItem="6JR-My-uty" secondAttribute="leading" constant="40" id="ooY-y0-NSg"/>
-                            <constraint firstItem="et8-Yz-OTC" firstAttribute="top" secondItem="nWP-eD-RpV" secondAttribute="bottom" constant="14" id="qEU-Ly-rdi"/>
                             <constraint firstItem="0RW-kF-2Ep" firstAttribute="centerX" secondItem="6JR-My-uty" secondAttribute="centerX" id="vXm-84-SZ5"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="第三页" id="YmK-lo-5Ye"/>
-                    <connections>
-                        <outlet property="appKeyTF" destination="nWP-eD-RpV" id="Hke-5X-4ZQ"/>
-                        <outlet property="domainTF" destination="xtj-wG-YJv" id="njI-VQ-efj"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HbL-SI-7x3" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

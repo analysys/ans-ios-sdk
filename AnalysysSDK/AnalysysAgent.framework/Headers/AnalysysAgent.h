@@ -8,12 +8,45 @@
 
 
 // ********************************
-// ***** 当前 SDK 版本号：4.3.4 *****
+// ***** 当前 SDK 版本号：4.3.4.1 *****
 // ********************************
 
 #import <Foundation/Foundation.h>
 #import "ANSConst.h"
 #import "AnalysysAgentConfig.h"
+
+
+
+/**
+ * @protocol
+ * 页面自动采集协议
+ *
+ * @abstract
+ * 当页面开启自动采集时，追加页面自定义参数
+ *
+ * @discussion
+ * 继承至UIViewController的子类，若遵循该协议，可将自定义页面的属性信息增加至$pageview事件中
+ */
+@protocol ANSAutoPageTracker <NSObject>
+
+@optional
+
+/**
+ 自定义页面属性信息，返回信息将自动增加至@pageview事件中
+
+ @return 页面参数
+ */
+- (NSDictionary *)registerPageProperties;
+
+/**
+ 自定义页面标识，返回信息将覆盖$url字段
+
+ @return 页面标识
+ */
+- (NSString *)registerPageUrl;
+
+@end
+
 
 /**
  * @class
@@ -250,6 +283,12 @@
  */
 + (id)getSuperProperty:(NSString *)superPropertyName;
 
+/**
+ SDK预置属性
+
+ @return 所有预置属性
+ */
++ (NSDictionary *)getPresetProperties;
 
 #pragma mark *** 用户属性 ***
 

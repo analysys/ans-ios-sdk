@@ -37,6 +37,12 @@
 				<key>backgroundColor</key>
 				<string>#9846B2</string>
 			</dict>
+			<dict>
+				<key>interface</key>
+				<string>获取预置属性</string>
+				<key>backgroundColor</key>
+				<string>#A9A9A9</string>
+			</dict>
 		</array>
 	</dict>
 	<dict>
@@ -158,6 +164,12 @@
 			<dict>
 				<key>interface</key>
 				<string>清除本地设置</string>
+				<key>backgroundColor</key>
+				<string>#A9A9A9</string>
+			</dict>
+			<dict>
+				<key>interface</key>
+				<string>获取匿名id</string>
 				<key>backgroundColor</key>
 				<string>#A9A9A9</string>
 			</dict>

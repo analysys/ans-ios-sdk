@@ -47,10 +47,10 @@
     //  使用配置信息初始化SDK
     [AnalysysAgent startWithConfig:AnalysysConfig];
     
-#if DEBUG
-    [AnalysysAgent setVisitorDebugURL:<#wsurl#>];
-#endif
-    [AnalysysAgent setVisitorConfigURL:<#configurl#>];
+//#if DEBUG
+//    [AnalysysAgent setVisitorDebugURL:<#wsurl#>];
+//#endif
+//    [AnalysysAgent setVisitorConfigURL:<#configurl#>];
     
     CFAbsoluteTime linkTime = (CFAbsoluteTimeGetCurrent() - startTime);
     NSLog(@"The code execution time %f ms", linkTime *1000.0);

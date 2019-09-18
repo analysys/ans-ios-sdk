@@ -182,6 +182,12 @@ static NSString *const kBackgroundColor = @"backgroundColor";
                 [self showAlertView:@"测试 随机上传一条数据"];
                 break;
             }
+            case 5: {
+                //  获取预置属性
+                NSDictionary *presetProperties = [AnalysysAgent getPresetProperties];
+                [self showAlertView:[NSString stringWithFormat:@"当前通用属性:\n%@",presetProperties]];
+                break;
+            }
             default:
                 break;
         }
@@ -325,6 +331,12 @@ static NSString *const kBackgroundColor = @"backgroundColor";
                 //  清除本地现有的设置,包括id和通用属性
                 [AnalysysAgent reset];
                 [self showAlertView:@"已清除本地所有distinct_id、alias_id、superProperties"];
+                break;
+            }
+            case 3: {
+                //  匿名id
+                NSString *distinctId = [AnalysysAgent getDistinctId];
+                [self showAlertView:distinctId];
                 break;
             }
             default:

@@ -136,6 +136,11 @@
             "value":"ANSDeviceInfo.getIdfv",
             "required":true
         },
+        "$idfa":{
+            "valueType":0,
+            "value":"ANSDeviceInfo.getIDFA",
+            "required":false
+        },
         "$lib":{
             "valueType":1,
             "value":"iOS",
@@ -210,11 +215,6 @@
             "valueType":0,
             "value":"ANSDataFunc.getAppDuration",
             "required":true
-        },
-        "$idfa":{
-            "valueType":0,
-            "value":"ANSDataFunc.getIDFA",
-            "required":false
         },
         "$is_time_calibrated":{
             "valueType":0,
