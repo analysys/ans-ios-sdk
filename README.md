@@ -304,8 +304,8 @@ Swift代码示例:
 AnalysysAgent.setIgnoredAutomaticCollectionControllers(["packageName.NextViewController"]);
 ```
 
-#### 自动采集添加自定义信息
-若用户开启页面自动采集功能，可将自定义页面信息添加至`$pageview`事件中。SDK对外提供一个协议`<ANSAutoPageTracker>`供继承至`UIViewController`的类使用，若类遵循该协议，则必须实现`getPageProperties`方法，并将自定义参数返回，SDK会将此部分信息添加至`$pageview`事件的自定义参数中，且自定义参数优先级高于自动采集参数（即：相同key情况下，用户key会覆盖自动采集key）。
+### 自动采集添加自定义信息
+若用户开启页面自动采集功能，可将自定义页面信息添加至`$pageview`事件中。SDK对外提供一个协议`<ANSAutoPageTracker>`供继承至`UIViewController`的类使用，若类遵循该协议，则须实现`registerPageProperties`方法，并将自定义参数返回，SDK会将此部分信息添加至`$pageview`事件的自定义参数中，且自定义参数优先级高于自动采集参数（即：相同key情况下，用户key会覆盖自动采集key）。
 
 注意事项：
 * 前提：页面自动采集功能未手动关闭
@@ -319,7 +319,7 @@ AnalysysAgent.setIgnoredAutomaticCollectionControllers(["packageName.NextViewCon
  * 页面自动采集协议
  *
  * @abstract
- * 页面自动采集时，追加页面自定义属性
+ * 当页面开启自动采集时，追加页面自定义参数
  *
  * @discussion
  * 继承至UIViewController的子类，若遵循该协议，可将自定义页面的属性信息增加至$pageview事件中
@@ -327,7 +327,7 @@ AnalysysAgent.setIgnoredAutomaticCollectionControllers(["packageName.NextViewCon
 @protocol ANSAutoPageTracker <NSObject>
 
 @optional
-- (NSDictionary *)getPageProperties;
+- (NSDictionary *)registerPageProperties;
 
  /** 自定义页面标识，返回信息将覆盖$url字段 */
 - (NSString *)registerPageUrl;
@@ -350,10 +350,10 @@ AnalysysAgent.setIgnoredAutomaticCollectionControllers(["packageName.NextViewCon
 
  @return 页面自定义参数信息
  */
-- (NSDictionary *)getPageProperties {
-    //  $title/$url 为自动采集使用key，用户可覆盖
+- (NSDictionary *)registerPageProperties {
+    //  $title为自动采集使用key，用户可覆盖
     //  增加商品标识(productID)
-    return @{@"$title": @"详情页", @"$url": @"/homepage/detailpage", @"productID": @"1001"};
+    return @{@"$title": @"详情页"};
 }
 
 /**
@@ -373,7 +373,7 @@ Swift代码示例:
 ```swift
 class PageDetailViewController: UIViewController, ANSAutoPageTracker {
     
-    func getPageProperties() -> [AnyHashable : Any]! {
+    func registerPageProperties() -> [AnyHashable : Any]! {
         return ["$title": "详情页", "$url": "/homepage/detailpage", "productID": "1001"]
     }
     

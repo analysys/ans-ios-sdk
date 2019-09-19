@@ -48,11 +48,11 @@
 		E8BE05E2212D501D00DFFFC3 /* EGWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E8BE05CD212D501D00DFFFC3 /* EGWebViewController.m */; };
 		E8BE05E6212D514100DFFFC3 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E8BE05E5212D514100DFFFC3 /* WebKit.framework */; };
 		E8BE05E9212D52AC00DFFFC3 /* UIColor+Transform.m in Sources */ = {isa = PBXBuildFile; fileRef = E8BE05E7212D52AC00DFFFC3 /* UIColor+Transform.m */; };
-		E8DA69D9233227D000B56AB0 /* AnalysysPush.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E8DA69D3233227CF00B56AB0 /* AnalysysPush.framework */; };
-		E8DA69DA233227D000B56AB0 /* AnalysysEncrypt.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E8DA69D4233227CF00B56AB0 /* AnalysysEncrypt.framework */; };
-		E8DA69DB233227D000B56AB0 /* AnalysysAgent.bundle in Resources */ = {isa = PBXBuildFile; fileRef = E8DA69D6233227CF00B56AB0 /* AnalysysAgent.bundle */; };
-		E8DA69DC233227D000B56AB0 /* AnalysysAgent.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E8DA69D7233227CF00B56AB0 /* AnalysysAgent.framework */; };
-		E8DA69DD233227D000B56AB0 /* AnalysysVisual.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E8DA69D8233227CF00B56AB0 /* AnalysysVisual.framework */; };
+		E8DA6A8823336ABC00B56AB0 /* AnalysysPush.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E8DA6A8223336ABC00B56AB0 /* AnalysysPush.framework */; };
+		E8DA6A8923336ABC00B56AB0 /* AnalysysEncrypt.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E8DA6A8323336ABC00B56AB0 /* AnalysysEncrypt.framework */; };
+		E8DA6A8A23336ABC00B56AB0 /* AnalysysAgent.bundle in Resources */ = {isa = PBXBuildFile; fileRef = E8DA6A8523336ABC00B56AB0 /* AnalysysAgent.bundle */; };
+		E8DA6A8B23336ABC00B56AB0 /* AnalysysAgent.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E8DA6A8623336ABC00B56AB0 /* AnalysysAgent.framework */; };
+		E8DA6A8C23336ABC00B56AB0 /* AnalysysVisual.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E8DA6A8723336ABC00B56AB0 /* AnalysysVisual.framework */; };
 		E8E4974521C107B600C817A3 /* AnalysysAgent.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E8E4974421C107B600C817A3 /* AnalysysAgent.framework */; };
 		E8F43EC822437792000A16EF /* UINavigationController+SafeTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = E8F43EC722437792000A16EF /* UINavigationController+SafeTransition.m */; };
 		E8F43ECB224379A6000A16EF /* ANSLocationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E8F43ECA224379A6000A16EF /* ANSLocationManager.m */; };
@@ -132,11 +132,11 @@
 		E8BE05E5212D514100DFFFC3 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		E8BE05E7212D52AC00DFFFC3 /* UIColor+Transform.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Transform.m"; sourceTree = "<group>"; };
 		E8BE05E8212D52AC00DFFFC3 /* UIColor+Transform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+Transform.h"; sourceTree = "<group>"; };
-		E8DA69D3233227CF00B56AB0 /* AnalysysPush.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AnalysysPush.framework; sourceTree = "<group>"; };
-		E8DA69D4233227CF00B56AB0 /* AnalysysEncrypt.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AnalysysEncrypt.framework; sourceTree = "<group>"; };
-		E8DA69D6233227CF00B56AB0 /* AnalysysAgent.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = AnalysysAgent.bundle; sourceTree = "<group>"; };
-		E8DA69D7233227CF00B56AB0 /* AnalysysAgent.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AnalysysAgent.framework; sourceTree = "<group>"; };
-		E8DA69D8233227CF00B56AB0 /* AnalysysVisual.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AnalysysVisual.framework; sourceTree = "<group>"; };
+		E8DA6A8223336ABC00B56AB0 /* AnalysysPush.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AnalysysPush.framework; sourceTree = "<group>"; };
+		E8DA6A8323336ABC00B56AB0 /* AnalysysEncrypt.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AnalysysEncrypt.framework; sourceTree = "<group>"; };
+		E8DA6A8523336ABC00B56AB0 /* AnalysysAgent.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = AnalysysAgent.bundle; sourceTree = "<group>"; };
+		E8DA6A8623336ABC00B56AB0 /* AnalysysAgent.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AnalysysAgent.framework; sourceTree = "<group>"; };
+		E8DA6A8723336ABC00B56AB0 /* AnalysysVisual.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AnalysysVisual.framework; sourceTree = "<group>"; };
 		E8E4974421C107B600C817A3 /* AnalysysAgent.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AnalysysAgent.framework; sourceTree = SOURCE_ROOT; };
 		E8F43EC722437792000A16EF /* UINavigationController+SafeTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UINavigationController+SafeTransition.m"; sourceTree = "<group>"; };
 		E8F43EC9224379A6000A16EF /* ANSLocationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ANSLocationManager.h; sourceTree = "<group>"; };
@@ -165,15 +165,15 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E8DA69D9233227D000B56AB0 /* AnalysysPush.framework in Frameworks */,
+				E8DA6A8823336ABC00B56AB0 /* AnalysysPush.framework in Frameworks */,
 				E8BE05E6212D514100DFFFC3 /* WebKit.framework in Frameworks */,
 				E8B2C02021070F8500CAC239 /* AdSupport.framework in Frameworks */,
 				E8B2C01F21070F7900CAC239 /* SystemConfiguration.framework in Frameworks */,
-				E8DA69DC233227D000B56AB0 /* AnalysysAgent.framework in Frameworks */,
+				E8DA6A8B23336ABC00B56AB0 /* AnalysysAgent.framework in Frameworks */,
 				E8B2C01D21070F7000CAC239 /* CoreTelephony.framework in Frameworks */,
-				E8DA69DD233227D000B56AB0 /* AnalysysVisual.framework in Frameworks */,
+				E8DA6A8C23336ABC00B56AB0 /* AnalysysVisual.framework in Frameworks */,
 				E8B2C01E21070F7400CAC239 /* libz.tbd in Frameworks */,
-				E8DA69DA233227D000B56AB0 /* AnalysysEncrypt.framework in Frameworks */,
+				E8DA6A8923336ABC00B56AB0 /* AnalysysEncrypt.framework in Frameworks */,
 				E81E987920FDBF060063FAA1 /* libicucore.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -235,7 +235,7 @@
 		178B22592085BE5F00425E4D /* AnalysysDemo */ = {
 			isa = PBXGroup;
 			children = (
-				E8DA69D2233227CF00B56AB0 /* AnalysysSDK */,
+				E8DA6A8123336ABC00B56AB0 /* AnalysysSDK */,
 				E8BE05AA212D501D00DFFFC3 /* Hybrid */,
 				178B225A2085BE5F00425E4D /* AppDelegate.h */,
 				178B225B2085BE5F00425E4D /* AppDelegate.m */,
@@ -310,22 +310,22 @@
 			path = Hybrid;
 			sourceTree = "<group>";
 		};
-		E8DA69D2233227CF00B56AB0 /* AnalysysSDK */ = {
+		E8DA6A8123336ABC00B56AB0 /* AnalysysSDK */ = {
 			isa = PBXGroup;
 			children = (
-				E8DA69D3233227CF00B56AB0 /* AnalysysPush.framework */,
-				E8DA69D4233227CF00B56AB0 /* AnalysysEncrypt.framework */,
-				E8DA69D5233227CF00B56AB0 /* Resources */,
-				E8DA69D7233227CF00B56AB0 /* AnalysysAgent.framework */,
-				E8DA69D8233227CF00B56AB0 /* AnalysysVisual.framework */,
+				E8DA6A8223336ABC00B56AB0 /* AnalysysPush.framework */,
+				E8DA6A8323336ABC00B56AB0 /* AnalysysEncrypt.framework */,
+				E8DA6A8423336ABC00B56AB0 /* Resources */,
+				E8DA6A8623336ABC00B56AB0 /* AnalysysAgent.framework */,
+				E8DA6A8723336ABC00B56AB0 /* AnalysysVisual.framework */,
 			);
 			path = AnalysysSDK;
 			sourceTree = SOURCE_ROOT;
 		};
-		E8DA69D5233227CF00B56AB0 /* Resources */ = {
+		E8DA6A8423336ABC00B56AB0 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				E8DA69D6233227CF00B56AB0 /* AnalysysAgent.bundle */,
+				E8DA6A8523336ABC00B56AB0 /* AnalysysAgent.bundle */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -428,7 +428,7 @@
 				178B22732085BF3F00425E4D /* DataSource.plist in Resources */,
 				178B227C2085BF6D00425E4D /* DemoCollectionHeaderView.xib in Resources */,
 				178B22642085BE6000425E4D /* Assets.xcassets in Resources */,
-				E8DA69DB233227D000B56AB0 /* AnalysysAgent.bundle in Resources */,
+				E8DA6A8A23336ABC00B56AB0 /* AnalysysAgent.bundle in Resources */,
 				178B22622085BE5F00425E4D /* Main.storyboard in Resources */,
 				178B227D2085BF6D00425E4D /* DemoCollectionViewCell.xib in Resources */,
 			);
