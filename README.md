@@ -7,7 +7,7 @@ This is the official iOS SDK for Argo.
 
 ## Learn More
 
-please visit [more](https://ark.analysys.cn/docs/sdk-ios.html)
+please visit [more](https://docs.analysys.cn/ark/integration/sdk/ios)
 
 
 ## License
