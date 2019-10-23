@@ -1,0 +1,6 @@
+framework module Pods_AnalysysSDK_Example {
+  umbrella header "Pods-AnalysysSDK_Example-umbrella.h"
+
+  export *
+  module * { export * }
+}

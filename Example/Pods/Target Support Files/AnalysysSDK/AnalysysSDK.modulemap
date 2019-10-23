@@ -1,0 +1,6 @@
+framework module AnalysysSDK {
+  umbrella header "AnalysysSDK-umbrella.h"
+
+  export *
+  module * { export * }
+}
