@@ -1,0 +1,373 @@
+//
+//  ANSDatabase.m
+//  AnalysysAgent
+//
+//  Created by analysys on 2018/2/9.
+//  Copyright © 2018年 analysys. All rights reserved.
+//
+
+#import "ANSDatabase.h"
+#import <sqlite3.h>
+
+#import "ANSConsoleLog.h"
+#import "ANSFileManager.h"
+#import "ANSJsonUtil.h"
+#import "ANSEncryptDB.h"
+#import "AnalysysAgentConfig.h"
+#import "AnalysysSDK.h"
+
+typedef NS_ENUM(NSInteger, AnalysysOrder) {
+    AnalysysOrderAsc = 0,
+    AnalysysOrderDesc = 1
+};
+
+@implementation ANSStatement
+
+@end
+
+@interface ANSDatabase ()
+
+@property (nonatomic) sqlite3 *database;
+
+@end
+
+@implementation ANSDatabase {
+    dispatch_queue_t _sqliteQueue;
+    NSInteger _dataCount;
+    ANSJsonUtil *_jsonUtil;
+    NSDateFormatter *_dateFormatter;
+    NSMutableDictionary *_stmtMap;
+    NSMutableArray *_ids;
+}
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        _dataCount = 0;
+        _ids = [NSMutableArray array];
+        _jsonUtil = [[ANSJsonUtil alloc] init];
+        _stmtMap = [NSMutableDictionary dictionary];
+        
+        _dateFormatter = [[NSDateFormatter alloc] init];
+        [_dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss.SSS"];
+    }
+    return self;
+}
+
+- (void)dealloc {
+    [self closeDatabase];
+}
+
+/** 关闭数据库连接 */
+- (void)closeDatabase {
+    sqlite3_close(_database);
+    sqlite3_shutdown();
+}
+
+#pragma mark - interface
+
+/** 创建数据库 */
+- (id)initWithDatabaseName:(NSString *)databaseName {
+    self = [self init];
+    if (self) {
+        NSString *dbPath = [ANSFileManager filePathWithName:databaseName];
+        //AnsDebug(@"Database path：%@",dbPath);
+        
+        if (sqlite3_initialize() != SQLITE_OK) {
+            AnsDebug(@"Database init failure!");
+            return nil;
+        }
+        //  SQLITE_OPEN_FULLMUTEX  多线程操作数据库保证线程安全
+        if (sqlite3_open_v2([dbPath UTF8String], &_database, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE | SQLITE_OPEN_FULLMUTEX, NULL) == SQLITE_OK) {
+            NSString *tableSQL = @"create table if not exists record_data (id integer primary key autoincrement, type text, json_string text, create_date text, column1 text,column2 text);";
+            char *error;
+            if (sqlite3_exec(_database, [tableSQL UTF8String], NULL, NULL, &error) == SQLITE_OK) {
+                [self vacuumDatabase];
+                _dataCount = [self tableRows];
+                AnsDebug(@"Database create success.");
+            } else {
+                AnsDebug(@"Database create failure: %s",sqlite3_errmsg(_database));
+                return nil;
+            }
+        } else {
+            [self closeDatabase];
+            AnsDebug(@"Database create failure: %s",sqlite3_errmsg(_database));
+            return nil;
+        }
+    }
+    return self;
+}
+
+/** 插入采集数据 */
+- (BOOL)insertRecordObject:(id)object event:(NSString *)event {
+    @try {
+        NSString *jsonString = nil;
+        NSInteger maxCacheSize = [[AnalysysSDK sharedManager] maxCacheSize];
+        if (_dataCount > maxCacheSize) {
+            AnsWarning(@"The number of data storage exceeds the maximum value: %ld, will clean up 10 old data!",(long)maxCacheSize);
+            [self deleteTopRecords];
+        }
+        NSData *jsonData = [_jsonUtil jsonSerializeWithObject:object];
+        if (!jsonData) {
+            AnsWarning(@"Insert json data is nil!");
+            return NO;
+        }
+        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        NSString *query = @"insert into record_data (type, json_string, create_date) values(?, ?, ?)";
+        sqlite3_stmt *pStmt = [self cachedStatementForQuery:query];
+        if (pStmt) {
+            NSString *dateStr = [_dateFormatter stringFromDate:[NSDate date]];
+            NSString *base64String = [ANSEncryptDB base64EncodeWithString:jsonString];
+            NSArray *params = @[event, base64String, dateStr];
+            if ([self execStatement:pStmt paramArray:params]) {
+                _dataCount++;
+//                ANSLog(@"Data insert success!!\n %@",object);
+                return YES;
+            }
+        }
+    } @catch (NSException *exception) {
+        AnsError(@"Database: insert data exception :%@", exception);
+        return NO;
+    }
+}
+
+- (void)clearDB {
+    NSString *query = @"delete from record_data";
+    sqlite3_stmt *pStmt = [self cachedStatementForQuery:query];
+    if ([self execStatement:pStmt paramArray:nil]) {
+        _dataCount = 0;
+    }
+}
+
+- (void)resetUploadRecordsWithType:(NSString *)type {
+    NSString *where = @"";
+    if (type.length > 0) {
+        where = [NSString stringWithFormat:@"where type = '%@' and column1='1' ", type];
+    } else {
+        where = @"where column1='1'";
+    }
+    
+    NSString *query = [NSString stringWithFormat:@"update record_data set column1=null %@ ", where];
+    sqlite3_stmt *pStmt = [self cachedStatementForQuery:query];
+    if ([self execStatement:pStmt paramArray:nil]) {
+        
+    }
+}
+
+/** 删除指定类型top数据 */
+- (BOOL)deleteUploadRecordsWithType:(NSString *)type {
+    NSString *where = @"";
+    if (type.length > 0) {
+        where = [NSString stringWithFormat:@"where type = '%@' and column1='1' ", type];
+    } else {
+        where = @"where column1='1'";
+    }
+    
+    NSString *query = [NSString stringWithFormat:@"delete from record_data %@", where];
+    sqlite3_stmt *pStmt = [self cachedStatementForQuery:query];
+    if ([self execStatement:pStmt paramArray:nil]) {
+        _dataCount -= _ids.count;
+        if (_dataCount < 0) {
+            _dataCount = [self tableRows];
+        }
+        return YES;
+    }
+    return NO;
+}
+
+- (NSArray *)getTopRecords:(NSInteger)limit type:(NSString *)type {
+    return [self getTopRecords:limit type:type orderBy:AnalysysOrderAsc];
+}
+
+- (NSArray *)getLastRecords:(NSInteger)limit type:(NSString *)type {
+    return [self getTopRecords:limit type:type orderBy:AnalysysOrderDesc];
+}
+
+/** 获取指定类型top数据 */
+- (NSArray *)getTopRecords:(NSInteger)limit type:(NSString *)type orderBy:(AnalysysOrder)orderBy {
+    NSMutableArray *records = [NSMutableArray array];
+    if (_dataCount <= 0) {
+        if (_dataCount < 0) {
+            _dataCount = [self tableRows];
+        }
+        return records;
+    }
+    @try {
+        NSString *where = @"";
+        NSString *limitStr = @"";
+        NSString *selelctSQL;
+        if (type.length > 0) {
+            where = [NSString stringWithFormat:@"where type = '%@'", type];
+        }
+        if (limit) {
+            limitStr = [NSString stringWithFormat:@"limit %ld", (long)limit];
+        }
+        selelctSQL = [NSString stringWithFormat:@"select id, json_string from record_data %@ order by id %@ %@", where, orderBy == AnalysysOrderAsc ? @"asc": @"desc", limitStr];
+        
+        [_ids removeAllObjects];
+        sqlite3_stmt *pStmt = [self cachedStatementForQuery:selelctSQL];
+        if (pStmt) {
+            while (sqlite3_step(pStmt) == SQLITE_ROW) {
+
+                NSInteger index = sqlite3_column_int(pStmt, 0);
+                [_ids addObject:[NSString stringWithFormat:@"%ld", (long)index]];
+                
+                char *text = (char*)sqlite3_column_text(pStmt, 1);
+                NSString *textString = [NSString stringWithUTF8String:text];
+                NSString *jsonString = [ANSEncryptDB base64DecodeWithString:textString];
+                if (jsonString.length == 0) {
+                    jsonString = textString;
+                }
+                if ([self validOfJsonString:jsonString]) {
+                    [records addObject:jsonString];
+                }
+            }
+        }
+    } @catch (NSException *exception) {
+        AnsError(@"Database get data exception: %@", exception);
+    }
+    
+    [self markUploadData];
+    
+    return records;
+}
+
+/** 获取表条数 */
+- (NSInteger)recordRows {
+    return _dataCount;
+}
+
+#pragma mark - private
+
+- (void)vacuumDatabase {
+    @try {
+        NSString *query = @"VACUUM";
+        char *errMsg;
+        if (sqlite3_exec(_database, [query UTF8String], NULL, NULL, &errMsg) != SQLITE_OK) {
+            AnsDebug(@"Failed to vacuum. error:%s", errMsg);
+        }
+    } @catch (NSException *exception) {
+
+    }
+}
+
+/** 表 记录 条数 */
+- (NSInteger)tableRows {
+    @try {
+        NSString *query = [NSString stringWithFormat:@"select count(*) from record_data"];
+        sqlite3_stmt *pStmt = [self cachedStatementForQuery:query];
+        NSInteger count = 0;
+        if (pStmt) {
+            while (sqlite3_step(pStmt) == SQLITE_ROW) {
+                count = sqlite3_column_int(pStmt, 0);
+            }
+        }
+        return count;
+    } @catch (NSException *exception) {
+        AnsDebug(@"Database SQL excute exception:%@!", exception);
+    }
+    return 0;
+}
+
+/** 执行sql */
+- (BOOL)execStatement:(sqlite3_stmt *)statement paramArray:(NSArray *)paramArray {
+    BOOL result = NO;
+    @try {
+        for (int i = 0; i < paramArray.count; i++) {
+            NSString *value = paramArray[i];
+            sqlite3_bind_text(statement, i+1, [value UTF8String], -1, SQLITE_STATIC);
+        }
+        if (sqlite3_step(statement) == SQLITE_DONE) {
+            result = YES;
+        } else {
+            AnsError(@"Database SQL prepare failure:%d %s!", result, sqlite3_errmsg(_database));
+            sqlite3_finalize(statement);
+            [self removeCachedStatement:statement];
+        }
+    } @catch (NSException *exception) {
+        AnsError(@"Database SQL excute exception:%@!", exception);
+    }
+    return result;
+}
+
+/** 缓存sqlite3_stmt */
+- (sqlite3_stmt *)cachedStatementForQuery:(NSString *)sql {
+    if (sql.length == 0 || !_stmtMap) return NULL;
+    ANSStatement *statement = [_stmtMap objectForKey:sql];
+    sqlite3_stmt *stmt = statement.statement;
+    if (!stmt) {
+        int result = sqlite3_prepare_v2(_database, sql.UTF8String, -1, &stmt, NULL);
+        if (result != SQLITE_OK) {
+            AnsError(@"Sqlite stmt prepare error (%d): %s", result, sqlite3_errmsg(_database));
+            return NULL;
+        }
+        ANSStatement *statement = [[ANSStatement alloc] init];
+        statement.sql = sql;
+        statement.statement = stmt;
+        [_stmtMap setValue:statement forKey:sql];
+    } else {
+        sqlite3_reset(stmt);
+    }
+    return stmt;
+}
+
+/** 删除缓存sqlite3_stmt */
+- (void)removeCachedStatement:(sqlite3_stmt *)statement {
+    NSString *tempKey = @"";
+    for (id key in _stmtMap) {
+        ANSStatement *value = _stmtMap[key];
+        if (value.statement == statement) {
+            tempKey = key;
+        }
+    }
+    [self->_stmtMap removeObjectForKey:tempKey];
+}
+
+/** 标记正在上传数据 */
+- (void)markUploadData {
+    NSMutableArray *paramArray = [NSMutableArray array];
+    if (_ids.firstObject == nil || _ids.lastObject == nil) {
+        return;
+    }
+    [paramArray addObject:_ids.firstObject];
+    [paramArray addObject:_ids.lastObject];
+
+    NSString *query = [NSString stringWithFormat:@"update record_data set column1='1' where id >= ? and id <= ?"];
+    sqlite3_stmt *pStmt = [self cachedStatementForQuery:query];
+    if ([self execStatement:pStmt paramArray:paramArray]) {
+        AnsDebug(@"update success");
+    } else {
+        AnsDebug(@"update failed");
+    }
+}
+
+//  默认清理数据条数
+- (void)deleteTopRecords {
+    NSString *query = @"delete from record_data where id in (select id from record_data order by id asc limit 10)";
+    sqlite3_stmt *pStmt = [self cachedStatementForQuery:query];
+    if ([self execStatement:pStmt paramArray:nil]) {
+        AnsDebug(@"清理成功");
+        _dataCount = (_dataCount - 10 > 0) ? (_dataCount - 10) : 0;
+    }
+}
+
+/** 基础字段校验 */
+- (BOOL)validOfJsonString:(NSString *)json {
+    NSDictionary *dataMap = [ANSJsonUtil convertToMapWithString:json];
+    if (![dataMap.allKeys containsObject:@"appid"] ||
+        ![dataMap.allKeys containsObject:@"xwho"] ||
+        ![dataMap.allKeys containsObject:@"xwhat"] ||
+        ![dataMap.allKeys containsObject:@"xwhen"] ||
+        ![dataMap.allKeys containsObject:@"xcontext"]) {
+        return NO;
+    }
+    NSString *appKey = dataMap[@"appid"];
+    if (![appKey isEqualToString:AnalysysConfig.appKey]) {
+        return NO;
+    }
+    return YES;
+}
+
+
+
+@end
