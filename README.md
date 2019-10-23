@@ -1,9 +1,9 @@
 
-# Argo iOS SDK
+# Analysys iOS SDK
 
 ========
 
-This is the official iOS SDK for Argo.
+This is the official iOS SDK for Analysys.
 
 ## Learn More
 
