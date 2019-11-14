@@ -40,12 +40,16 @@ typedef NS_ENUM(NSInteger, AnalysysEncryptType) {
  - AnalysysPushGeTui: 个推推送
  - AnalysysPushBaiDu: 百度推送
  - AnalysysPushXiaoMi: 小米推送
+ - AnalysysPushXinGe: 信鸽推送
+ - AnalysysPushAPNS: APNS推送
  */
 typedef NS_ENUM(NSInteger, AnalysysPushProvider) {
     AnalysysPushJiGuang = 0,
     AnalysysPushGeTui,
     AnalysysPushBaiDu,
-    AnalysysPushXiaoMi
+    AnalysysPushXiaoMi,
+    AnalysysPushXinGe,
+    AnalysysPushAPNS
 };
 
 

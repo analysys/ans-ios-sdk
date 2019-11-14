@@ -49,7 +49,7 @@
  协议：数据上传及可视化数据配置地址默认 HTTPS 协议。
  如：arkpaastest.analysys.cn
  */
-@property (nonatomic, copy) NSString *baseUrl;
+@property (nonatomic, copy) NSString *baseUrl __attribute__((deprecated("已过时！请使用 setUploadURL:/setVisitorDebugURL:/setVisitorConfigURL:")));
 
 /**
  是否追踪新用户的首次属性
@@ -69,6 +69,15 @@
  数据上传加密类型
  */
 @property (nonatomic, assign) AnalysysEncryptType encryptType;
+
+/// 是否允许时间校准
+/// 默认值：NO
+@property (nonatomic, assign) BOOL allowTimeCheck;
+
+/// 最大允许时间误差
+/// 单位：秒
+/// 默认值：30秒
+@property (nonatomic, assign) NSUInteger maxDiffTimeInterval;
 
 
 @end

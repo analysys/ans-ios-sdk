@@ -14,8 +14,8 @@
 #import "DemoCollectionHeaderView.h"
 #import "UIColor+Transform.h"
 
-#import "EGWebViewController.h"
-#import "EGWKWebViewController.h"
+#import "ANSWebViewController.h"
+#import "ANSWKWebViewController.h"
 
 static NSString *const kCategory = @"category";
 static NSString *const kInterface = @"interface";
@@ -177,7 +177,7 @@ static NSString *const kBackgroundColor = @"backgroundColor";
             }
             case 4: {
                 //  立即上传数据接口  flush
-                [AnalysysAgent track:[NSString stringWithFormat:@"randomEvent_%d",arc4random()%100]];
+                [AnalysysAgent track:[NSString stringWithFormat:@"randomEvent_%d",arc4random()%10]];
                 [AnalysysAgent flush];
                 [self showAlertView:@"测试 随机上传一条数据"];
                 break;
@@ -204,7 +204,7 @@ static NSString *const kBackgroundColor = @"backgroundColor";
             case 1: {
                 //  获取已设置的通用属性
                 id value = [AnalysysAgent getSuperProperty:@"Hobby"];
-                [self showAlertView:[NSString stringWithFormat:@"通用属性:VIPLevel \n 值:%@",value]];
+                [self showAlertView:[NSString stringWithFormat:@"通用属性:Hobby \n 值:%@",value]];
                 break;
             }
             case 2: {
@@ -226,6 +226,7 @@ static NSString *const kBackgroundColor = @"backgroundColor";
                 break;
             }
             case 5: {
+                //  获取通用属性
                 [self showAlertView:[NSString stringWithFormat:@"当前通用属性:\n%@",[AnalysysAgent getSuperProperties]]];
                 break;
             }
@@ -253,11 +254,11 @@ static NSString *const kBackgroundColor = @"backgroundColor";
                 break;
             }
             case 2: {
-                UIStoryboard * sb = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-                NextViewController * nextVC = [sb instantiateViewControllerWithIdentifier:@"NextViewController"];
+                UIStoryboard *sb = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+                NextViewController *nextVC = [sb instantiateViewControllerWithIdentifier:@"NextViewController"];
                 nextVC.hidesBottomBarWhenPushed = YES;
                 if (![AnalysysAgent isViewAutoTrack]) {
-                    nextVC.ignoredAutoCollection = YES;
+//                    nextVC.ignoredAutoCollection = YES;
                 }
                 [self.navigationController pushViewController:nextVC animated:YES];
                 break;
@@ -267,7 +268,7 @@ static NSString *const kBackgroundColor = @"backgroundColor";
         }
     } else if (indexPath.section == 3) {
         //  为了方便查看现使用随机事件做Demo
-        NSString *event = [NSString stringWithFormat:@"buy_%d",arc4random()%100];
+        NSString *event = [NSString stringWithFormat:@"event_%d",arc4random()%10];
         switch (indexPath.row) {
             case 0: {
                 [AnalysysAgent track:event];
@@ -275,6 +276,7 @@ static NSString *const kBackgroundColor = @"backgroundColor";
                 break;
             }
             case 1: {
+                
                 //  追踪用户收藏、加入购物车、购买等事件
                 NSInteger productId = 1234;   //  商品标识
                 NSString *productCategory = @"iPhone X";  //  商品类型
@@ -287,6 +289,7 @@ static NSString *const kBackgroundColor = @"backgroundColor";
                                              };
                 [AnalysysAgent track:event properties:properties];
                 [self showAlertView:[NSString stringWithFormat:@"当前事件:%@ 属性:%@",event,properties]];
+ 
                 break;
             }
             case 2: {
@@ -315,16 +318,16 @@ static NSString *const kBackgroundColor = @"backgroundColor";
     } else if (indexPath.section == 4) {
         switch (indexPath.row) {
             case 0: {
-                //  为了方便查看 现使用随机id做Demo
-                NSString *distinct_id = [NSString stringWithFormat:@"wechat_%d",arc4random()%1000];
+                //  为了方便查看现使用随机id做Demo
+                NSString *distinct_id = [NSString stringWithFormat:@"WeChatID_%d",arc4random()%10];
                 [AnalysysAgent identify:distinct_id];
                 [self showAlertView:[NSString stringWithFormat:@"当前标识:%@",distinct_id]];
                 break;
             }
             case 1: {
-                //  由游客身份变为用户使用手机号登录
-                [AnalysysAgent alias:@"18699998888" originalId:nil];
-                [self showAlertView:@"当前身份标识：18699998888"];
+                //  用户注册后账号为 18688886666
+                [AnalysysAgent alias:@"18688886666" originalId:@""];
+                [self showAlertView:@"当前身份标识：18688886666"];
                 break;
             }
             case 2: {
@@ -347,7 +350,7 @@ static NSString *const kBackgroundColor = @"backgroundColor";
             case 0: {
                 //  $开头字符为预定义字段
                 //  统计用户昵称和爱好信息
-                NSDictionary *properties = @{@"nickName":@"小叮当",@"hobby":@[@"Singing", @"Dancing"]};
+                NSDictionary *properties = @{@"nickName":@"小叮当",@"Hobby":@[@"Singing", @"Dancing"], @"Point": [NSNumber numberWithInt:5], @"UseCount": [NSNumber numberWithInt:5], @"Books": @[@"aaa"],@"Drinks": @"可乐"};
                 [AnalysysAgent profileSet:properties];
                 [self showAlertView:[NSString stringWithFormat:@"设置profile为:\n%@",properties]];
                 break;
@@ -380,27 +383,27 @@ static NSString *const kBackgroundColor = @"backgroundColor";
             }
             case 5: {
                 //  增加用户消费金额
-                [AnalysysAgent profileIncrement:@"Consume" propertyValue:@10];
+                [AnalysysAgent profileIncrement:@"UseCount" propertyValue:@10];
                 [self showAlertView:@"Consume: 10"];
                 break;
             }
             case 6: {
                 //  增加用户购买过的书籍，属性 "Books" 为: ["西游记", "三国演义"]，属性 "Drinks" 为："orange juice"
                 [AnalysysAgent profileAppend:@{@"Books": @[@"西游记", @"三国演义"],@"Drinks": @"orange juice"}];
-//                [AnalysysAgent profileAppend:@"Drinks" value:@"orange juice"];
                 [self showAlertView:@"Books: 西游记,三国演义；Drinks：orange juice"];
                 break;
             }
             case 7: {
                 //  再次设定该属性，属性 "Books" 为: ["西游记", "三国演义", "红楼梦", "水浒传"]
+//                [AnalysysAgent profileAppend:@"Books" value:@"西游记"];
                 [AnalysysAgent profileAppend:@"Books" propertyValue:[NSSet setWithObjects:@"红楼梦", @"水浒传", nil]];
                 [self showAlertView:@"Books: 红楼梦,水浒传"];
                 break;
             }
             case 8: {
                 //  删除用户的 hobby 属性
-                [AnalysysAgent profileUnset:@"hobby"];
-                [self showAlertView:@"删除 hobby 属性"];
+                [AnalysysAgent profileUnset:@"Hobby"];
+                [self showAlertView:@"删除 Hobby 属性"];
                 break;
             }
             case 9: {
@@ -412,16 +415,16 @@ static NSString *const kBackgroundColor = @"backgroundColor";
             default:
                 break;
         }
-    }  else if (indexPath.section == 6) {
+    } else if (indexPath.section == 6) {
         switch (indexPath.row) {
             case 0: {
-                EGWebViewController *webView = [[EGWebViewController alloc] initWithNibName:@"EGWebViewController" bundle:nil];
+                ANSWebViewController *webView = [[ANSWebViewController alloc] initWithNibName:@"ANSWebViewController" bundle:nil];
                 webView.hidesBottomBarWhenPushed = YES;
                 [self.navigationController pushViewController:webView animated:YES];
                 break;
             }
             case 1: {
-                EGWKWebViewController *wkWebView = [[EGWKWebViewController alloc] initWithNibName:@"EGWKWebViewController" bundle:nil];
+                ANSWKWebViewController *wkWebView = [[ANSWKWebViewController alloc] initWithNibName:@"ANSWKWebViewController" bundle:nil];
                 wkWebView.hidesBottomBarWhenPushed = YES;
                 [self.navigationController pushViewController:wkWebView animated:YES];
                 break;

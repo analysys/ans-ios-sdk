@@ -44,6 +44,8 @@
     AnalysysConfig.autoProfile = YES;
     AnalysysConfig.autoInstallation =  YES;
     AnalysysConfig.encryptType = AnalysysEncryptAES;
+    AnalysysConfig.allowTimeCheck = YES;
+    AnalysysConfig.maxDiffTimeInterval = 5 * 60;
     //  使用配置信息初始化SDK
     [AnalysysAgent startWithConfig:AnalysysConfig];
     

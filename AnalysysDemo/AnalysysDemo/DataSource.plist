@@ -35,7 +35,7 @@
 				<key>interface</key>
 				<string>立即上传数据</string>
 				<key>backgroundColor</key>
-				<string>#9846B2</string>
+				<string>#686BF4</string>
 			</dict>
 			<dict>
 				<key>interface</key>
@@ -109,7 +109,7 @@
 				<key>interface</key>
 				<string>下一页</string>
 				<key>backgroundColor</key>
-				<string>#9846B2</string>
+				<string>#686BF4</string>
 			</dict>
 		</array>
 	</dict>
@@ -122,25 +122,25 @@
 				<key>interface</key>
 				<string>点击事件</string>
 				<key>backgroundColor</key>
-				<string>#9846B2</string>
+				<string>#686BF4</string>
 			</dict>
 			<dict>
 				<key>interface</key>
 				<string>点击事件带属性</string>
 				<key>backgroundColor</key>
-				<string>#9846B2</string>
+				<string>#686BF4</string>
 			</dict>
 			<dict>
 				<key>interface</key>
 				<string>页面事件</string>
 				<key>backgroundColor</key>
-				<string>#9846B2</string>
+				<string>#686BF4</string>
 			</dict>
 			<dict>
 				<key>interface</key>
 				<string>页面事件带属性</string>
 				<key>backgroundColor</key>
-				<string>#9846B2</string>
+				<string>#686BF4</string>
 			</dict>
 		</array>
 	</dict>
@@ -157,9 +157,9 @@
 			</dict>
 			<dict>
 				<key>interface</key>
-				<string>用户关联</string>
+				<string>alias用户关联</string>
 				<key>backgroundColor</key>
-				<string>#9846B2</string>
+				<string>#686BF4</string>
 			</dict>
 			<dict>
 				<key>interface</key>
@@ -184,67 +184,67 @@
 				<key>interface</key>
 				<string>设置多个用户属性</string>
 				<key>backgroundColor</key>
-				<string>#9846B2</string>
+				<string>#686BF4</string>
 			</dict>
 			<dict>
 				<key>interface</key>
 				<string>设置单个用户属性</string>
 				<key>backgroundColor</key>
-				<string>#9846B2</string>
+				<string>#686BF4</string>
 			</dict>
 			<dict>
 				<key>interface</key>
 				<string>设置多个固有属性</string>
 				<key>backgroundColor</key>
-				<string>#9846B2</string>
+				<string>#686BF4</string>
 			</dict>
 			<dict>
 				<key>interface</key>
 				<string>设置单个固有属性</string>
 				<key>backgroundColor</key>
-				<string>#9846B2</string>
+				<string>#686BF4</string>
 			</dict>
 			<dict>
 				<key>interface</key>
 				<string>设置多个相对变化值</string>
 				<key>backgroundColor</key>
-				<string>#9846B2</string>
+				<string>#686BF4</string>
 			</dict>
 			<dict>
 				<key>interface</key>
 				<string>设置单个相对变化值</string>
 				<key>backgroundColor</key>
-				<string>#9846B2</string>
+				<string>#686BF4</string>
 			</dict>
 			<dict>
 				<key>interface</key>
 				<string>追加多个用户属性</string>
 				<key>backgroundColor</key>
-				<string>#9846B2</string>
+				<string>#686BF4</string>
 			</dict>
 			<dict>
 				<key>interface</key>
 				<string>追加单个用户属性</string>
 				<key>backgroundColor</key>
-				<string>#9846B2</string>
+				<string>#686BF4</string>
 			</dict>
 			<dict>
 				<key>interface</key>
 				<string>删除单个用户属性</string>
 				<key>backgroundColor</key>
-				<string>#9846B2</string>
+				<string>#686BF4</string>
 			</dict>
 			<dict>
 				<key>interface</key>
 				<string>删除所有用户属性</string>
 				<key>backgroundColor</key>
-				<string>#9846B2</string>
+				<string>#686BF4</string>
 			</dict>
 		</array>
 	</dict>
 	<dict>
 		<key>category</key>
-		<string>Hybrid</string>
+		<string>Hybird</string>
 		<key>subArray</key>
 		<array>
 			<dict>

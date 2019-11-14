@@ -8,7 +8,7 @@
 
 
 // ********************************
-// ***** 当前 SDK 版本号：4.3.4.2 *****
+// ***** 当前 SDK 版本号：4.3.5 *****
 // ********************************
 
 #import <Foundation/Foundation.h>
@@ -61,7 +61,7 @@
 @interface AnalysysAgent : NSObject
 
 
-#pragma mark *** 基本配置 ***
+#pragma mark - 基本配置
 
 
 /**
@@ -78,7 +78,7 @@
  */
 + (NSString *)SDKVersion;
 
-#pragma mark *** 服务器地址设置 ***
+#pragma mark - 服务器地址设置
 
 /**
  设置上传数据地址
@@ -115,7 +115,7 @@
  */
 + (void)setAutomaticHeatmap:(BOOL)autoTrack;
 
-#pragma mark *** SDK发送策略 ***
+#pragma mark - SDK发送策略
 
 /**
  debug模式
@@ -163,7 +163,7 @@
 + (void)flush;
 
 
-#pragma mark *** 点击事件 ***
+#pragma mark - 点击事件
 
 /**
  添加事件
@@ -181,7 +181,7 @@
 + (void)track:(NSString *)event properties:(NSDictionary *)properties;
 
 
-#pragma mark *** 页面事件 ***
+#pragma mark - 页面事件
 
 /**
  页面跟踪
@@ -226,7 +226,7 @@
 + (void)setIgnoredAutomaticCollectionControllers:(NSArray<NSString *> *)controllers;
 
 
-#pragma mark *** 通用属性 ***
+#pragma mark - 通用属性
 
 /**
  此部分属性将在所有触发事件中携带
@@ -290,7 +290,7 @@
  */
 + (NSDictionary *)getPresetProperties;
 
-#pragma mark *** 用户属性 ***
+#pragma mark - 用户属性
 
 /**
  匿名ID设置。小于255字符
@@ -385,7 +385,7 @@
 + (void)profileDelete;
 
 
-#pragma mark *** 清除本地设置 ***
+#pragma mark - 清除本地设置
 
 /**
  清除本地设置（anonymousId、aliasID、superProperties）
@@ -393,7 +393,7 @@
 + (void)reset;
 
 
-#pragma mark *** Hybrid 页面 ***
+#pragma mark - Hybrid 页面
 
 /**
  监听webview
@@ -411,7 +411,7 @@
 + (void)resetHybridModel;
 
 
-#pragma mark *** 消息推送 ***
+#pragma mark - 消息推送
 
 /**
  推送基本设置
