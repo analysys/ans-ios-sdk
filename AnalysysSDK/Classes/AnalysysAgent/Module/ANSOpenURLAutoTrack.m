@@ -84,7 +84,7 @@
 }
 
 + (NSDictionary *)parameterWithURL:(NSURL *)url {
-    NSDictionary *queryParameters = [NSDictionary dictionary];
+    NSDictionary *queryParameters;
     NSURLComponents *urlComponents = [[NSURLComponents alloc] initWithString:url.absoluteString];
     if ([UIDevice currentDevice].systemVersion.floatValue >= 8.0) {
         NSMutableDictionary *query = [NSMutableDictionary dictionary];

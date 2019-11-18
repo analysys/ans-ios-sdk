@@ -25,6 +25,13 @@
 /** SDK版本号 */
 extern NSString *const ANSSDKVersion;
 
+#pragma mark - 基础字段
+extern NSString *const ANSAppid;
+extern NSString *const ANSXwho;
+extern NSString *const ANSXwhen;
+extern NSString *const ANSXwhat;
+extern NSString *const ANSXcontext;
+
 #pragma mark - 事件类型
 
 /** App启动 */
@@ -61,32 +68,8 @@ extern NSString *const ANSEventHeatMap;
 /** 推送(虚拟) */
 extern NSString *const ANSEventPush;
 
-#pragma mark - other
 
-/** 匿名标识 */
-extern NSString *const ANSAnonymousId;
-/** 默认标识 */
-extern NSString *const ANSUUID;
-/** 原始标识 */
-extern NSString *const ANSOriginalId;
-
-/** App启动标识 */
-extern NSString *const ANSAppLaunchDate;
-/** profile系列模板 */
-extern NSString *const ANSProfileSetXXX;
-/** 服务器时间校准 */
-extern NSString *const ANSServerTimeInterval;
-
-/** 页面标识 */
-extern NSString *const ANSPageUrl;
-/** 页面标题 */
-extern NSString *const ANSPageTitle;
-/** 页面名称 */
-extern NSString *const ANSPageName;
-/** 页面来源 */
-extern NSString *const ANSPageReferrerUrl;
-
-#pragma mark - 预置属性
+#pragma mark - 通用预置属性
 
 /** 时区 */
 extern NSString *const ANSPresetTimeZone;
@@ -108,24 +91,47 @@ extern NSString *const ANSPresetScreenHeight;
 extern NSString *const ANSPresetNetwork;
 /** 设备厂商 */
 extern NSString *const ANSPresetManufacturer;
-/** 广告标识 */
-extern NSString *const ANSPresetIDFV;
-/** 广告标识 */
-extern NSString *const ANSPresetIDFA;
-/** 首次启动时间 */
-extern NSString *const ANSPresetFirstVisitTime;
-/** 首次启动语言 */
-extern NSString *const ANSPresetFirstVisitLanguage;
 /** 设备品牌 */
 extern NSString *const ANSPresetBrand;
 /** 设备型号 */
 extern NSString *const ANSPresetModel;
 /** 操作系统 */
 extern NSString *const ANSPresetOS;
-/** reset时间 */
-extern NSString *const ANSPresetResetTime;
 /** session标识 */
 extern NSString *const ANSSessionId;
+/** 时间校准标识 */
+extern NSString *const ANSTimeCalibrated;
+/** 是否首次访问 */
+extern NSString *const ANSIsFirstTime;
+/** 是否首天 */
+extern NSString *const ANSIsFirstDay;
+
+
+// 页面事件
+
+/** 页面标识 */
+extern NSString *const ANSPageUrl;
+/** 页面标题 */
+extern NSString *const ANSPageTitle;
+/** 页面名称 */
+extern NSString *const ANSPageName;
+/** 页面来源 */
+extern NSString *const ANSPageReferrerUrl;
+
+// profile_set_once事件
+
+/** 首次启动时间 */
+extern NSString *const ANSPresetFirstVisitTime;
+/** 首次启动语言 */
+extern NSString *const ANSPresetFirstVisitLanguage;
+/** reset时间 */
+extern NSString *const ANSPresetResetTime;
+
+//  profile_set_xxx/alias
+/** 广告标识 */
+extern NSString *const ANSPresetIDFV;
+/** 广告标识 */
+extern NSString *const ANSPresetIDFA;
 
 #pragma mark - UTM参数
 extern NSString *const ANSUtmCampaignId;
@@ -138,6 +144,23 @@ extern NSString *const ANSUtmActionType;
 extern NSString *const ANSUtmAction;
 extern NSString *const ANSUtmCpd;
 
+#pragma mark - other
+
+/** 匿名标识 */
+extern NSString *const ANSAnonymousId;
+/** 默认标识 */
+extern NSString *const ANSUUID;
+/** 原始标识 */
+extern NSString *const ANSOriginalId;
+
+/** App启动标识 */
+extern NSString *const ANSAppLaunchDate;
+/** profile系列模板 */
+extern NSString *const ANSProfileSetXXX;
+
+#pragma mark - 数据库
+extern NSString *const ANSLogJson;  //  上报日志
+extern NSString *const ANSLogOldOrNew;  //  是否本次产生的数据
 
 
 @end

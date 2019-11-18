@@ -12,6 +12,14 @@
 
 NSString *const ANSSDKVersion = @"4.3.5";
 
+#pragma mark - 基础字段
+
+NSString *const ANSAppid = @"appid";
+NSString *const ANSXwho = @"xwho";
+NSString *const ANSXwhen = @"xwhen";
+NSString *const ANSXwhat = @"xwhat";
+NSString *const ANSXcontext = @"xcontext";
+
 #pragma mark - 事件类型标识
 
 NSString *const ANSEventAppStart = @"$startup";
@@ -34,23 +42,7 @@ NSString *const ANSEventHeatMap = @"$app_click";
 
 NSString *const ANSEventPush = @"push";
 
-#pragma mark - other
-
-NSString *const ANSAnonymousId = @"$distinct_id";
-NSString *const ANSUUID = @"eg_uuid";
-NSString *const ANSOriginalId = @"$original_id";
-
-NSString *const ANSAppLaunchDate = @"EGAppLaunchedDate";
-NSString *const ANSProfileSetXXX = @"$profile_set_xxx";
-
-NSString *const ANSServerTimeInterval = @"ANSServerTimeInterval";
-
-NSString *const ANSPageUrl = @"$url";
-NSString *const ANSPageTitle = @"$title";
-NSString *const ANSPageName = @"$pagename";
-NSString *const ANSPageReferrerUrl = @"$referrer";
-
-#pragma mark - 预置属性
+#pragma mark - 通用预置属性
 NSString *const ANSPresetTimeZone = @"$time_zone";
 NSString *const ANSPresetPlatform = @"$platform";
 NSString *const ANSPresetAppVersion = @"$app_version";
@@ -61,16 +53,28 @@ NSString *const ANSPresetScreenWidth = @"$screen_width";
 NSString *const ANSPresetScreenHeight = @"$screen_height";
 NSString *const ANSPresetNetwork = @"$network";
 NSString *const ANSPresetManufacturer = @"$manufacturer";
-NSString *const ANSPresetIDFV = @"$idfv";
-NSString *const ANSPresetIDFA = @"$idfa";
-NSString *const ANSPresetFirstVisitTime = @"$first_visit_time";
 NSString *const ANSPresetBrand = @"$brand";
 NSString *const ANSPresetModel = @"$model";
 NSString *const ANSPresetOS = @"$os";
-NSString *const ANSPresetResetTime = @"$reset_time";
 NSString *const ANSSessionId = @"$session_id";
+NSString *const ANSTimeCalibrated = @"$is_time_calibrated";
+NSString *const ANSIsFirstTime = @"$is_first_time";
+NSString *const ANSIsFirstDay = @"$is_first_day";
 
+// 页面事件
+NSString *const ANSPageUrl = @"$url";
+NSString *const ANSPageTitle = @"$title";
+NSString *const ANSPageName = @"$pagename";
+NSString *const ANSPageReferrerUrl = @"$referrer";
+
+// profile_set_once事件
+NSString *const ANSPresetFirstVisitTime = @"$first_visit_time";
 NSString *const ANSPresetFirstVisitLanguage = @"$first_visit_language";
+NSString *const ANSPresetResetTime = @"$reset_time";
+
+//  profile_set_xxx/alias
+NSString *const ANSPresetIDFV = @"$idfv";
+NSString *const ANSPresetIDFA = @"$idfa";
 
 #pragma mark - UTM参数
 NSString *const ANSUtmCampaignId = @"$utm_campaign_id";
@@ -83,5 +87,18 @@ NSString *const ANSUtmActionType = @"$actiontype";
 NSString *const ANSUtmAction = @"$action";
 NSString *const ANSUtmCpd = @"$cpd";
 
+#pragma mark - other
+
+NSString *const ANSAnonymousId = @"$distinct_id";
+NSString *const ANSUUID = @"eg_uuid";
+NSString *const ANSOriginalId = @"$original_id";
+
+NSString *const ANSAppLaunchDate = @"EGAppLaunchedDate";
+NSString *const ANSProfileSetXXX = @"$profile_set_xxx";
+
+#pragma mark - 数据库
+
+NSString *const ANSLogJson = @"LogJsonString";
+NSString *const ANSLogOldOrNew = @"LogOldOrNew";
 
 @end

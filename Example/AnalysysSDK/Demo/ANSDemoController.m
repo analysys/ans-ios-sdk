@@ -139,8 +139,8 @@ static NSString *const kBackgroundColor = @"backgroundColor";
 #pragma mark - tips
 
 - (void)showAlertView:(NSString *)tips {
-//    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"tips" message:tips delegate:nil cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
-//    [alert show];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"tips" message:tips delegate:nil cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+    [alert show];
 }
 
 #pragma mark - UICollectionViewDataSource

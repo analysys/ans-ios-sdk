@@ -28,7 +28,7 @@
  @param obj 需要转换的对象
  @return 转换后的结果
  */
-- (NSData *)jsonSerializeWithObject:(id)obj;
++ (NSData *)jsonSerializeWithObject:(id)obj;
 
 /**
  将对象转换为JSON允许类型
@@ -36,7 +36,7 @@
  @param obj 对象
  @return 转换结果
  */
-- (id)convertToJsonObjectWithObject:(id)obj;
++ (id)convertToJsonObjectWithObject:(id)obj;
 
 /**
  json转字典

@@ -16,6 +16,8 @@
         _channel = @"App Store";
         _autoProfile = YES;
         _autoInstallation = NO;
+        _allowTimeCheck = NO;
+        _maxDiffTimeInterval = 30;
     }
     return self;
 }
@@ -27,6 +29,12 @@
         instance = [[AnalysysAgentConfig alloc] init] ;
     });
     return instance;
+}
+
+- (void)setMaxDiffTimeInterval:(NSUInteger)maxDiffTimeInterval {
+    if (maxDiffTimeInterval < 0) {
+        _maxDiffTimeInterval = 30;
+    }
 }
 
 @end

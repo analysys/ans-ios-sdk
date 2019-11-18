@@ -22,7 +22,7 @@
     NSString *_referrerPageUrl; // 来源页标识
 }
 
-@property (nonatomic, strong) NSMutableDictionary *lastVisitPageInfo; // 最后访问的页面信息
+@property (nonatomic, weak) UIViewController *lastViewController;
 
 @end
 
@@ -35,14 +35,6 @@
         singleInstance = [[self alloc] init] ;
     });
     return singleInstance;
-}
-
-- (instancetype)init {
-    self = [super init];
-    if (self) {
-        _lastVisitPageInfo = [NSMutableDictionary dictionary];
-    }
-    return self;
 }
 
 + (void)autoTrack {
@@ -62,7 +54,7 @@
 }
 
 + (void)autoTrackLastVisitPage {
-    NSDictionary *pageInfo = [ANSPageAutoTrack shareInstance].lastVisitPageInfo;
+    NSDictionary *pageInfo = [[ANSPageAutoTrack shareInstance] lastControllerInfo];
     if (pageInfo.allKeys.count) {
         [[AnalysysSDK sharedManager] autoPageView:nil properties:pageInfo];
     }
@@ -98,8 +90,9 @@
 
 /** 页面显示 */
 - (void)viewDidAppear:(UIViewController *)controller {
-    NSString *className = NSStringFromClass([controller class]);
-    NSString *controllerTitle = [ANSControllerUtils titleFromViewController:controller];
+    if (self.lastViewController == controller) {
+        return;
+    }
     
     [[AnalysysSDK sharedManager] dispatchOnSerialQueue:^{
         //  先生成session 后记录时间
@@ -107,10 +100,6 @@
         [[ANSSession shareInstance] updatePageAppearDate];
         
         if ([self canTrackViewController:controller]) {
-            [self.lastVisitPageInfo removeAllObjects];
-            [self.lastVisitPageInfo setValue:controllerTitle forKey:ANSPageTitle];
-            [self.lastVisitPageInfo setValue:className forKey:ANSPageUrl];
-            
             [self autoTrackViewController:controller];
         }
     }];
@@ -125,9 +114,10 @@
 
 /** 自定义参数 */
 - (void)autoTrackViewController:(UIViewController *)controller {
+    self.lastViewController = controller;
+    
     NSMutableDictionary *pageProperties = [NSMutableDictionary dictionary];
-    NSDictionary *SDKPageTrackProperty = [self.lastVisitPageInfo copy];
-    [pageProperties addEntriesFromDictionary:SDKPageTrackProperty];
+    [pageProperties addEntriesFromDictionary:[self lastControllerInfo]];
     
     if (_referrerPageUrl) {
         [pageProperties setValue:_referrerPageUrl forKey:ANSPageReferrerUrl];
@@ -160,6 +150,17 @@
     }
     
     [[AnalysysSDK sharedManager] autoPageView:nil properties:pageProperties];
+}
+
+/// controller页面信息
+- (NSDictionary *)lastControllerInfo {
+    NSString *className = NSStringFromClass([self.lastViewController class]);
+    NSString *controllerTitle = [ANSControllerUtils titleFromViewController:self.lastViewController];
+    NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:
+                          className, ANSPageUrl,
+                          controllerTitle, ANSPageTitle,
+                          nil];
+    return info;
 }
 
 @end

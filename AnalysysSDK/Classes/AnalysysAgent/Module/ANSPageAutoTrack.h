@@ -23,8 +23,6 @@
 
 @interface ANSPageAutoTrack : NSObject
 
-+ (instancetype)shareInstance;
-
 /**
  开启页面切换监测
  */

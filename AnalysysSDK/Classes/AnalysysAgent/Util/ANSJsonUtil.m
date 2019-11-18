@@ -8,24 +8,14 @@
 
 #import "ANSJsonUtil.h"
 #import "ANSConsoleLog.h"
+#import "ANSDateUtil.h"
 
-@implementation ANSJsonUtil {
-    NSDateFormatter *_dateFormatter;
-}
+@implementation ANSJsonUtil
 
-- (instancetype)init {
-    self = [super init];
-    if (self) {
-        _dateFormatter = [[NSDateFormatter alloc] init];
-        [_dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss.SSS"];
-    }
-    return self;
-}
-
-- (NSData *)jsonSerializeWithObject:(id)obj {
++ (NSData *)jsonSerializeWithObject:(id)obj {
     NSData *data = nil;
     @try {
-        id coercedObj = [self convertToJsonObjectWithObject:obj];
+        id coercedObj = [ANSJsonUtil convertToJsonObjectWithObject:obj];
         //        if (@available(iOS 11.0, *)) {
         //            data = [NSJSONSerialization dataWithJSONObject:coercedObj options:NSJSONWritingSortedKeys error:&error];
         //        } else {
@@ -38,7 +28,7 @@
     return data;
 }
 
-- (id)convertToJsonObjectWithObject:(id)obj {
++ (id)convertToJsonObjectWithObject:(id)obj {
     if ([obj isKindOfClass:[NSString class]] ||
         [obj isKindOfClass:[NSNumber class]] ) {
         return obj;
@@ -47,7 +37,7 @@
     if ([obj isKindOfClass:[NSArray class]]) {
         NSMutableArray *a = [NSMutableArray array];
         for (id i in obj) {
-            [a addObject:[self convertToJsonObjectWithObject:i]];
+            [a addObject:[ANSJsonUtil convertToJsonObjectWithObject:i]];
         }
         return [NSArray arrayWithArray:a];
     }
@@ -62,7 +52,7 @@
             } else {
                 stringKey = [NSString stringWithString:key];
             }
-            id v = [self convertToJsonObjectWithObject:obj[key]];
+            id v = [ANSJsonUtil convertToJsonObjectWithObject:obj[key]];
             [d setValue:v forKey:stringKey];
         }
         return [NSDictionary dictionaryWithDictionary:d];
@@ -71,13 +61,13 @@
     if ([obj isKindOfClass:[NSSet class]]) {
         NSMutableArray *a = [NSMutableArray array];
         for (id i in obj) {
-            [a addObject:[self convertToJsonObjectWithObject:i]];
+            [a addObject:[ANSJsonUtil convertToJsonObjectWithObject:i]];
         }
         return [NSArray arrayWithArray:a];
     }
 
     if ([obj isKindOfClass:[NSDate class]]) {
-        return [_dateFormatter stringFromDate:obj];
+        return [[ANSDateUtil dateFormat] stringFromDate:obj];
     }
     
     if ([obj isKindOfClass:[NSURL class]]) {
@@ -109,7 +99,7 @@
         }
     }
     NSError *error = nil;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:object options:NSJSONWritingPrettyPrinted error:&error];
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:object options:(NSJSONWritingOptions)0 error:&error];
     if (error) {
         return @"";
     }
