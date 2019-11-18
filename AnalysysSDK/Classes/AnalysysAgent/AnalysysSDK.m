@@ -21,6 +21,7 @@
 #import "ANSHybrid.h"
 
 #import "ANSUtil.h"
+#import "ANSDateUtil.h"
 #import "ANSEncryptUtis.h"
 #import "ANSConst+private.h"
 #import "ANSGzip.h"
@@ -35,6 +36,7 @@
 
 #import "ANSStrategyManager.h"
 
+#import "ANSTimeCheckManager.h"
 
 #define AgentLock() dispatch_semaphore_wait(self->_lock, DISPATCH_TIME_FOREVER);
 #define AgentUnlock() dispatch_semaphore_signal(self->_lock);
@@ -74,8 +76,6 @@ void* AnalysysQueueTag = &AnalysysQueueTag;
     dispatch_queue_t _serialQueue;  //  数据队列
     dispatch_queue_t _requestQueue; //  数据队列
     NSMutableArray *_ignoredViewControllers;    //  忽略自动采集的页面
-    NSDateFormatter *_timeCheckFmt; //  时间校准
-    NSDateFormatter *_dateFmt;
     
     BOOL _isAppLaunched;    // 是否launch启动，防止pageview事件先于start事件
     BOOL _canSendProfileSetOnce;    // 是否可发送profileSetOnce
@@ -118,15 +118,6 @@ void* AnalysysQueueTag = &AnalysysQueueTag;
         _propertiesLock = [[NSLock alloc] init];
         _userDefaultsLock = [[NSLock alloc] init];
         _isSendingDataLock = [[NSLock alloc] init];
-        _dateFmt = [[NSDateFormatter alloc] init];
-        _dateFmt.dateFormat = @"yyyy-MM-dd HH:mm:ss.SSS";
-        _dateFmt.timeZone = [NSTimeZone timeZoneWithAbbreviation:@"GMT+0800"];
-        
-        _timeCheckFmt = [[NSDateFormatter alloc] init];
-        [_timeCheckFmt setTimeStyle:NSDateFormatterFullStyle];
-        [_timeCheckFmt setDateFormat:@"EEE',' dd' 'MMM' 'yyyy HH':'mm':'ss zzz"];
-        [_timeCheckFmt setLocale:[NSLocale localeWithLocaleIdentifier:@"en_US"]];
-        [_timeCheckFmt setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"GMT+0800"]];
         
         NSString *serialLabel = [NSString stringWithFormat:@"com.analysys.serialQueue"];
         NSString *requestLabel = [NSString stringWithFormat:@"com.analysys.requestQueue"];
@@ -143,7 +134,7 @@ void* AnalysysQueueTag = &AnalysysQueueTag;
         [[ANSTelephonyNetwork shareInstance] startReachability];
         [self registNotifications];
         self->_dbHelper = [[ANSDatabase alloc] initWithDatabaseName:@"ANALYSYS.db"];
-        
+        [self->_dbHelper resetLogStatus];
     }
     return self;
 }
@@ -209,6 +200,10 @@ void* AnalysysQueueTag = &AnalysysQueueTag;
             return;
         }
         NSString *serverUrl = [NSString stringWithFormat:@"%@/up",url];
+        
+        [[ANSTimeCheckManager shared] requestWithServer:serverUrl block:^{
+            [self flushDataNotification:nil];
+        }];
         
         if ([self isServerURLChanged:serverUrl]) {
             [self profileResetWithType:ANSStartReset];
@@ -516,12 +511,9 @@ void* AnalysysQueueTag = &AnalysysQueueTag;
     
     NSString *netWork = [[ANSTelephonyNetwork shareInstance] telephonyNetworkDescrition];
     [presetProperties setValue:netWork forKey:ANSPresetNetwork];
-    [_userDefaultsLock lock];
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    NSString *launchDate = [userDefaults objectForKey:ANSAppLaunchDate];
-    [_userDefaultsLock unlock];
     
-    [presetProperties setValue:launchDate forKey:ANSPresetFirstVisitTime];
+    [presetProperties setValue:[self appFirstStartTime] forKey:ANSPresetFirstVisitTime];
+    
     NSString *session = [[ANSSession shareInstance] localSession];
     [presetProperties setValue:session forKey:ANSSessionId];
     
@@ -944,7 +936,6 @@ void* AnalysysQueueTag = &AnalysysQueueTag;
     dispatch_async(self->_serialQueue, ^{
         [self flushDataIfIgnorePolicy:NO];
     });
-    
 }
 
 #pragma mark - 事件处理
@@ -985,7 +976,7 @@ void* AnalysysQueueTag = &AnalysysQueueTag;
         [pageProperties setValue:pageName forKey:ANSPageName];
         if ([properties isKindOfClass:[NSDictionary class]]) {
             [pageProperties addEntriesFromDictionary:properties];
-        } else {
+         } else if (properties) {
             pageProperties = properties;
         }
         NSDictionary *pageInfo = [ANSDataProcessing processPageProperties:pageProperties SDKProperties:nil];
@@ -999,10 +990,8 @@ void* AnalysysQueueTag = &AnalysysQueueTag;
 - (void)upProfileSetOnce {
     dispatch_block_t block = ^(){
         if (AnalysysConfig.autoProfile) {
-            NSString *dateStr = [self->_dateFmt stringFromDate:[NSDate date]];
-            NSString *language = [ANSDeviceInfo getDeviceLanguage];
-            NSDictionary *properties = @{ANSPresetFirstVisitTime: dateStr,
-                                         ANSPresetFirstVisitLanguage: language};
+            NSDictionary *properties = @{ANSPresetFirstVisitTime: [self appFirstStartTime],
+                                         ANSPresetFirstVisitLanguage: [ANSDeviceInfo getDeviceLanguage]};
             NSDictionary *setOnce = [ANSDataProcessing processProfileSetOnceProperties:nil SDKProperties:properties];
             [self saveUploadInfo:setOnce event:ANSEventProfileSetOnce handler:^{}];
         }
@@ -1036,7 +1025,6 @@ void* AnalysysQueueTag = &AnalysysQueueTag;
         [tmp removeObjectForKey:ANSAnonymousId];
         [tmp removeObjectForKey:ANSEventAlias];
         [tmp removeObjectForKey:ANSOriginalId];
-        [tmp removeObjectForKey:ANSServerTimeInterval];
         self->_superProperties = [NSDictionary dictionary];
         [ANSFileManager archiveSuperProperties:self->_superProperties];
         self->_commonProperties = tmp;
@@ -1048,12 +1036,8 @@ void* AnalysysQueueTag = &AnalysysQueueTag;
         [[ANSSession shareInstance] resetSession];
         
         [[ANSStrategyManager sharedManager] resetStrategy];
-        
-        [[AnalysysSDK getUserDefaultLock] lock];
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        [defaults setObject:nil forKey:ANSAppLaunchDate];
-        [defaults synchronize];
-        [[AnalysysSDK getUserDefaultLock] unlock];
+
+        [ANSFileManager saveUserDefaultWithKey:ANSAppLaunchDate value:nil];
         
         [self->_dbHelper clearDB];
     };
@@ -1068,7 +1052,7 @@ void* AnalysysQueueTag = &AnalysysQueueTag;
             checkResult.remarks = @"send reset info.";
             ANSBriefLog(@"%@",[checkResult messageDisplay]);
             
-            NSString *dateStr = [self->_dateFmt stringFromDate:[NSDate date]];
+            NSString *dateStr = [[ANSDateUtil dateFormat] stringFromDate:[NSDate date]];
             NSDictionary *upInfo = [ANSDataProcessing processProfileSetOnceProperties:nil SDKProperties:@{ANSPresetResetTime: dateStr}];
             [self saveUploadInfo:upInfo event:ANSEventProfileSetOnce handler:^{}];
         }
@@ -1080,11 +1064,8 @@ void* AnalysysQueueTag = &AnalysysQueueTag;
 
 /** 首次启动 */
 - (void)checkAppFirstStart {
-    [[AnalysysSDK getUserDefaultLock] lock];
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    id hasValue = [[userDefaults objectForKey:ANSAppLaunchDate] copy];
-    [[AnalysysSDK getUserDefaultLock] unlock];
-    if (!hasValue) {
+    NSString *launchDate = [ANSFileManager userDefaultValueWithKey:ANSAppLaunchDate];
+    if (!launchDate) {
         _canSendProfileSetOnce = YES;
         _canSendAutoInstallation = YES;
         [_propertiesLock lock];
@@ -1135,6 +1116,11 @@ static BOOL isSendingData = NO;
         ANSBriefWarning(@"%@",[checkResult messageDisplay]);
         return;
     }
+    
+    if (![[ANSTimeCheckManager shared] timeCheckRequestIsFinished]) {
+        return;
+    }
+    
     [_isSendingDataLock lock];
     if (isSendingData) {
         [_isSendingDataLock unlock];
@@ -1149,8 +1135,6 @@ static BOOL isSendingData = NO;
                                                        header:httpHeader
                                                          body:uploadInfo
                                                       success:^(NSURLResponse *response, NSData *responseData) {
-                  NSHTTPURLResponse *res = (NSHTTPURLResponse *)response;
-                  [self checkTimeWithResponse:res];
                   @try {
                       NSData *decodBase64Data = [[NSData alloc] initWithBase64EncodedData:responseData options:0];
                       NSError *error = nil;
@@ -1255,6 +1239,7 @@ static BOOL isSendingData = NO;
         dispatch_sync(self->_serialQueue, ^{
             dataArray = [self->_dbHelper getTopRecords:dataCount type:type];
             if (dataArray.count > 0) {
+                dataArray = [[ANSTimeCheckManager shared] checkDataArray:dataArray];
                 blockHttpHeader = [ANSEncryptUtis httpHeaderInfo];
                 NSString *jsonString = [NSString stringWithFormat:@"[%@]",[dataArray componentsJoinedByString:@","]];
                 blockUploadData = [[ANSEncryptUtis processUploadBody:jsonString param:blockHttpHeader] copy];
@@ -1308,23 +1293,14 @@ static BOOL isSendingData = NO;
 
 #pragma mark - other
 
-/** 时间校准 */
-- (void)checkTimeWithResponse:(NSHTTPURLResponse *)response {
-    dispatch_block_t block = ^(){
-        NSString *string = [NSString stringWithFormat:@"%@", response.allHeaderFields[@"Date"]];
-        NSDate *date = [self->_timeCheckFmt dateFromString:string];
-        NSTimeInterval serverTimeInterval = [date timeIntervalSince1970]*1000;
-        NSTimeInterval nowTimeInterval = [[NSDate date] timeIntervalSince1970]*1000;
-        
-        [self->_propertiesLock lock];
-        NSMutableDictionary *tmp = [NSMutableDictionary dictionaryWithDictionary:self->_commonProperties];
-        [tmp setValue:[NSNumber numberWithDouble:(serverTimeInterval - nowTimeInterval)] forKey:ANSServerTimeInterval];
-        self->_commonProperties = [NSDictionary dictionaryWithDictionary:tmp];
-        [ANSFileManager archiveCommonProperties:self->_commonProperties];
-        [self->_propertiesLock unlock];
-        
-    };
-    [self dispatchOnSerialQueue:block];
+/** app首次启动时间 */
+- (NSString *)appFirstStartTime {
+    NSString *launchDate = [ANSFileManager userDefaultValueWithKey:ANSAppLaunchDate];
+    if (!launchDate) {
+        launchDate = [[ANSDateUtil dateFormat] stringFromDate:[NSDate date]];
+        [ANSFileManager saveUserDefaultWithKey:ANSAppLaunchDate value:launchDate];
+    }
+    return launchDate;
 }
 
 - (BOOL)isIgnoreTrackWithClassName:(NSString *)className {
@@ -1362,6 +1338,5 @@ static BOOL isSendingData = NO;
 + (NSLock *)getUserDefaultLock {
     return [AnalysysSDK sharedManager]->_userDefaultsLock;
 }
-
 
 @end

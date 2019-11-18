@@ -36,9 +36,14 @@
     //    [AnalysysAgent identify:@"testIdentify"];
     //    [AnalysysAgent alias:@"18600008888" originalId:@""];
     
-    // [AnalysysAgent setAutomaticCollection:YES];
-    // [AnalysysAgent setAutomaticHeatmap:YES];
-        
+    [AnalysysAgent setAutomaticCollection:YES];
+    //    [AnalysysAgent setIgnoredAutomaticCollectionControllers:@[@"ANSHomeViewController",@"SettingViewController", @"ScrollViewController", @"PopViewController"]];
+    
+//    [AnalysysAgent setAutomaticHeatmap:YES];
+    
+    //  默认的 debugmode = debugoff 不打印log。 应该先设置debugmode，然后设置 superproperty 避免 log 丢失。
+//    [AnalysysAgent registerSuperProperties:@{@"Sex": @"male", @"bobby": @[@"football",@"pingpang"]}];
+    
     
 #if DEBUG
     [AnalysysAgent setDebugMode:AnalysysDebugButTrack];
@@ -51,10 +56,11 @@
     //  AnalysysAgent SDK配置信息
     AnalysysConfig.appKey = @"sdktest201907";
     AnalysysConfig.channel = @"App Store";
-//    AnalysysConfig.baseUrl = @"arkpaastest.analysys.cn";
     AnalysysConfig.autoProfile = YES;
     AnalysysConfig.autoInstallation = YES;
     AnalysysConfig.encryptType = AnalysysEncryptAESCBC128;
+    AnalysysConfig.allowTimeCheck = YES;
+    AnalysysConfig.maxDiffTimeInterval = 5 * 60;
     //  使用配置信息初始化SDK
     [AnalysysAgent startWithConfig:AnalysysConfig];
     

@@ -36,16 +36,6 @@ static NSString *ANSUserAgentId = @"UserAgent";
     return singleInstance;
 }
 
-
-- (instancetype)init {
-    self = [super init];
-    if (self) {
-        _jsonUtil = [[ANSJsonUtil alloc] init];
-    }
-    return self;
-}
-
-
 #pragma mark - Interface
 
 + (BOOL)excuteRequest:(NSURLRequest *)request webView:(id)webView {
@@ -154,7 +144,7 @@ static NSString *ANSUserAgentId = @"UserAgent";
 /** 字典转json */
 -(NSString *)jsonStringWithobject:(id)object {
     @try {
-        id converObject = [_jsonUtil convertToJsonObjectWithObject:object];
+        id converObject = [ANSJsonUtil convertToJsonObjectWithObject:object];
         if ([converObject isKindOfClass:[NSNumber class]] ||
             [converObject isKindOfClass:[NSString class]]) {
             return [NSString stringWithFormat:@"%@",converObject];
@@ -340,7 +330,7 @@ static NSString *ANSUserAgentId = @"UserAgent";
 
 - (void)getDistinctId:(NSArray *)params webView:(UIWebView *)webView {
     NSString *distinctId = [AnalysysAgent getDistinctId];
-    NSString *jsMethod = params.lastObject;
+    NSString *jsMethod;
     if (distinctId) {
         jsMethod = [NSString stringWithFormat:@"%@('%@')",params.lastObject,distinctId];
     } else {

@@ -12,9 +12,11 @@
 #import "ANSConsoleLog.h"
 #import "ANSFileManager.h"
 #import "ANSJsonUtil.h"
+#import "ANSDateUtil.h"
 #import "ANSEncryptDB.h"
 #import "AnalysysAgentConfig.h"
 #import "AnalysysSDK.h"
+#import "ANSConst+private.h"
 
 typedef NS_ENUM(NSInteger, AnalysysOrder) {
     AnalysysOrderAsc = 0,
@@ -25,6 +27,10 @@ typedef NS_ENUM(NSInteger, AnalysysOrder) {
 
 @end
 
+//  以下两个参数4.3.5之后每次冷启动置为null
+//  column1：数据上传状态。默认：空(null)；1：数据正在上传
+//  column2：数据是否为本地启动采集。历史数据：默认空(null)；4.3.5之后数据插入即为1(用于时间校准)
+
 @interface ANSDatabase ()
 
 @property (nonatomic) sqlite3 *database;
@@ -34,8 +40,6 @@ typedef NS_ENUM(NSInteger, AnalysysOrder) {
 @implementation ANSDatabase {
     dispatch_queue_t _sqliteQueue;
     NSInteger _dataCount;
-    ANSJsonUtil *_jsonUtil;
-    NSDateFormatter *_dateFormatter;
     NSMutableDictionary *_stmtMap;
     NSMutableArray *_ids;
 }
@@ -45,11 +49,7 @@ typedef NS_ENUM(NSInteger, AnalysysOrder) {
     if (self) {
         _dataCount = 0;
         _ids = [NSMutableArray array];
-        _jsonUtil = [[ANSJsonUtil alloc] init];
         _stmtMap = [NSMutableDictionary dictionary];
-        
-        _dateFormatter = [[NSDateFormatter alloc] init];
-        [_dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss.SSS"];
     }
     return self;
 }
@@ -107,16 +107,16 @@ typedef NS_ENUM(NSInteger, AnalysysOrder) {
             AnsWarning(@"The number of data storage exceeds the maximum value: %ld, will clean up 10 old data!",(long)maxCacheSize);
             [self deleteTopRecords];
         }
-        NSData *jsonData = [_jsonUtil jsonSerializeWithObject:object];
+        NSData *jsonData = [ANSJsonUtil jsonSerializeWithObject:object];
         if (!jsonData) {
             AnsWarning(@"Insert json data is nil!");
             return NO;
         }
         jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-        NSString *query = @"insert into record_data (type, json_string, create_date) values(?, ?, ?)";
+        NSString *query = @"insert into record_data (type, json_string, create_date, column2) values(?, ?, ?, 1)";
         sqlite3_stmt *pStmt = [self cachedStatementForQuery:query];
         if (pStmt) {
-            NSString *dateStr = [_dateFormatter stringFromDate:[NSDate date]];
+            NSString *dateStr = [[ANSDateUtil dateFormat] stringFromDate:[NSDate date]];
             NSString *base64String = [ANSEncryptDB base64EncodeWithString:jsonString];
             NSArray *params = @[event, base64String, dateStr];
             if ([self execStatement:pStmt paramArray:params]) {
@@ -202,25 +202,34 @@ typedef NS_ENUM(NSInteger, AnalysysOrder) {
         if (limit) {
             limitStr = [NSString stringWithFormat:@"limit %ld", (long)limit];
         }
-        selelctSQL = [NSString stringWithFormat:@"select id, json_string from record_data %@ order by id %@ %@", where, orderBy == AnalysysOrderAsc ? @"asc": @"desc", limitStr];
+        selelctSQL = [NSString stringWithFormat:@"select id, json_string, column2 from record_data %@ order by id %@ %@", where, orderBy == AnalysysOrderAsc ? @"asc": @"desc", limitStr];
         
         [_ids removeAllObjects];
         sqlite3_stmt *pStmt = [self cachedStatementForQuery:selelctSQL];
         if (pStmt) {
             while (sqlite3_step(pStmt) == SQLITE_ROW) {
-
+                NSMutableDictionary *logInfo = [NSMutableDictionary dictionary];
+                
                 NSInteger index = sqlite3_column_int(pStmt, 0);
                 [_ids addObject:[NSString stringWithFormat:@"%ld", (long)index]];
                 
-                char *text = (char*)sqlite3_column_text(pStmt, 1);
-                NSString *textString = [NSString stringWithUTF8String:text];
-                NSString *jsonString = [ANSEncryptDB base64DecodeWithString:textString];
-                if (jsonString.length == 0) {
-                    jsonString = textString;
+                char *logText = (char*)sqlite3_column_text(pStmt, 1);
+                NSString *logString = [NSString stringWithUTF8String:logText];
+                NSString *logJsonString = [ANSEncryptDB base64DecodeWithString:logString];
+                if (logJsonString.length == 0) {
+                    logJsonString = logString;
                 }
-                if ([self validOfJsonString:jsonString]) {
-                    [records addObject:jsonString];
+                if ([self validOfJsonString:logJsonString]) {
+                    logInfo[ANSLogJson] = logJsonString;
                 }
+                
+                char *oldOrNew = (char*)sqlite3_column_text(pStmt, 2);
+                if (oldOrNew) {
+                    NSString *oldOrNewString = [NSString stringWithUTF8String:oldOrNew];
+                    logInfo[ANSLogOldOrNew] = oldOrNewString;
+                }
+                
+                [records addObject:logInfo];
             }
         }
     } @catch (NSException *exception) {
@@ -235,6 +244,16 @@ typedef NS_ENUM(NSInteger, AnalysysOrder) {
 /** 获取表条数 */
 - (NSInteger)recordRows {
     return _dataCount;
+}
+
+- (void)resetLogStatus {
+    NSString *query = [NSString stringWithFormat:@"update record_data set column1 = null, column2 = null"];
+    sqlite3_stmt *pStmt = [self cachedStatementForQuery:query];
+    if ([self execStatement:pStmt paramArray:nil]) {
+        AnsDebug(@"reset data success");
+    } else {
+        AnsDebug(@"reset data failed");
+    }
 }
 
 #pragma mark - private
@@ -354,14 +373,14 @@ typedef NS_ENUM(NSInteger, AnalysysOrder) {
 /** 基础字段校验 */
 - (BOOL)validOfJsonString:(NSString *)json {
     NSDictionary *dataMap = [ANSJsonUtil convertToMapWithString:json];
-    if (![dataMap.allKeys containsObject:@"appid"] ||
-        ![dataMap.allKeys containsObject:@"xwho"] ||
-        ![dataMap.allKeys containsObject:@"xwhat"] ||
-        ![dataMap.allKeys containsObject:@"xwhen"] ||
-        ![dataMap.allKeys containsObject:@"xcontext"]) {
+    if (![dataMap.allKeys containsObject:ANSAppid] ||
+        ![dataMap.allKeys containsObject:ANSXwho] ||
+        ![dataMap.allKeys containsObject:ANSXwhat] ||
+        ![dataMap.allKeys containsObject:ANSXwhen] ||
+        ![dataMap.allKeys containsObject:ANSXcontext]) {
         return NO;
     }
-    NSString *appKey = dataMap[@"appid"];
+    NSString *appKey = dataMap[ANSAppid];
     if (![appKey isEqualToString:AnalysysConfig.appKey]) {
         return NO;
     }

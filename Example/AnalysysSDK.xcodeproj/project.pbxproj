@@ -189,19 +189,19 @@
 		48DA23B1233B6C3000FCD7D9 /* Other */ = {
 			isa = PBXGroup;
 			children = (
-				48DA23B2233B6C3000FCD7D9 /* ANSTextField.m */,
-				48DA23B3233B6C3000FCD7D9 /* UIView+MGO.m */,
-				48DA23B4233B6C3000FCD7D9 /* UIColor+Transform.h */,
-				48DA23B5233B6C3000FCD7D9 /* ANSSlider.h */,
-				48DA23B6233B6C3000FCD7D9 /* ANSTouchId.m */,
 				48DA23B7233B6C3000FCD7D9 /* ANSButton.h */,
-				48DA23B8233B6C3000FCD7D9 /* UIView+MGO.h */,
-				48DA23B9233B6C3000FCD7D9 /* ANSTextField.h */,
-				48DA23BA233B6C3000FCD7D9 /* UIColor+Transform.m */,
-				48DA23BB233B6C3000FCD7D9 /* HRKeyboardAnimation */,
-				48DA23C0233B6C3000FCD7D9 /* ANSTouchId.h */,
-				48DA23C1233B6C3000FCD7D9 /* ANSSlider.m */,
 				48DA23C2233B6C3000FCD7D9 /* ANSButton.m */,
+				48DA23B5233B6C3000FCD7D9 /* ANSSlider.h */,
+				48DA23C1233B6C3000FCD7D9 /* ANSSlider.m */,
+				48DA23B9233B6C3000FCD7D9 /* ANSTextField.h */,
+				48DA23B2233B6C3000FCD7D9 /* ANSTextField.m */,
+				48DA23C0233B6C3000FCD7D9 /* ANSTouchId.h */,
+				48DA23B6233B6C3000FCD7D9 /* ANSTouchId.m */,
+				48DA23BB233B6C3000FCD7D9 /* HRKeyboardAnimation */,
+				48DA23B4233B6C3000FCD7D9 /* UIColor+Transform.h */,
+				48DA23BA233B6C3000FCD7D9 /* UIColor+Transform.m */,
+				48DA23B8233B6C3000FCD7D9 /* UIView+MGO.h */,
+				48DA23B3233B6C3000FCD7D9 /* UIView+MGO.m */,
 			);
 			path = Other;
 			sourceTree = "<group>";
@@ -209,10 +209,10 @@
 		48DA23BB233B6C3000FCD7D9 /* HRKeyboardAnimation */ = {
 			isa = PBXGroup;
 			children = (
-				48DA23BC233B6C3000FCD7D9 /* UIView+KeyboardAnimation.m */,
+				48DA23BF233B6C3000FCD7D9 /* UIView+CustomLayout.h */,
 				48DA23BD233B6C3000FCD7D9 /* UIView+CustomLayout.m */,
 				48DA23BE233B6C3000FCD7D9 /* UIView+KeyboardAnimation.h */,
-				48DA23BF233B6C3000FCD7D9 /* UIView+CustomLayout.h */,
+				48DA23BC233B6C3000FCD7D9 /* UIView+KeyboardAnimation.m */,
 			);
 			path = HRKeyboardAnimation;
 			sourceTree = "<group>";
@@ -325,33 +325,33 @@
 		E8DC83F4236054FC00DC0FC6 /* Demo */ = {
 			isa = PBXGroup;
 			children = (
-				E8DC83F5236054FC00DC0FC6 /* UnitTestCase.m */,
-				E8DC83F6236054FC00DC0FC6 /* ANSMutiThreadTestViewController.h */,
-				E8DC83F7236054FC00DC0FC6 /* NextViewController.m */,
-				E8DC83F8236054FC00DC0FC6 /* ANSSearchTableViewController.m */,
 				E8DC83F9236054FC00DC0FC6 /* ANSDemoCollectionHeaderView.h */,
-				E8DC83FA236054FC00DC0FC6 /* ANSHomeViewController.m */,
-				E8DC83FB236054FC00DC0FC6 /* ANSDemoController.m */,
-				E8DC83FC236054FC00DC0FC6 /* ANSDemoViewController.h */,
-				E8DC83FD236054FC00DC0FC6 /* ANSDemoTableViewCell.m */,
-				E8DC83FE236054FC00DC0FC6 /* PageDetailViewController.h */,
-				E8DC83FF236054FC00DC0FC6 /* ANSDemoCollectionViewCell.xib */,
-				E8DC8400236054FC00DC0FC6 /* ANSDemoTableViewCell.xib */,
-				E8DC8401236054FC00DC0FC6 /* ANSPresentViewController.m */,
-				E8DC8402236054FC00DC0FC6 /* ANSDemoCollectionViewCell.h */,
-				E8DC8403236054FC00DC0FC6 /* NextViewController.h */,
-				E8DC8404236054FC00DC0FC6 /* ANSSearchTableViewController.h */,
-				E8DC8405236054FC00DC0FC6 /* ANSMutiThreadTestViewController.m */,
-				E8DC8406236054FC00DC0FC6 /* UnitTestCase.h */,
-				E8DC8407236054FC00DC0FC6 /* ANSDemoCollectionHeaderView.xib */,
-				E8DC8408236054FC00DC0FC6 /* ANSDemoTableViewCell.h */,
-				E8DC8409236054FC00DC0FC6 /* ANSDemoViewController.m */,
-				E8DC840A236054FC00DC0FC6 /* ANSDemoController.h */,
-				E8DC840B236054FC00DC0FC6 /* ANSHomeViewController.h */,
 				E8DC840C236054FC00DC0FC6 /* ANSDemoCollectionHeaderView.m */,
-				E8DC840D236054FC00DC0FC6 /* PageDetailViewController.m */,
-				E8DC840E236054FC00DC0FC6 /* ANSPresentViewController.h */,
+				E8DC8407236054FC00DC0FC6 /* ANSDemoCollectionHeaderView.xib */,
+				E8DC8402236054FC00DC0FC6 /* ANSDemoCollectionViewCell.h */,
 				E8DC840F236054FC00DC0FC6 /* ANSDemoCollectionViewCell.m */,
+				E8DC83FF236054FC00DC0FC6 /* ANSDemoCollectionViewCell.xib */,
+				E8DC840A236054FC00DC0FC6 /* ANSDemoController.h */,
+				E8DC83FB236054FC00DC0FC6 /* ANSDemoController.m */,
+				E8DC8408236054FC00DC0FC6 /* ANSDemoTableViewCell.h */,
+				E8DC83FD236054FC00DC0FC6 /* ANSDemoTableViewCell.m */,
+				E8DC8400236054FC00DC0FC6 /* ANSDemoTableViewCell.xib */,
+				E8DC83FC236054FC00DC0FC6 /* ANSDemoViewController.h */,
+				E8DC8409236054FC00DC0FC6 /* ANSDemoViewController.m */,
+				E8DC840B236054FC00DC0FC6 /* ANSHomeViewController.h */,
+				E8DC83FA236054FC00DC0FC6 /* ANSHomeViewController.m */,
+				E8DC83F6236054FC00DC0FC6 /* ANSMutiThreadTestViewController.h */,
+				E8DC8405236054FC00DC0FC6 /* ANSMutiThreadTestViewController.m */,
+				E8DC840E236054FC00DC0FC6 /* ANSPresentViewController.h */,
+				E8DC8401236054FC00DC0FC6 /* ANSPresentViewController.m */,
+				E8DC8404236054FC00DC0FC6 /* ANSSearchTableViewController.h */,
+				E8DC83F8236054FC00DC0FC6 /* ANSSearchTableViewController.m */,
+				E8DC8403236054FC00DC0FC6 /* NextViewController.h */,
+				E8DC83F7236054FC00DC0FC6 /* NextViewController.m */,
+				E8DC83FE236054FC00DC0FC6 /* PageDetailViewController.h */,
+				E8DC840D236054FC00DC0FC6 /* PageDetailViewController.m */,
+				E8DC8406236054FC00DC0FC6 /* UnitTestCase.h */,
+				E8DC83F5236054FC00DC0FC6 /* UnitTestCase.m */,
 			);
 			path = Demo;
 			sourceTree = "<group>";

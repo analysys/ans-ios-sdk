@@ -71,6 +71,10 @@
  */
 - (NSInteger)recordRows;
 
+/// 重置数据标识
+/// 用于：1.数据上传 2. 时间校准
+- (void)resetLogStatus;
+
 
 /**
  获取指定类型top:时间由老到新

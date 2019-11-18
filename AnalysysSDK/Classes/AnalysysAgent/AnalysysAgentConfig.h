@@ -70,6 +70,15 @@
  */
 @property (nonatomic, assign) AnalysysEncryptType encryptType;
 
+/// 是否允许时间校准
+/// 默认值：NO
+@property (nonatomic, assign) BOOL allowTimeCheck;
+
+/// 最大允许时间误差
+/// 单位：秒
+/// 默认值：30秒
+@property (nonatomic, assign) NSUInteger maxDiffTimeInterval;
+
 
 @end
 

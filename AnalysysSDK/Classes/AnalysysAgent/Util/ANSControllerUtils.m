@@ -131,12 +131,17 @@
 }
 
 + (NSString *)titleFromViewController:(UIViewController *)viewController {
-    UIView *titleView = viewController.navigationItem.titleView;
-    if (titleView) {
-        return [self contentFromView:titleView];
-    }
-
-    return viewController.navigationItem.title ?: viewController.title;
+    __block NSString *title;
+    [NSThread AnsRunOnMainThread:^{
+        title = viewController.navigationItem.title ?: viewController.title;
+        if (!title) {
+            UIView *titleView = viewController.navigationItem.titleView;
+            if (titleView) {
+                title = [self contentFromView:titleView];
+            }
+        }
+    }];
+    return title;
 }
 
 + (NSString *)contentFromView:(UIView *)view {
@@ -149,7 +154,7 @@
         [content appendString:[contentArray componentsJoinedByString:@"-"]];
     }
     
-    return content.length > 0 ? content : nil;
+    return content;
 }
 
 + (UIViewController *)rootViewController {
@@ -268,20 +273,22 @@
 
 /** 递归获取文本内容 */
 + (void)getContentFromView:(UIView *)view contentArray:(NSMutableArray *)contentArray {
-    for (UIView *subview in view.subviews) {
-        if (subview.hidden) {
-            continue;
-        }
-        if ([subview isKindOfClass:UILabel.class]) {
-            UILabel *label = (UILabel *)subview;
-            NSString *text = label.text;
-            if (text.length > 0) {
-                [contentArray addObject:text];
+    [NSThread AnsRunOnMainThread:^{
+        for (UIView *subview in view.subviews) {
+            if (subview.hidden) {
                 continue;
             }
+            if ([subview isKindOfClass:UILabel.class]) {
+                UILabel *label = (UILabel *)subview;
+                NSString *text = label.text;
+                if (text.length > 0) {
+                    [contentArray addObject:text];
+                    continue;
+                }
+            }
+            [ANSControllerUtils getContentFromView:subview contentArray:contentArray];
         }
-        [ANSControllerUtils getContentFromView:subview contentArray:contentArray];
-    }
+    }];
 }
 
 @end
