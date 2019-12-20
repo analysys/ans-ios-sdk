@@ -8,16 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-@interface ANSStatement : NSObject
-
-/** sql */
-@property (nonatomic, copy) NSString *sql;
-
-/** SQLite sqlite3_stmt */
-@property (atomic, assign) void *statement;
-
-@end
-
 /**
  * @class
  * ANSDatabase
@@ -46,9 +36,9 @@
 
  @param object 采集结果对象
  @param event 事件标识
- @return 是否成功
+ @param maxCacheSize 最大缓存条数
  */
-- (BOOL)insertRecordObject:(id)object event:(NSString *)event;
+- (void)insertRecordObject:(id)object event:(NSString *)event maxCacheSize:(NSInteger)maxCacheSize result:(void(^)(BOOL success))result;
 
 /**
  删除已上传数据
@@ -82,11 +72,10 @@
 
  @param limit 条数
  @param type 类型过滤条件，若为空则不区分类型
- @return 返回json数组
  */
-- (NSArray *)getTopRecords:(NSInteger)limit type:(NSString *)type;
+- (void)getTopRecords:(NSInteger)limit type:(NSString *)type result:(void(^)(BOOL success, NSArray *resultArray))result;
 
-- (NSArray *)getLastRecords:(NSInteger)limit type:(NSString *)type;
+- (void)getLastRecords:(NSInteger)limit type:(NSString *)type result:(void(^)(BOOL success, NSArray *resultArray))result;
 
 
 

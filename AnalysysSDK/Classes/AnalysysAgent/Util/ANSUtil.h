@@ -50,6 +50,10 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSString *)subByteString:(NSString *)string byteLength:(NSInteger )length;
 
 
+/// 获取当前使用的window对象
+/// 适配xcode11使用SceneDelegate对象创建window
++ (UIWindow *)currentWindow;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -19,7 +19,7 @@
 @implementation ANSOpenURLAutoTrack
 
 + (void)autoTrack {
-    [NSThread AnsRunOnMainThread:^{
+    [NSThread ansRunOnMainThread:^{
         [self excuteSwizzingOpenURL];
     }];
 }
@@ -150,12 +150,12 @@
         [allKeys containsObject:@"utm_medium"] &&
         [allKeys containsObject:@"utm_campaign"]) {
         NSMutableDictionary *utmParameters = [NSMutableDictionary dictionary];
-        [utmParameters setValue:[parameters objectForKey:@"utm_campaign"] forKey:ANSUtmCampaign];
-        [utmParameters setValue:[parameters objectForKey:@"utm_medium"] forKey:ANSUtmMedium];
-        [utmParameters setValue:[parameters objectForKey:@"utm_source"] forKey:ANSUtmSource];
-        [utmParameters setValue:[parameters objectForKey:@"campaign_id"] forKey:ANSUtmCampaignId];
-        [utmParameters setValue:[parameters objectForKey:@"utm_content"] forKey:ANSUtmContent];
-        [utmParameters setValue:[parameters objectForKey:@"utm_term"] forKey:ANSUtmTerm];
+        [utmParameters setValue:parameters[@"utm_campaign"] forKey:ANSUtmCampaign];
+        [utmParameters setValue:parameters[@"utm_medium"] forKey:ANSUtmMedium];
+        [utmParameters setValue:parameters[@"utm_source"] forKey:ANSUtmSource];
+        [utmParameters setValue:parameters[@"campaign_id"] forKey:ANSUtmCampaignId];
+        [utmParameters setValue:parameters[@"utm_content"] forKey:ANSUtmContent];
+        [utmParameters setValue:parameters[@"utm_term"] forKey:ANSUtmTerm];
 
         return [utmParameters copy];
     }
@@ -163,11 +163,11 @@
         [allKeys containsObject:@"hmpl"] &&
         [allKeys containsObject:@"hmcu"]) {
         NSMutableDictionary *utmParameters = [NSMutableDictionary dictionary];
-        [utmParameters setValue:[parameters objectForKey:@"hmcu"] forKey:ANSUtmCampaign];
-        [utmParameters setValue:[parameters objectForKey:@"hmpl"] forKey:ANSUtmMedium];
-        [utmParameters setValue:[parameters objectForKey:@"hmsr"] forKey:ANSUtmSource];
-        [utmParameters setValue:[parameters objectForKey:@"hmci"] forKey:ANSUtmContent];
-        [utmParameters setValue:[parameters objectForKey:@"hmkw"] forKey:ANSUtmTerm];
+        [utmParameters setValue:parameters[@"hmcu"] forKey:ANSUtmCampaign];
+        [utmParameters setValue:parameters[@"hmpl"] forKey:ANSUtmMedium];
+        [utmParameters setValue:parameters[@"hmsr"] forKey:ANSUtmSource];
+        [utmParameters setValue:parameters[@"hmci"] forKey:ANSUtmContent];
+        [utmParameters setValue:parameters[@"hmkw"] forKey:ANSUtmTerm];
         return [utmParameters copy];
     }
     return nil;
@@ -175,14 +175,15 @@
 
 #pragma mark - 数据存储
 
+static NSString *const AnalysysUtm = @"AnalysysUtm";
 /** 存储UTM参数 */
 + (void)saveUtmParameters:(nullable NSDictionary *)utmParameters {
-    [ANSFileManager saveUserDefaultWithKey:@"AnalysysUtm" value:utmParameters];
+    [ANSFileManager saveUserDefaultWithKey:AnalysysUtm value:utmParameters];
 }
 
 /** 获取UTM参数 */
 + (NSDictionary *)utmParameters {
-    return [[ANSFileManager userDefaultValueWithKey:@"AnalysysUtm"] copy];
+    return [[ANSFileManager userDefaultValueWithKey:AnalysysUtm] copy];
 }
 
 

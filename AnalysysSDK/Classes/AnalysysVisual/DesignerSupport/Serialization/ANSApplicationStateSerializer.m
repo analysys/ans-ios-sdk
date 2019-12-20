@@ -15,7 +15,7 @@
 #import "ANSObjectSerializer.h"
 #import "ANSObjectSerializerConfig.h"
 
-#import "ANSConsoleLog.h"
+#import "AnalysysLogger.h"
 
 @implementation ANSApplicationStateSerializer {
     ANSObjectSerializer *_serializer;
@@ -44,7 +44,7 @@
     if (window && !CGRectEqualToRect(window.frame, CGRectZero)) {
         UIGraphicsBeginImageContextWithOptions(window.bounds.size, YES, window.screen.scale);
         if ([window drawViewHierarchyInRect:window.bounds afterScreenUpdates:NO] == NO) {
-            AnsDebug(@"Unable to get complete screenshot for window at index: %d.", (int)index);
+            ANSDebug(@"Unable to get complete screenshot for window at index: %d.", (int)index);
         }
         image = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();

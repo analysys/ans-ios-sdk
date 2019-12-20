@@ -9,7 +9,7 @@
 
 #import <UIKit/UIKit.h>
 #import "ANSAutoTrackProperty.h"
-
+#import "ANSAutoTrackCellProperty.h"
 #pragma mark - UIView
 
 @interface UIView (ANSAutoTrack)<ANSAutoTrackProperty>
@@ -82,6 +82,18 @@
 
 @interface UIStepper (ANSAutoTrack)<ANSAutoTrackProperty>
 
+@end
+
+#pragma mark - UITabBarItem
+@interface UITabBarItem (AutoTrack) <ANSAutoTrackProperty>
+@end
+
+#pragma mark - Cell
+
+@interface UITableViewCell (AutoTrack) <ANSAutoTrackCellProperty>
+@end
+
+@interface UICollectionViewCell (AutoTrack) <ANSAutoTrackCellProperty>
 @end
 
 

@@ -9,7 +9,8 @@
 #import "ANSDataProcessing.h"
 #import "ANSMediator.h"
 #import "ANSConst+private.h"
-#import "ANSConsoleLog.h"
+#import "ANSDataCheckLog.h"
+#import "AnalysysLogger.h"
 #import "ANSDataCheckRouter.h"
 #import "ANSDataConfig.h"
 #import "AnalysysSDK.h"
@@ -17,9 +18,17 @@
 @implementation ANSDataProcessing
 
 #pragma mark - 事件接口
++ (NSDictionary *)processAppCrashProperties:(NSDictionary *)properties {
+    ANSDataCheckLog *checkResult = nil;
+    NSDictionary *dict = [self fillTemplate:ANSEventCrash action:ANSEventCrash sdkProperties:nil userProperties:properties errLog:&checkResult];
+    if (checkResult) {
+        ANSBriefWarning(@"%@",[checkResult messageDisplay]);
+    }
+    return dict;
+}
 
 + (NSDictionary *)processAppStartProperties:(NSDictionary *)properties {
-    ANSConsoleLog *checkResult = nil;
+    ANSDataCheckLog *checkResult = nil;
     NSDictionary *dict = [self fillTemplate:ANSEventAppStart action:ANSEventAppStart sdkProperties:nil userProperties:properties errLog:&checkResult];
     if (checkResult) {
         ANSBriefWarning(@"%@",[checkResult messageDisplay]);
@@ -28,7 +37,7 @@
 }
 
 + (NSDictionary *)processAppEnd {
-    ANSConsoleLog *checkResult = nil;
+    ANSDataCheckLog *checkResult = nil;
     NSDictionary *dict = [self fillTemplate:ANSEventAppEnd action:ANSEventAppEnd sdkProperties:nil userProperties:nil errLog:&checkResult];
     if (checkResult) {
         ANSBriefWarning(@"%@",[checkResult messageDisplay]);
@@ -84,19 +93,6 @@
     return [self fillTemplate:ANSEventHeatMap action:ANSEventHeatMap sdkProperties:sdkProperties userProperties:nil];
 }
 
-/** 获取配置预置字段 */
-//+ (NSMutableDictionary *)getPreProperties; {
-//    ANSDataConfig *dataConfig = [ANSDataConfig sharedManager];
-//    NSSet *contextKeys = [[ANSDataConfig sharedManager] allPrePropertyKeys];
-//    NSMutableDictionary *preProperties = [NSMutableDictionary dictionary];
-//    for (NSString *contextFieldName in contextKeys) {
-//        NSDictionary *fieldRules = dataConfig.dataRules[ANSTemplateContext][contextFieldName];
-//        id fieldValue = [self getValueWithFieldRules:fieldRules andAciton:nil key:ANSTemplateContext error:nil];
-//        [preProperties setValue:fieldValue forKey:contextFieldName];
-//    }
-//    return preProperties;
-//}
-
 #pragma mark - 内部方法
 
 /**
@@ -111,7 +107,7 @@
                         action:(id)action
                  sdkProperties:(NSDictionary *)sdkProperties
                 userProperties:(NSDictionary *)userProperties {
-    ANSConsoleLog *checkResult = nil;
+    ANSDataCheckLog *checkResult = nil;
     return [self fillTemplate:templateName action:action sdkProperties:sdkProperties userProperties:userProperties errLog:&checkResult];
 }
 
@@ -119,19 +115,19 @@
                         action:(id)action
                  sdkProperties:(NSDictionary *)sdkProperties
                 userProperties:(NSDictionary *)userProperties
-                        errLog:(ANSConsoleLog **)checkResult {
+                        errLog:(ANSDataCheckLog **)checkResult {
     
     ANSDataConfig *dataConfig = [ANSDataConfig sharedManager];
     NSDictionary *actionTemplate = dataConfig.dataTemplate[templateName];
     if (actionTemplate == nil) {
-        *checkResult = [[ANSConsoleLog alloc]init];
+        *checkResult = [[ANSDataCheckLog alloc]init];
         (*checkResult).remarks = @"Please add config resource: AnalysysAgent.bundle !";
         ANSBriefWarning(@"%@",[*checkResult messageDisplay]);
         return nil;
     }
     
     if (!action || [action length] == 0 || ![action isKindOfClass:NSString.class]) {
-        *checkResult = [[ANSConsoleLog alloc] init];
+        *checkResult = [[ANSDataCheckLog alloc] init];
         (*checkResult).resultType = AnalysysResultTypeError;
         (*checkResult).keyWords = @"NSString/not empty ";
         (*checkResult).value = userProperties;
@@ -140,7 +136,7 @@
     }
     
     if (userProperties && ![userProperties isKindOfClass:NSDictionary.class]) {
-        *checkResult = [[ANSConsoleLog alloc] init];
+        *checkResult = [[ANSDataCheckLog alloc] init];
         (*checkResult).resultType = AnalysysResultTypeError;
         (*checkResult).keyWords = @"NSDictionary";
         (*checkResult).value = userProperties;
@@ -208,16 +204,6 @@
         }
     }];
     [contextDic addEntriesFromDictionary:[tempContextDic mutableCopy]];
-    // 2.3 用户自定义参数检查
-    if ([innerUserProperties isKindOfClass:NSDictionary.class] && innerUserProperties.count) {
-        ANSConsoleLog *retCheckResult = [ANSDataCheckRouter checkProperties:&innerUserProperties type:ANSPropertyDefault];
-        if (retCheckResult && retCheckResult.resultType < AnalysysResultSuccess) {
-            ANSBriefWarning(@"%@",[retCheckResult messageDisplay]);
-            *checkResult = retCheckResult;
-        }
-    }
-    // 2.4 合并用户数据
-    [contextDic addEntriesFromDictionary:innerUserProperties];
     
     // 3. 其他设置
     // 3.1 添加全局变量
@@ -225,11 +211,22 @@
         [contextDic addEntriesFromDictionary:[[AnalysysSDK sharedManager] getSuperPropertiesValue]];
     }
     
+    // 4 用户自定义参数检查
+    if ([innerUserProperties isKindOfClass:NSDictionary.class] && innerUserProperties.count) {
+        ANSDataCheckLog *retCheckResult = [ANSDataCheckRouter checkProperties:&innerUserProperties type:ANSPropertyDefault];
+        if (retCheckResult && retCheckResult.resultType < AnalysysResultSuccess) {
+            ANSBriefWarning(@"%@",[retCheckResult messageDisplay]);
+            *checkResult = retCheckResult;
+        }
+    }
+    // 4.1 合并用户数据
+    [contextDic addEntriesFromDictionary:innerUserProperties];
+    
     return uploadInfo;
 }
 
 /** 通过字段规则获取相应值并校验 */
-+ (id)getValueWithFieldRules:(NSDictionary *)ruleDic andAciton:(id)value key:(NSString *)key error:(ANSConsoleLog **)checkResult {
++ (id)getValueWithFieldRules:(NSDictionary *)ruleDic andAciton:(id)value key:(NSString *)key error:(ANSDataCheckLog **)checkResult {
     // 1. 填充数据
     NSInteger getType = [ruleDic[ANSRulesValueType] integerValue];
     id dataValue ;

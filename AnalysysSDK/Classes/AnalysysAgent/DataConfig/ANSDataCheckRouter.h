@@ -21,7 +21,7 @@ typedef NS_ENUM(NSInteger, ANSPropertyType) {
     ANSPropertyAppend
 };
 
-@class ANSConsoleLog;
+@class ANSDataCheckLog;
 @interface ANSDataCheckRouter : NSObject
 
 
@@ -30,7 +30,7 @@ typedef NS_ENUM(NSInteger, ANSPropertyType) {
  
  @param type 分类
  */
-+ (ANSConsoleLog *)checkProperties:(NSDictionary **)superProperties type:(ANSPropertyType)type;
++ (ANSDataCheckLog *)checkProperties:(NSDictionary **)superProperties type:(ANSPropertyType)type;
 
 /**
  value校验
@@ -38,7 +38,7 @@ typedef NS_ENUM(NSInteger, ANSPropertyType) {
  @param value 校验对象
  @param funcList 方法列表字符串
  */
-+ (ANSConsoleLog *)checkPropertyKey:(NSString *)key value:(id)value type:(ANSPropertyType)type checkRules:(NSArray *)funcList;
++ (ANSDataCheckLog *)checkPropertyKey:(NSString *)key value:(id)value type:(ANSPropertyType)type checkRules:(NSArray *)funcList;
 
 #pragma mark - 部分配置中特殊参数检查
 
@@ -47,42 +47,42 @@ typedef NS_ENUM(NSInteger, ANSPropertyType) {
  
  必须初始化ANSCheckResult对象中extraInfo
  */
-+ (ANSConsoleLog *)checkSuperProperties:(NSDictionary **)superProperties;
++ (ANSDataCheckLog *)checkSuperProperties:(NSDictionary **)superProperties;
 
 /**
  profile_increment k-v校验
  
  必须初始化ANSCheckResult对象中extraInfo
  */
-+ (ANSConsoleLog *)checkIncrementProperties:(NSDictionary **)incrementProperties;
++ (ANSDataCheckLog *)checkIncrementProperties:(NSDictionary **)incrementProperties;
 
 /**
  profile_append k-v校验
  
  必须初始化ANSCheckResult对象中extraInfo
  */
-+ (ANSConsoleLog *)checkAppendProperties:(NSDictionary **)appendProperties;
++ (ANSDataCheckLog *)checkAppendProperties:(NSDictionary **)appendProperties;
 
 /**
  匿名id规则检查
  
  @param identify 标识
  */
-+ (ANSConsoleLog *)checkLengthOfIdentify:(NSString *)identify;
++ (ANSDataCheckLog *)checkLengthOfIdentify:(NSString *)identify;
 
 /**
  aliasid检查
  
  @param aliasId aliasId
  */
-+ (ANSConsoleLog *)checkLengthOfAliasId:(NSString *)aliasId;
++ (ANSDataCheckLog *)checkLengthOfAliasId:(NSString *)aliasId;
 
 /**
  alias_original_id检查
  
  @param originalId originalId
  */
-+ (ANSConsoleLog *)checkAliasOriginalId:(NSString *)originalId;
++ (ANSDataCheckLog *)checkAliasOriginalId:(NSString *)originalId;
 
 /**
  event 校验
@@ -90,7 +90,7 @@ typedef NS_ENUM(NSInteger, ANSPropertyType) {
  @param event 事件名
  @return ANSConsoleLog
  */
-+ (ANSConsoleLog *)checkEvent:(NSString *)event;
++ (ANSDataCheckLog *)checkEvent:(NSString *)event;
 
 
 

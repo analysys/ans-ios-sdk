@@ -11,7 +11,7 @@
 #import "ANSUploadManager.h"
 #import "ANSTelephonyNetwork.h"
 #import "AnalysysAgentConfig.h"
-#import "ANSConsoleLog.h"
+#import "AnalysysLogger.h"
 #import "ANSDateUtil.h"
 #import "ANSJsonUtil.h"
 #import "ANSConst+private.h"
@@ -71,7 +71,7 @@
         self->_isNeedTimeCheck = YES;
         
         if (fabs(timerDiff) > AnalysysConfig.maxDiffTimeInterval) {
-            AnsPrint(@"收到服务器的时间：%@，本地时间：%@，时间相差：%.f 秒，数据将会进行时间校准。", [ANSDateUtil convertToLocalDate:serverDate], [ANSDateUtil convertToLocalDate:[NSDate date]], fabs(timerDiff));
+            ANSLog(@"收到服务器的时间：%@，本地时间：%@，时间相差：%.f 秒，数据将会进行时间校准。", [ANSDateUtil convertToLocalDate:serverDate], [ANSDateUtil convertToLocalDate:[NSDate date]], fabs(timerDiff));
         }
         block();
     } failure:^(NSError *error) {
@@ -101,8 +101,8 @@
             long long xwhen = [mutableLogDic[ANSXwhen] longLongValue] + _serverTimerDiff*1000;
             mutableLogDic[ANSXwhen] = [NSNumber numberWithLongLong:xwhen];
             NSMutableDictionary *xcontext = mutableLogDic[ANSXcontext];
-            if ([xcontext.allKeys containsObject:ANSTimeCalibrated]) {
-                xcontext[ANSTimeCalibrated] = [NSNumber numberWithBool:YES];
+            if ([xcontext.allKeys containsObject:ANSPresetTimeCalibrated]) {
+                xcontext[ANSPresetTimeCalibrated] = [NSNumber numberWithBool:YES];
             }
         }
         [uploadArray addObject:[ANSJsonUtil convertToStringWithObject:mutableLogDic]];

@@ -118,7 +118,7 @@ static void *AnsAllocBufferForObjCType(const char *objCType) {
     }
 }
 
-- (void)AnsSetArgumentsFromArray:(NSArray *)argumentArray {
+- (void)ansSetArgumentsFromArray:(NSArray *)argumentArray {
     NSParameterAssert(argumentArray.count == (self.methodSignature.numberOfArguments - 2));
     
     NSUInteger i = 0;
@@ -129,7 +129,7 @@ static void *AnsAllocBufferForObjCType(const char *objCType) {
     }
 }
 
-- (id)AnsReturnValue {
+- (id)ansReturnValue {
     __autoreleasing id returnValue = nil;
     
     NSMethodSignature *methodSignature = self.methodSignature;

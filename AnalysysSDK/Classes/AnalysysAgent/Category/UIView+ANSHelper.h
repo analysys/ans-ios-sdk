@@ -12,9 +12,15 @@
 
 @interface UIView (ANSHelper)
 
-- (UIImage *)AnsSnapshotImage;
-- (UIImage *)AnsSnapshotForBlur;
-- (NSString *)AnsElementText;
+
+/// 控件标识
+@property (nonatomic, copy) NSString *ansViewId;
+
+/// 截图当前view
+- (UIImage *)ansSnapshotImage;
+
+/// 控件文本信息
+- (NSString *)ansElementText;
 
 - (NSString *)eg_varA;
 - (NSString *)eg_varB;

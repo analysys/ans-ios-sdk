@@ -11,6 +11,9 @@
 
 @interface NSObject (ANSSwizzling)
 
-+ (void)AnsExchangeOriginalSel:(SEL)originalSel replacedSel:(SEL)replacedSel;
+/// 方法交换
+/// @param originalSel 原方法
+/// @param replacedSel 替换后方法
++ (void)ansExchangeOriginalSel:(SEL)originalSel replacedSel:(SEL)replacedSel;
 
 @end

@@ -10,7 +10,6 @@
 #import "ANSObjectSerializer.h"
 
 #import <objc/runtime.h>
-#import <UIKit/UIKit.h>
 #import "NSInvocation+ANSHelper.h"
 
 #import "ANSClassDescription.h"
@@ -297,7 +296,7 @@
         if ([selectorDescription.selectorName isEqualToString:@"frame"]) {
             //  将当前相对坐标转换为相对window的坐标
             if ([value isKindOfClass:[NSDictionary class]]) {
-                UIWindow * window = [[[UIApplication sharedApplication] delegate] window];
+                UIWindow * window = [ANSUtil currentWindow];
                 UIView *view = (UIView *)object;
                 CGRect absoluteRect = [view convertRect:view.bounds toView:window];
                 value[@"AX"] = [NSNumber numberWithFloat:absoluteRect.origin.x];
@@ -332,10 +331,10 @@
             NSArray *parameterVariations = [self parameterVariationsForPropertySelector:selectorDescription];
             //  获取枚举每个状态下的值
             for (NSArray *parameters in parameterVariations) {
-                [invocation AnsSetArgumentsFromArray:parameters];
+                [invocation ansSetArgumentsFromArray:parameters];
                 [invocation invokeWithTarget:object];
                 //  调用获取返回值
-                id returnValue = [invocation AnsReturnValue];
+                id returnValue = [invocation ansReturnValue];
                 //  转换值类型
                 id value = [self propertyValue:returnValue
                            propertyDescription:propertyDescription

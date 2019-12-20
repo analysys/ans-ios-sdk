@@ -14,7 +14,7 @@
 #import "ANSApplicationStateSerializer.h"
 #import "ANSObjectIdentityProvider.h"
 #import "ANSObjectSerializerConfig.h"
-#import "ANSConsoleLog.h"
+#import "AnalysysLogger.h"
 
 NSString * const ANSDesignerSnapshotRequestMessageType = @"snapshot_request";
 static NSString * const ANSSnapshotSerializerConfigKey = @"snapshot_class_descriptions";
@@ -34,7 +34,7 @@ static NSString * const ANSObjectIdentityProviderKey = @"object_identity_provide
 }
 
 - (NSOperation *)responseCommandWithConnection:(ANSABTestDesignerConnection *)connection {
-    AnsDebug(@"uploadStatus - %d",connection.uploadStatus);
+    ANSDebug(@"uploadStatus - %d",connection.uploadStatus);
     
     //  服务器下发需要获取的config信息(enums/classes)
     __block ANSObjectSerializerConfig *serializerConfig = self.configuration;
@@ -50,7 +50,7 @@ static NSString * const ANSObjectIdentityProviderKey = @"object_identity_provide
             conn.uploadStatus == ANSViewUnload ||
             conn.uploadStatus == ANSAppInBackground ||
             conn.uploadStatus == ANSKeyboardShow) {
-            AnsDebug(@"仅发送心跳信息");
+            ANSDebug(@"仅发送心跳信息");
             [snapshotMessage setPayloadObject:@"200" forKey:@"egMsgCode"];
             snapshotMessage.screenshot = nil;
             [conn sendMessage:snapshotMessage];
@@ -93,7 +93,7 @@ static NSString * const ANSObjectIdentityProviderKey = @"object_identity_provide
         snapshotMessage.screenshot = screenshot;
 
         if ([imageHash isEqualToString:snapshotMessage.imageHash]) {
-            AnsDebug(@"页面未改变，保持心跳");
+            ANSDebug(@"页面未改变，保持心跳");
             snapshotMessage.screenshot = nil;
             [snapshotMessage setPayloadObject:@"200" forKey:@"egMsgCode"];
             [conn sendMessage:snapshotMessage];

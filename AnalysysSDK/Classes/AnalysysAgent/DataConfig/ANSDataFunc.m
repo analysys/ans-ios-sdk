@@ -28,7 +28,7 @@
 }
 
 + (NSString *)getChannel {
-    return AnalysysConfig.channel ?: @"App Store";;
+    return AnalysysConfig.channel ?: @"App Store";
 }
 
 + (NSString *)getLibVersion {

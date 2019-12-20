@@ -7,7 +7,7 @@
 //
 
 #import "ANSJsonUtil.h"
-#import "ANSConsoleLog.h"
+#import "AnalysysLogger.h"
 #import "ANSDateUtil.h"
 
 @implementation ANSJsonUtil
@@ -23,7 +23,7 @@
         //        }
         data = [NSJSONSerialization dataWithJSONObject:coercedObj options:0 error:nil];
     } @catch (NSException *exception) {
-        AnsDebug(@"JSON serialized exception:%@", exception);
+        ANSDebug(@"JSON serialized exception:%@", exception);
     }
     return data;
 }
@@ -48,7 +48,7 @@
             NSString *stringKey;
             if (![key isKindOfClass:[NSString class]]) {
                 stringKey = [key description];
-                AnsError(@"Property keys should be string. got: %@. coercing to: %@", [key class], stringKey);
+                ANSBriefError(@"Property keys should be string. got: %@. coercing to: %@", [key class], stringKey);
             } else {
                 stringKey = [NSString stringWithString:key];
             }
@@ -75,7 +75,7 @@
     }
 
     NSString *des = [obj description];
-    AnsError(@"Property values should be valid json types. got: %@. coercing to: %@", [obj class], des);
+    ANSBriefError(@"Property values should be valid json types. got: %@. coercing to: %@", [obj class], des);
     return des;
 }
 

@@ -24,21 +24,25 @@
 @interface ANSHeatMapAutoTrack : NSObject
 
 /** 相对window坐标 */
-@property (atomic, assign) CGPoint viewToWindowPoint;
+@property (nonatomic, assign) CGPoint viewToWindowPoint;
 /** 相对父视图坐标 */
-@property (atomic, assign) CGPoint viewToParentPoint;
+@property (nonatomic, assign) CGPoint viewToParentPoint;
 /** 元素标识 */
-@property (atomic, copy) NSString *viewId;
+@property (nonatomic, copy) NSString *viewId;
 /** 元素所在页面标识 */
-@property (atomic, copy) NSString *viewControllerName;
+@property (nonatomic, copy) NSString *viewControllerName;
 /** 元素类型 如：uibutton、uiswitch等 */
-@property (atomic, copy) NSString *elementType;
+@property (nonatomic, copy) NSString *elementType;
 /** 文本信息 */
-@property (atomic, copy) NSString *elementContent;
+@property (nonatomic, copy) NSString *elementContent;
 /** 元素路径 */
-@property (atomic, copy) NSString *elementPath;
+@property (nonatomic, copy) NSString *elementPath;
 /** 是否可点击控件 */
-@property (atomic, assign) BOOL elementClickable;
+@property (nonatomic, assign) BOOL elementClickable;
+/** 忽略部分页面上所有的点击事件*/
+@property (nonatomic, strong) NSMutableSet *ignoreAutoClickPage;
+/** 只上报部分页面内点击事件*/
+@property (nonatomic, strong) NSMutableSet *autoClickPage;
 
 + (instancetype)sharedManager;
 

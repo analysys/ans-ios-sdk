@@ -1,5 +1,5 @@
 //
-//  ANSDemoViewController.h
+//  ANSCaseViewController.h
 //  AnalysysSDK-iOS
 //
 //  Created by SoDo on 2019/3/13.
@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface ANSDemoViewController : UIViewController
+@interface ANSCaseViewController : UIViewController
 
 
 @end

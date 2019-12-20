@@ -10,7 +10,7 @@
 
 @implementation NSThread (ANSHelper)
 
-+ (void)AnsRunOnMainThread:(void (^)(void))block {
++ (void)ansRunOnMainThread:(void (^)(void))block {
     if ([self isMainThread]) {
         block();
     } else {

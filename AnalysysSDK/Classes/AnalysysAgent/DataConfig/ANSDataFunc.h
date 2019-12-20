@@ -22,6 +22,11 @@
 
 
 @interface ANSDataFunc : NSObject
-
++ (NSString *)getAppId;
++ (NSString *)getChannel;
++ (NSString *)getLibVersion;
++ (NSString *)getId;
++ (NSNumber *)currentTimeInteval;
++ (NSNumber *)isFirstDayStart;
 @end
 

@@ -13,8 +13,9 @@
 #import "ANSABTestDesignerSnapshotRequestMessage.h"
 #import "ANSABTestDesignerSnapshotResponseMessage.h"
 #import "ANSDesignerEventBindingMessage.h"
-#import "ANSConsoleLog.h"
+#import "AnalysysLogger.h"
 #import "ANSGzip.h"
+#import "ANSUtil.h"
 
 static NSString * const ANSStartLoadingAnimationKey = @"ANSConnectivityBarLoadingAnimation";
 static NSString * const ANSFinishLoadingAnimationKey = @"ANSConnectivityBarFinishLoadingAnimation";
@@ -92,7 +93,7 @@ static NSString * const ANSFinishLoadingAnimationKey = @"ANSConnectivityBarFinis
     static int retries = 0;
     BOOL inRetryLoop = retries > 0;
     
-    AnsDebug(@"In open. initiate = %d, retries = %d, maxRetries = %d, maxInterval = %d, connected = %d", initiate, retries, maxRetries, maxInterval, _connected);
+    ANSDebug(@"In open. initiate = %d, retries = %d, maxRetries = %d, maxInterval = %d, connected = %d", initiate, retries, maxRetries, maxInterval, _connected);
     
     if (self.sessionEnded || _connected || (inRetryLoop && retries >= maxRetries) ) {
         // break out of retry loop if any of the success conditions are met.
@@ -101,7 +102,7 @@ static NSString * const ANSFinishLoadingAnimationKey = @"ANSConnectivityBarFinis
         // If we are initiating a new connection, or we are already in a
         // retry loop (but not both). Then open a socket.
         if (!_open) {
-            AnsDebug(@"Attempting to open WebSocket to: %@, try %d/%d ", _url, retries, maxRetries);
+            ANSDebug(@"Attempting to open WebSocket to: %@, try %d/%d ", _url, retries, maxRetries);
             _open = YES;
             _webSocket = [[ANSWebSocket alloc] initWithURL:_url];
             _webSocket.delegate = self;
@@ -163,14 +164,14 @@ static NSString * const ANSFinishLoadingAnimationKey = @"ANSConnectivityBarFinis
             NSData *jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
             NSData *zipData = [ANSGzip gzipData:jsonData];
             NSString *base64Str = [zipData base64EncodedStringWithOptions:0];
-            AnsDebug(@"-------------客户端响应%@数据:%.2f KB 压缩后：%.2f KB-------------\n%@",message.type, jsonString.length/1024.0, base64Str.length/1024.0, jsonString);
+            ANSDebug(@"-------------客户端响应%@数据:%.2f KB 压缩后：%.2f KB-------------\n%@",message.type, jsonString.length/1024.0, base64Str.length/1024.0, jsonString);
             [_webSocket send:base64Str];
         } else {
-            AnsDebug(@"-------------客户端响应数据:%.2f KB -------------\n%@\n%@",jsonString.length/1024.0, message.type, jsonString);
+            ANSDebug(@"-------------客户端响应数据:%.2f KB -------------\n%@\n%@",jsonString.length/1024.0, message.type, jsonString);
             [_webSocket send:jsonString];
         }
     } else {
-        AnsDebug(@"Not sending message as we are not connected: %@", [message debugDescription]);
+        ANSDebug(@"Not sending message as we are not connected: %@", [message debugDescription]);
     }
 }
 
@@ -183,7 +184,7 @@ static NSString * const ANSFinishLoadingAnimationKey = @"ANSConnectivityBarFinis
     NSError *parseError = nil;
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:object options:NSJSONWritingPrettyPrinted error:&parseError];
     if (parseError) {
-        AnsDebug(@"eventClickResponse json 转换错误-%@",parseError);
+        ANSDebug(@"eventClickResponse json 转换错误-%@",parseError);
         return;
     }
     NSString *jsonStr = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
@@ -214,7 +215,7 @@ static NSString * const ANSFinishLoadingAnimationKey = @"ANSConnectivityBarFinis
         designerMessage = [_typeToMessageClassMap[type] messageWithType:type payload:payload];
         designerMessage.operate = operateType;
     } else {
-        AnsWarning(@"Badly formed socket message expected JSON dictionary: %@", error);
+        ANSBriefWarning(@"Badly formed socket message expected JSON dictionary: %@", error);
     }
     
     return designerMessage;
@@ -237,7 +238,7 @@ static NSString * const ANSFinishLoadingAnimationKey = @"ANSConnectivityBarFinis
         }
     }
     id<ANSABTestDesignerMessage> designerMessage = [self designerMessageForMessage:message];
-    AnsDebug(@"-------------接收到服务器下发数据:-------------\n%@",message);
+    ANSDebug(@"-------------接收到服务器下发数据:-------------\n%@",message);
     //  对应实例进行消息发送
     NSOperation *commandOperation = [designerMessage responseCommandWithConnection:self];
     
@@ -247,29 +248,24 @@ static NSString * const ANSFinishLoadingAnimationKey = @"ANSConnectivityBarFinis
 }
 
 - (void)webSocketDidOpen:(ANSWebSocket *)webSocket {
-    AnsDebug(@"WebSocket %@ did open.", webSocket);
+    ANSDebug(@"WebSocket %@ did open.", webSocket);
     _commandQueue.suspended = NO;
     [self showConnectedViewWithLoading:YES];
 }
 
 - (void)webSocket:(ANSWebSocket *)webSocket didFailWithError:(NSError *)error {
-    AnsDebug(@"WebSocket did fail with error: %@", error);
-    _commandQueue.suspended = YES;
-    [_commandQueue cancelAllOperations];
-    [self hideConnectedView];
-    _open = NO;
-    if (_connected) {
-        _connected = NO;
-        [self open:YES maxInterval:10 maxRetries:3];
-        if (_disconnectCallback) {
-            _disconnectCallback();
-        }
-    }
+    ANSDebug(@"WebSocket did fail with error: %@", error);
+    
+    [self closeWebSocketConnetion];
 }
 
 - (void)webSocket:(ANSWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean {
-    AnsDebug(@"WebSocket did close with code '%d' reason '%@'.", (int)code, reason);
+    ANSDebug(@"WebSocket did close with code '%d' reason '%@'.", (int)code, reason);
 
+    [self closeWebSocketConnetion];
+}
+
+- (void)closeWebSocketConnetion {
     _commandQueue.suspended = YES;
     [_commandQueue cancelAllOperations];
     [self hideConnectedView];
@@ -277,7 +273,6 @@ static NSString * const ANSFinishLoadingAnimationKey = @"ANSConnectivityBarFinis
     [_webSocket close];
     if (_connected) {
         _connected = NO;
-//        [self open:YES maxInterval:10 maxRetries:3];
         if (_disconnectCallback) {
             _disconnectCallback();
         }
@@ -293,7 +288,7 @@ static NSString * const ANSFinishLoadingAnimationKey = @"ANSConnectivityBarFinis
  */
 - (void)showConnectedViewWithLoading:(BOOL)isLoading {
     if (!self.connectivityIndicatorWindow) {
-        UIWindow *mainWindow = [[UIApplication sharedApplication] delegate].window;
+        UIWindow *mainWindow = [ANSUtil currentWindow];
         self.connectivityIndicatorWindow = [[UIWindow alloc] initWithFrame:CGRectMake(0, 0, mainWindow.frame.size.width, 4.f)];
         self.connectivityIndicatorWindow.backgroundColor = [UIColor clearColor];
         self.connectivityIndicatorWindow.windowLevel = UIWindowLevelAlert;
@@ -428,7 +423,7 @@ static NSString * const ANSFinishLoadingAnimationKey = @"ANSConnectivityBarFinis
 - (void)reloadWebVisual {
     NSString *jsonStr = @"{\"type\":\"snapshot_request\",\"payload\":{\"image_hash\":\"SODO\"}}";
     id<ANSABTestDesignerMessage> designerMessage = [self designerMessageForMessage:jsonStr];
-    AnsDebug(@"-------------webview 强制图层上传-------------\n");
+    ANSDebug(@"-------------webview 强制图层上传-------------\n");
     NSOperation *commandOperation = [designerMessage responseCommandWithConnection:self];
 
     if (commandOperation) {

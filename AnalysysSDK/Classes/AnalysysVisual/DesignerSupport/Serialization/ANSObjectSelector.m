@@ -9,7 +9,6 @@
 
 #import "ANSObjectSelector.h"
 
-#import <objc/runtime.h>
 #import <UIKit/UIKit.h>
 #import "NSThread+AnsHelper.h"
 
@@ -19,9 +18,9 @@
  */
 @interface ANSObjectFilter : NSObject
 
-@property (nonatomic, strong) NSString *name;// 控件名称
+@property (nonatomic, strong) NSString *className;// 控件名称
 @property (nonatomic, strong) NSPredicate *predicate;// 过滤条件 tag==10 或  文本内容
-@property (nonatomic, strong) NSNumber *index;// 相对父视图同类控件 所在的索引值
+@property (nonatomic, strong) NSNumber *indexOfSuperView;   // 相对父视图同类 isKindOfClass/isMemberOfClass
 @property (nonatomic, assign) BOOL unique;
 @property (nonatomic, assign) BOOL nameOnly;
 
@@ -53,13 +52,13 @@
 @implementation ANSObjectSelector
 
 + (ANSObjectSelector *)objectSelectorWithString:(NSString *)string {
-    return [[ANSObjectSelector alloc] initWithString:string];
+    return [[ANSObjectSelector alloc] initWithPathString:string];
 }
 
-- (instancetype)initWithString:(NSString *)string {
+- (instancetype)initWithPathString:(NSString *)string {
     if (self = [super init]) {
-        _string = string;
-        _scanner = [NSScanner scannerWithString:string];
+        _pathString = string;
+        _scanner = [NSScanner scannerWithString:_pathString];
         [_scanner setCharactersToBeSkipped:nil];
         _separatorChars = [NSCharacterSet characterSetWithCharactersInString:@"/"];
         _predicateStartChar = [NSCharacterSet characterSetWithCharactersInString:@"["];
@@ -86,9 +85,9 @@
         NSString *name;
         filter = [[ANSObjectFilter alloc] init];
         if ([_scanner scanCharactersFromSet:_classAndPropertyChars intoString:&name]) {
-            filter.name = name;
+            filter.className = name;
         } else {
-            filter.name = @"*";
+            filter.className = @"*";
         }
         if ([_scanner scanCharactersFromSet:_flagStartChar intoString:nil]) {
             NSString *flags;
@@ -103,7 +102,7 @@
             NSString *predicateFormat;
             NSInteger index = 0;
             if ([_scanner scanInteger:&index] && [_scanner scanCharactersFromSet:_predicateEndChar intoString:nil]) {
-                filter.index = @((NSUInteger)index);
+                filter.indexOfSuperView = @((NSUInteger)index);
             } else {
                 [_scanner scanUpToCharactersFromSet:_predicateEndChar intoString:&predicateFormat];
                 @try {
@@ -138,23 +137,21 @@
 
 /** 根据传入对象自 父->子 向下遍历，返回所有满足条件的控件 */
 - (NSArray *)selectFromRoot:(id)root evaluatingFinalPredicate:(BOOL)finalPredicate {
-    NSArray *views = @[];
-    if (root) {
-        views = @[root];
-        //  通过filter对象个数决定遍历对象深度，并使用每层filter进行过滤
-        NSUInteger i = 0, n = _filters.count;
-        for (ANSObjectFilter *filter in _filters) {
-            //  末节节点是否只使用名称匹配
-            filter.nameOnly = (i == n-1 && !finalPredicate);
-            views = [filter apply:views];
-            if (views.count == 0) {
-                //  如果当前视图个数为0则直接返回
-                break;
-            }
-            i++;
-        }
-    }
+    if (!root) return nil;
     
+    NSArray *views = @[root];
+    //  通过filter对象个数决定遍历对象深度，并使用每层filter进行过滤
+    NSUInteger i = 0, n = _filters.count;
+    for (ANSObjectFilter *filter in _filters) {
+        //  末节节点是否只使用名称匹配
+        filter.nameOnly = (i == n-1 && !finalPredicate);
+        views = [filter apply:views];
+        if (views.count == 0) {
+            //  如果当前视图个数为0则直接返回
+            break;
+        }
+        i++;
+    }
     return views;
 }
 
@@ -199,7 +196,7 @@
 - (Class)selectedClass {
     ANSObjectFilter *filter = _filters.lastObject;
     if (filter) {
-        return NSClassFromString(filter.name);
+        return NSClassFromString(filter.className);
     }
     return nil;
 }
@@ -207,7 +204,7 @@
 /** path路径中节点是否为klass的子类 */
 - (BOOL)pathContainsObjectOfClass:(Class)klass {
     for (ANSObjectFilter *filter in _filters) {
-        if ([NSClassFromString(filter.name) isSubclassOfClass:klass]) {
+        if ([NSClassFromString(filter.className) isSubclassOfClass:klass]) {
             return YES;
         }
     }
@@ -215,22 +212,22 @@
 }
 
 - (NSString *)description {
-    return self.string;
+    return self.pathString;
 }
 
 - (BOOL)isEqual:(id)other {
     if (other == self) {
         return YES;
-    } else if (![other isKindOfClass:[ANSObjectSelector class]]) {
+    }
+    if (![other isKindOfClass:[ANSObjectSelector class]]) {
         return NO;
     } else {
-        return [self.string isEqual:((ANSObjectSelector *)other).string];
+        return [self.pathString isEqual:((ANSObjectSelector *)other).pathString];
     }
 }
 
 - (NSUInteger)hash {
-    
-    return [self.string hash];
+    return [self.pathString hash];
 }
 
 
@@ -252,17 +249,17 @@
 - (NSArray *)apply:(NSArray *)views {
     NSMutableArray *result = [NSMutableArray array];
     
-    Class class = NSClassFromString(_name);
-    if (class || [_name isEqualToString:@"*"]) {
+    Class class = NSClassFromString(_className);
+    if (class || [_className isEqualToString:@"*"]) {
         for (NSObject *view in views) {
             NSArray *children = [self getChildrenOfObject:view ofType:class];
-            if (_index && _index.unsignedIntegerValue < children.count) {
+            if (_indexOfSuperView && _indexOfSuperView.unsignedIntegerValue < children.count) {
                 //  当前视图必须为UIView子类
-                if ([view isKindOfClass:[UIView class]]) {
-                    children = @[children[_index.unsignedIntegerValue]];
-                } else {
-                    children = @[];
-                }
+//                if ([view isKindOfClass:[UIView class]]) {
+                    children = @[children[_indexOfSuperView.unsignedIntegerValue]];
+//                } else {
+//                    children = @[];
+//                }
             }
             [result addObjectsFromArray:children];
         }
@@ -294,11 +291,10 @@
 
 /** 当前视图是否满足filter过滤条件 */
 - (BOOL)appliesTo:(NSObject *)view {
-    return (([self.name isEqualToString:@"*"] || [view isKindOfClass:NSClassFromString(self.name)])
+    return (([self.className isEqualToString:@"*"] || [view isKindOfClass:NSClassFromString(self.className)])
             && (self.nameOnly || (
-                                  (!self.predicate || [_predicate evaluateWithObject:view])
-                                  && (!self.index || [self isView:view siblingNumber:_index.integerValue])
-                                  && (!(self.unique) || [self isView:view oneOfNSiblings:1])))
+                                  (!self.predicate || [_predicate evaluateWithObject:view]) && (!self.indexOfSuperView || [self isView:view siblingNumber:_indexOfSuperView.integerValue]) &&
+                                  (!(self.unique) || [self isView:view oneOfNSiblings:1])))
             );
 }
 
@@ -330,7 +326,7 @@
     NSArray *parents = [self getParentsOfObject:view];
     for (NSObject *parent in parents) {
         if ([parent isKindOfClass:[UIView class]]) {
-            NSArray *siblings = [self getChildrenOfObject:parent ofType:NSClassFromString(_name)];
+            NSArray *siblings = [self getChildrenOfObject:parent ofType:NSClassFromString(_className)];
             if ((index < 0 || ((NSUInteger)index < siblings.count && siblings[(NSUInteger)index] == view))
                 && (numSiblings < 0 || siblings.count == (NSUInteger)numSiblings)) {
                 return YES;
@@ -378,9 +374,19 @@
     // A UIWindow is also a UIView, so we could in theory follow the subviews chain from UIWindow, but
     // for now we only follow rootViewController from UIView.
     if ([obj isKindOfClass:[UIWindow class]]) {
-        UIViewController *rootViewController = ((UIWindow *)obj).rootViewController;
-        if ([rootViewController isKindOfClass:class]) {
-            [children addObject:rootViewController];
+        NSArray *subviews = [[UIApplication sharedApplication].keyWindow subviews];
+        if (subviews.count > 1) {
+            //  弹窗直接添加至UIWindow类型的视图
+            for (NSObject *child in subviews) {
+                if ([child isMemberOfClass:class]) {
+                    [children addObject:child];
+                }
+            }
+        } else {
+            UIViewController *rootViewController = ((UIWindow *)obj).rootViewController;
+            if ([rootViewController isKindOfClass:class]) {
+                [children addObject:rootViewController];
+            }
         }
     } else if ([obj isKindOfClass:[UIView class]]) {
         // NB. For UIViews, only add subviews, nothing else.
@@ -388,7 +394,7 @@
         // apply the index filter.
         
         __block NSArray *subviews;
-        [NSThread AnsRunOnMainThread:^{
+        [NSThread ansRunOnMainThread:^{
             subviews = [[(UIView *)obj subviews] copy];
         }];
         for (NSObject *child in subviews) {
@@ -429,7 +435,7 @@
 }
 
 - (NSString *)description;{
-    return [NSString stringWithFormat:@"%@[%@]", self.name, self.index ?: self.predicate];
+    return [NSString stringWithFormat:@"%@[%@]", self.className, self.indexOfSuperView ?: self.predicate];
 }
 
 @end

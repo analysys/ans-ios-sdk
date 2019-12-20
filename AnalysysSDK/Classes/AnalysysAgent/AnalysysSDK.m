@@ -11,8 +11,11 @@
 #import <UIKit/UIKit.h>
 
 #import "AnalysysAgentConfig.h"
-#import "ANSConsoleLog.h"
-#import "ANSDatabase.h"
+#import "ANSLock.h"
+#import "ANSQueue.h"
+#import "ANSDataCheckLog.h"
+#import "AnalysysLogger.h"
+
 #import "ANSDeviceInfo.h"
 #import "ANSTelephonyNetwork.h"
 #import "ANSFileManager.h"
@@ -33,13 +36,12 @@
 #import "ANSPageAutoTrack.h"
 #import "ANSOpenURLAutoTrack.h"
 #import "ANSHeatMapAutoTrack.h"
+#import "ANSAllBuryPoint.h"
 
 #import "ANSStrategyManager.h"
 
+#import "ANSUncaughtExceptionHandler.h"
 #import "ANSTimeCheckManager.h"
-
-#define AgentLock() dispatch_semaphore_wait(self->_lock, DISPATCH_TIME_FOREVER);
-#define AgentUnlock() dispatch_semaphore_signal(self->_lock);
 
 static AnalysysSDK *sharedInstance = nil;
 
@@ -57,14 +59,12 @@ typedef NS_ENUM(NSInteger, ANSResetType) {
     ANSProfileReset
 };
 
-void* AnalysysQueueTag = &AnalysysQueueTag;
-
 @interface AnalysysSDK () {
     
 }
 
-@property (atomic, strong) NSDictionary *commonProperties;  // 自定义常用属性
-@property (atomic, strong) NSDictionary *superProperties;   // 用户通用属性
+@property (nonatomic, strong) NSDictionary *commonProperties;  // 自定义常用属性
+@property (nonatomic, strong) NSDictionary *superProperties;   // 用户通用属性
 @property (nonatomic, copy) NSString *userId;  //  当前用户
 
 @end
@@ -73,21 +73,16 @@ void* AnalysysQueueTag = &AnalysysQueueTag;
 @implementation AnalysysSDK {
     ANSUploadManager *_uploadManager;
     ANSDatabase *_dbHelper;
-    dispatch_queue_t _serialQueue;  //  数据队列
-    dispatch_queue_t _requestQueue; //  数据队列
-    NSMutableArray *_ignoredViewControllers;    //  忽略自动采集的页面
-    
+    NSMutableSet *_pageViewBlackList;    //  忽略自动采集的页面
+    NSMutableSet *_pageViewWhiteList;  //  只采集某些页面
     BOOL _isAppLaunched;    // 是否launch启动，防止pageview事件先于start事件
     BOOL _canSendProfileSetOnce;    // 是否可发送profileSetOnce
     BOOL _canSendAutoInstallation;  // 是否可发送渠道追踪
     BOOL _isAutoCollectionPage; // 页面自动采集
-    dispatch_semaphore_t _lock;
     NSInteger _maxCacheSize;    // 本地允许最大缓存
     long long _appBecomeActiveTime; // App活跃点
     long long _appResignActiveTime; // App非活跃点
     
-    NSLock *_propertiesLock;    // properties 专用锁 不要随便使用
-    NSLock *_userDefaultsLock;  // userDefaults专用 对外暴露
     NSLock *_isSendingDataLock; // 数据发送锁
 }
 
@@ -109,31 +104,27 @@ void* AnalysysQueueTag = &AnalysysQueueTag;
     if (self) {
         _uploadManager = [[ANSUploadManager alloc] init];
         _isAppLaunched = YES;
-        _lock = dispatch_semaphore_create(0);
         _isBackgroundActive = NO;
         _isAutoCollectionPage = YES;
         _maxCacheSize = 10000;
-        _ignoredViewControllers = [NSMutableArray array];
+        _pageViewBlackList = [NSMutableSet set];
+        _pageViewWhiteList = [NSMutableSet set];
         _appBecomeActiveTime = [ANSUtil nowTimeMilliseconds];
-        _propertiesLock = [[NSLock alloc] init];
-        _userDefaultsLock = [[NSLock alloc] init];
         _isSendingDataLock = [[NSLock alloc] init];
         
-        NSString *serialLabel = [NSString stringWithFormat:@"com.analysys.serialQueue"];
-        NSString *requestLabel = [NSString stringWithFormat:@"com.analysys.requestQueue"];
-        _serialQueue = dispatch_queue_create([serialLabel UTF8String], DISPATCH_QUEUE_SERIAL);
-        _requestQueue = dispatch_queue_create([requestLabel UTF8String], DISPATCH_QUEUE_SERIAL);
-        dispatch_queue_set_specific(_serialQueue, AnalysysQueueTag, &AnalysysQueueTag, NULL);
-        [_propertiesLock lock];
+        ANSPropertyLock();
         _superProperties = [ANSFileManager unarchiveSuperProperties];
         _commonProperties = [ANSFileManager unarchiveCommonProperties];
-        [_propertiesLock unlock];
+        ANSPropertyUnlock();
         
         [self updateUserId];
         
         [[ANSTelephonyNetwork shareInstance] startReachability];
+        
         [self registNotifications];
+        
         self->_dbHelper = [[ANSDatabase alloc] initWithDatabaseName:@"ANALYSYS.db"];
+        
         [self->_dbHelper resetLogStatus];
     }
     return self;
@@ -143,11 +134,15 @@ void* AnalysysQueueTag = &AnalysysQueueTag;
     @try {
         static dispatch_once_t autoTrackOnceToken ;
         dispatch_once(&autoTrackOnceToken, ^{
+            if (config.autoTrackCrash) {
+                ANSInstallUncaughtExceptionHandler();
+            }
             [ANSOpenURLAutoTrack autoTrack];
             [ANSPageAutoTrack autoTrack];
         });
         
         dispatch_block_t block = ^(){
+            
             NSString *upServerUrl;
             if (config.baseUrl.length > 0) {
                 upServerUrl = [NSString stringWithFormat:@"https://%@:%@/up", config.baseUrl, ANSHttpsDefaultPort];
@@ -156,7 +151,7 @@ void* AnalysysQueueTag = &AnalysysQueueTag;
                 [ANSModuleProcessing setVisualBaseUrl:config.baseUrl];
             }
             
-            [self checkAppFirstStart];
+            [self appFirstLauchDate];
             
             if ([self isAppKeyChanged:config.appKey] ||
                 [self isServerURLChanged:upServerUrl]) {
@@ -169,9 +164,9 @@ void* AnalysysQueueTag = &AnalysysQueueTag;
             
             [self trackAppStartEvent];
         };
-        [self dispatchOnSerialQueue:block];
+        [ANSQueue dispatchAsyncLogSerialQueueWithBlock:block];
     } @catch (NSException *exception) {
-        AnsDebug(@"SDK init exception: %@", exception);
+        ANSDebug(@"SDK init exception: %@", exception);
     }
 }
 
@@ -187,7 +182,7 @@ void* AnalysysQueueTag = &AnalysysQueueTag;
 /** 设置上传数据地址 */
 - (void)setUploadURL:(NSString *)uploadURL {
     dispatch_block_t block = ^(){
-        ANSConsoleLog *checkResult = [[ANSConsoleLog alloc] init];
+        ANSDataCheckLog *checkResult = [[ANSDataCheckLog alloc] init];
         checkResult.value = uploadURL;
         
         NSString *url = [ANSUtil getHttpUrlString:uploadURL];
@@ -196,7 +191,7 @@ void* AnalysysQueueTag = &AnalysysQueueTag;
             
             checkResult.resultType = AnalysysResultSetFailed;
             checkResult.remarks = @"'uploadURL' must start with 'http://' or 'https://'";
-            ANSWarning(@"%@",[checkResult messageDisplay]);
+            ANSBriefWarning(@"%@",[checkResult messageDisplay]);
             return;
         }
         NSString *serverUrl = [NSString stringWithFormat:@"%@/up",url];
@@ -212,32 +207,30 @@ void* AnalysysQueueTag = &AnalysysQueueTag;
         checkResult.resultType = AnalysysResultSetSuccess;
         ANSLog(@"%@",[checkResult messageDisplay]);
     };
-    [self dispatchOnSerialQueue:block];
+    [ANSQueue dispatchAsyncLogSerialQueueWithBlock:block];
 }
 
 /** 设置可视化websocket服务器地址 */
 - (void)setVisitorDebugURL:(NSString *)visitorDebugURL {
-    dispatch_block_t block = ^(){
+    [ANSQueue dispatchAsyncLogSerialQueueWithBlock:^{
         [ANSModuleProcessing setVisitorDebugURL:visitorDebugURL];
-    };
-    [self dispatchOnSerialQueue:block];
+    }];
 }
 
 /** 设置线上请求埋点配置的服务器地址 */
 - (void)setVisitorConfigURL:(NSString *)configURL {
-    dispatch_block_t block = ^(){
+    [ANSQueue dispatchAsyncLogSerialQueueWithBlock:^{
         [ANSModuleProcessing setVisualConfigUrl:configURL];
-    };
-    [self dispatchOnSerialQueue:block];
+    }];
 }
 
 /** 是否采集热图坐标 */
 - (void)setAutomaticHeatmap:(BOOL)autoTrack {
-    dispatch_block_t block = ^(){
+    [ANSQueue dispatchAsyncLogSerialQueueWithBlock:^{
         [ANSHeatMapAutoTrack heatMapAutoTrack:autoTrack];
-    };
-    [self dispatchOnSerialQueue:block];
+    }];
 }
+
 
 #pragma mark - SDK发送策略
 
@@ -251,7 +244,7 @@ void* AnalysysQueueTag = &AnalysysQueueTag;
                 if ([self isDebugModeChanged:debugMode]) {
                     [self profileResetWithType:ANSStartReset];
                 }
-                ANSConsoleLog *checkResult = [[ANSConsoleLog alloc] init];
+                ANSDataCheckLog *checkResult = [[ANSDataCheckLog alloc] init];
                 checkResult.resultType = AnalysysResultSetSuccess;
                 checkResult.value = [NSNumber numberWithInteger:debugMode];
                 ANSLog(@"%@",[checkResult messageDisplay]);
@@ -261,7 +254,7 @@ void* AnalysysQueueTag = &AnalysysQueueTag;
                 break;
         }
     };
-    [self dispatchOnSerialQueue:block];
+    [ANSQueue dispatchAsyncLogSerialQueueWithBlock:block];
 }
 
 /** 当前调试模式 */
@@ -272,37 +265,35 @@ void* AnalysysQueueTag = &AnalysysQueueTag;
 
 /** 设置上传间隔时间 */
 - (void)setIntervalTime:(NSInteger)flushInterval {
-    dispatch_block_t block = ^(){
+    [ANSQueue dispatchAsyncLogSerialQueueWithBlock:^{
         NSInteger _flushInterval = MAX(1, flushInterval);
         [[ANSStrategyManager sharedManager] setUserIntervalTimeValue:_flushInterval];
         
-        ANSConsoleLog *checkResult = [[ANSConsoleLog alloc] init];
+        ANSDataCheckLog *checkResult = [[ANSDataCheckLog alloc] init];
         checkResult.resultType = AnalysysResultSetSuccess;
         checkResult.value = [NSNumber numberWithInteger:_flushInterval];
         ANSLog(@"%@",[checkResult messageDisplay]);
-    };
-    [self dispatchOnSerialQueue:block];
+    }];
 }
 
 /** 数据累积"size"条数后触发上传 */
 - (void)setMaxEventSize:(NSInteger)flushSize {
-    dispatch_block_t block = ^(){
+    [ANSQueue dispatchAsyncLogSerialQueueWithBlock:^{
         NSInteger _flushSize = MAX(1, flushSize);
         [[ANSStrategyManager sharedManager] setUserMaxEventSizeValue:_flushSize];
         
-        ANSConsoleLog *checkResult = [[ANSConsoleLog alloc] init];
+        ANSDataCheckLog *checkResult = [[ANSDataCheckLog alloc] init];
         checkResult.resultType = AnalysysResultSetSuccess;
         checkResult.value = [NSNumber numberWithInteger:_flushSize];
         ANSLog(@"%@",[checkResult messageDisplay]);
-    };
-    [self dispatchOnSerialQueue:block];
+    }];
 }
 
 /** 本地缓存上限值 */
 - (void)setMaxCacheSize:(NSInteger)cacheSize {
     _maxCacheSize = MAX(100, cacheSize);
     
-    ANSConsoleLog *checkResult = [[ANSConsoleLog alloc] init];
+    ANSDataCheckLog *checkResult = [[ANSDataCheckLog alloc] init];
     checkResult.resultType = AnalysysResultSetSuccess;
     checkResult.value = [NSNumber numberWithInteger:_maxCacheSize];
     ANSLog(@"%@",[checkResult messageDisplay]);
@@ -315,20 +306,18 @@ void* AnalysysQueueTag = &AnalysysQueueTag;
 
 /** 主动向服务器上传数据 */
 - (void)flush {
-    dispatch_block_t block = ^(){
-        [self flushDataIfIgnorePolicy:YES];
-    };
-    [self dispatchOnSerialQueue:block];
+    [ANSQueue dispatchAsyncLogSerialQueueWithBlock:^{
+         [self flushDataIfIgnorePolicy:YES];
+    }];
 }
 
 #pragma mark - 热图
 
 - (void)trackHeatMapWithSDKProperties:(NSDictionary *)sdkProperties  {
-    dispatch_block_t block = ^(){
+    [ANSQueue dispatchAsyncLogSerialQueueWithBlock:^{
         NSDictionary *heatMap = [ANSDataProcessing processHeatMapWithSDKProperties:sdkProperties];
         [self saveUploadInfo:heatMap event:ANSEventHeatMap handler:^{}];
-    };
-    [self dispatchOnSerialQueue:block];
+    }];
 }
 
 #pragma mark - 事件
@@ -337,16 +326,16 @@ void* AnalysysQueueTag = &AnalysysQueueTag;
 - (void)track:(NSString *)event properties:(NSDictionary *)properties {
     NSDictionary *tProperties = [properties mutableCopy];
     dispatch_block_t block = ^(){
-        ANSConsoleLog *checkResult = [ANSDataCheckRouter checkEvent:event];
+        ANSDataCheckLog *checkResult = [ANSDataCheckRouter checkEvent:event];
         if (checkResult) {
-            ANSWarning(@"%@",[checkResult messageDisplay]);
+            ANSBriefWarning(@"%@",[checkResult messageDisplay]);
             return ;
         }
         
         NSDictionary *trackInfo = [ANSDataProcessing processTrack:event properties:tProperties];
         [self saveUploadInfo:trackInfo event:ANSEventTrack handler:^{}];
     };
-    [self dispatchOnSerialQueue:block];
+    [ANSQueue dispatchAsyncLogSerialQueueWithBlock:block];
 }
 
 #pragma mark - 页面事件
@@ -355,10 +344,10 @@ void* AnalysysQueueTag = &AnalysysQueueTag;
 - (void)pageView:(NSString *)pageName properties:(NSDictionary *)properties {
     if (![pageName isKindOfClass:NSString.class]) {
         pageName = nil;
-        ANSWarning(@"pagename is not <NSString>.");
+        ANSBriefWarning(@"pagename is not <NSString>.");
     } else if ([pageName isKindOfClass:NSString.class] && pageName.length == 0) {
         pageName = nil;
-        ANSWarning(@"pagename is empty.");
+        ANSBriefWarning(@"pagename is empty.");
     }
     [self trackPageView:pageName properties:properties];
 }
@@ -370,29 +359,78 @@ void* AnalysysQueueTag = &AnalysysQueueTag;
 
 /** 设置是否允许页面自动采集 */
 - (void)setAutomaticCollection:(BOOL)isAuto {
-    [_propertiesLock lock];
+    ANSPropertyLock();
     _isAutoCollectionPage = isAuto;
-    [_propertiesLock unlock];
+    ANSPropertyUnlock();
 }
 
 /** 当前SDK是否允许页面自动跟踪 */
 - (BOOL)isViewAutoTrack {
-    [_propertiesLock lock];
+    ANSPropertyLock();
     BOOL retValue = _isAutoCollectionPage;
-    [_propertiesLock unlock];
+    ANSPropertyUnlock();
     return retValue;
+}
+
+/** 只采集部分页面 */
+- (void)setPageViewWhiteListByPages:(NSSet<NSString *> *)controllers {
+    if (controllers.count == 0 || ![controllers isKindOfClass:NSSet.class]) {
+        return;
+    }
+    NSSet *sControllers = [controllers mutableCopy];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        ANSPropertyLock();
+        [self->_pageViewWhiteList setSet:sControllers];
+        
+        ANSPropertyUnlock();
+    });
+}
+
+/** 忽略部分页面自动采集 */
+- (void)setPageViewBlackListByPages:(NSSet<NSString *> *)controllers {
+    if (controllers.count == 0 || ![controllers isKindOfClass:NSSet.class]) {
+        return;
+    }
+    NSSet *sControllers = [controllers mutableCopy];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        ANSPropertyLock();
+        [self->_pageViewBlackList setSet:sControllers];
+        ANSPropertyUnlock();
+    });
 }
 
 /** 忽略部分页面自动采集 */
 - (void)setIgnoredAutomaticCollectionControllers:(NSArray<NSString *> *)controllers {
-    NSArray *sControllers = [controllers mutableCopy];
-    if (sControllers.count == 0 || ![sControllers isKindOfClass:NSArray.class]) {
+    if (controllers.count == 0 || ![controllers isKindOfClass:NSArray.class]) {
         return;
     }
+    NSSet *sets = [NSSet setWithArray:controllers];
+    [self setPageViewBlackListByPages:sets];
+}
+
+#pragma mark - 热图模块儿接口
+
+- (void)setHeatmapIgnoreAutoClickByPage:(NSSet<NSString *> *)controllerNames {
+    if (controllerNames.count == 0 || ![controllerNames isKindOfClass:NSSet.class]) {
+        return;
+    }
+    NSSet *sControllers = [controllerNames mutableCopy];
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self->_propertiesLock lock];
-        [self->_ignoredViewControllers addObjectsFromArray:sControllers];
-        [self->_propertiesLock unlock];
+        ANSPropertyLock();
+        [[ANSHeatMapAutoTrack sharedManager].ignoreAutoClickPage setSet:sControllers];
+        ANSPropertyUnlock();
+    });
+}
+
+- (void)setHeatmapAutoClickByPage:(NSSet<NSString *> *)controllerNames {
+    if (controllerNames.count == 0 || ![controllerNames isKindOfClass:NSSet.class]) {
+        return;
+    }
+    NSSet *sControllers = [controllerNames mutableCopy];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        ANSPropertyLock();
+        [[ANSHeatMapAutoTrack sharedManager].autoClickPage setSet:sControllers];
+        ANSPropertyUnlock();
     });
 }
 
@@ -402,30 +440,30 @@ void* AnalysysQueueTag = &AnalysysQueueTag;
 - (void)registerSuperProperties:(NSDictionary *)superProperties {
     __block NSDictionary *blockSuperProperties = [superProperties mutableCopy];
     dispatch_block_t block = ^(){
-        ANSConsoleLog *checkResult = [ANSDataCheckRouter checkSuperProperties:&blockSuperProperties];
+        ANSDataCheckLog *checkResult = [ANSDataCheckRouter checkSuperProperties:&blockSuperProperties];
         if (checkResult && checkResult.resultType <= AnalysysResultSuccess) {
-            ANSWarning(@"%@",[checkResult messageDisplay]);
+            ANSBriefWarning(@"%@",[checkResult messageDisplay]);
             if (blockSuperProperties == nil) {
                 return;
             }
         }
-        [self->_propertiesLock lock];
+        ANSPropertyLock();
         NSMutableDictionary *tmp = [NSMutableDictionary dictionaryWithDictionary:self->_superProperties];
         [tmp addEntriesFromDictionary:blockSuperProperties];
         self->_superProperties = [NSDictionary dictionaryWithDictionary:tmp];
         BOOL result = [ANSFileManager archiveSuperProperties:self->_superProperties];
-        [self->_propertiesLock unlock];
+        ANSPropertyUnlock();
         if (result) {
-            ANSConsoleLog *checkResult = [[ANSConsoleLog alloc] init];
+            ANSDataCheckLog *checkResult = [[ANSDataCheckLog alloc] init];
             checkResult.resultType = AnalysysResultSetSuccess;
             ANSLog(@"%@",[checkResult messageDisplay]);
         } else {
-            ANSConsoleLog *checkResult = [[ANSConsoleLog alloc] init];
+            ANSDataCheckLog *checkResult = [[ANSDataCheckLog alloc] init];
             checkResult.resultType = AnalysysResultSetFailed;
-            ANSWarning(@"%@",[checkResult messageDisplay]);
+            ANSBriefWarning(@"%@",[checkResult messageDisplay]);
         }
     };
-    [self dispatchOnSerialQueue:block];
+    [ANSQueue dispatchAsyncLogSerialQueueWithBlock:block];
 }
 
 /** 添加单个通用属性 */
@@ -441,59 +479,59 @@ void* AnalysysQueueTag = &AnalysysQueueTag;
         return;
     }
     dispatch_block_t block = ^(){
-        [self->_propertiesLock lock];
+        ANSPropertyLock();
         NSMutableDictionary *tmp = [NSMutableDictionary dictionaryWithDictionary:self.superProperties];
         [tmp removeObjectForKey:superPropertyName];
         self.superProperties = [NSDictionary dictionaryWithDictionary:tmp];
         BOOL result = [ANSFileManager archiveSuperProperties:self.superProperties];
-        [self->_propertiesLock unlock];
+        ANSPropertyUnlock();
         if (result) {
-            ANSConsoleLog *checkResult = [[ANSConsoleLog alloc] init];
+            ANSDataCheckLog *checkResult = [[ANSDataCheckLog alloc] init];
             checkResult.value = superPropertyName;
             checkResult.resultType = AnalysysResultSetSuccess;
             ANSLog(@"%@",[checkResult messageDisplay]);
         }
     };
-    [self dispatchOnSerialQueue:block];
+    [ANSQueue dispatchAsyncLogSerialQueueWithBlock:block];
 }
 
 /** 清除所有通用属性 */
 - (void)clearSuperProperties {
-    dispatch_block_t block = ^{
-        [self->_propertiesLock lock];
+    [ANSQueue dispatchAsyncLogSerialQueueWithBlock:^{
+        ANSPropertyLock();
         self.superProperties = [NSDictionary dictionary];
         BOOL result = [ANSFileManager archiveSuperProperties:self.superProperties];
-        [self->_propertiesLock unlock];
+        ANSPropertyUnlock();
         if (result) {
-            ANSConsoleLog *checkResult = [[ANSConsoleLog alloc] init];
+            ANSDataCheckLog *checkResult = [[ANSDataCheckLog alloc] init];
             checkResult.resultType = AnalysysResultSetSuccess;
             ANSLog(@"%@",[checkResult messageDisplay]);
         }
-    };
-    [self dispatchOnSerialQueue:block];
+    }];
 }
 
-/** 获取通用属性 */
+/** 获取hybird通用属性，取App与js集合，且已App为准 */
 - (NSDictionary *)getSuperPropertiesValue {
-    [_propertiesLock lock];
-    NSDictionary *retValue = [_superProperties copy];
-    [_propertiesLock unlock];
-    return retValue;
+    ANSPropertyLock();
+    NSDictionary *hybirdSuperProperty = [ANSFileManager unarchiveHybridSuperProperties];
+    NSMutableDictionary *superProperties = [NSMutableDictionary dictionaryWithDictionary:hybirdSuperProperty];
+    [superProperties addEntriesFromDictionary:_superProperties];
+    ANSPropertyUnlock();
+    return [superProperties copy];
 }
 
-/** 获取某个通用属性 */
+/** 获取hybird某个通用属性，取App与js合集，若key相同则以App为准 */
 - (id)getSuperProperty:(NSString *)superPropertyName {
-    [_propertiesLock lock];
-    id retValue = _superProperties[superPropertyName];
-    [_propertiesLock unlock];
+    NSDictionary *superProperties = [self getSuperPropertiesValue];
+    id retValue = superProperties[superPropertyName];
     return retValue;
 }
 
 /** 普通属性 */
 - (NSDictionary *)getCommonProperties {
-    [_propertiesLock lock];
+    ANSPropertyLock();
     NSDictionary *retValue = [_commonProperties copy];
-    [_propertiesLock unlock];
+    ANSPropertyUnlock();
     return retValue;
 }
 
@@ -511,11 +549,10 @@ void* AnalysysQueueTag = &AnalysysQueueTag;
     
     NSString *netWork = [[ANSTelephonyNetwork shareInstance] telephonyNetworkDescrition];
     [presetProperties setValue:netWork forKey:ANSPresetNetwork];
-    
-    [presetProperties setValue:[self appFirstStartTime] forKey:ANSPresetFirstVisitTime];
+    [presetProperties setValue:[self appFirstLauchDate] forKey:ANSPresetFirstVisitTime];
     
     NSString *session = [[ANSSession shareInstance] localSession];
-    [presetProperties setValue:session forKey:ANSSessionId];
+    [presetProperties setValue:session forKey:ANSPresetSessionId];
     
     [presetProperties setValue:ANSSDKVersion forKey:ANSPresetLibVersion];
     [presetProperties setValue:@"iOS" forKey:ANSPresetPlatform];
@@ -533,44 +570,44 @@ void* AnalysysQueueTag = &AnalysysQueueTag;
 - (void)identify:(NSString *)anonymousId {
     
     dispatch_block_t block = ^(){
-        ANSConsoleLog *checkResult = [ANSDataCheckRouter checkLengthOfIdentify:anonymousId];
+        ANSDataCheckLog *checkResult = [ANSDataCheckRouter checkLengthOfIdentify:anonymousId];
         if (checkResult && checkResult.resultType < AnalysysResultSuccess) {
-            ANSWarning(@"%@",[checkResult messageDisplay]);
+            ANSBriefWarning(@"%@",[checkResult messageDisplay]);
             return;
         }
-        [self->_propertiesLock lock];
+        ANSPropertyLock();
         NSMutableDictionary *tmpCommonProperties = [NSMutableDictionary dictionaryWithDictionary:self->_commonProperties];
         [tmpCommonProperties setValue:anonymousId forKey:ANSAnonymousId];
         self->_commonProperties = [NSDictionary dictionaryWithDictionary:tmpCommonProperties];
         BOOL result = [ANSFileManager archiveCommonProperties:self->_commonProperties];
-        [self->_propertiesLock unlock];
+        ANSPropertyUnlock();
         
         [self updateUserId];
         
         if (result) {
-            ANSConsoleLog *checkResult = [[ANSConsoleLog alloc] init];
+            ANSDataCheckLog *checkResult = [[ANSDataCheckLog alloc] init];
             checkResult.value = anonymousId;
             checkResult.resultType = AnalysysResultSetSuccess;
             ANSLog(@"%@",[checkResult messageDisplay]);
         }
     };
-    [self dispatchOnSerialQueue:block];
+    [ANSQueue dispatchAsyncLogSerialQueueWithBlock:block];
 }
 
 /** 用户关联 */
 - (void)alias:(NSString *)aliasId originalId:(NSString *)originalId {
     dispatch_block_t block = ^(){
-        ANSConsoleLog *checkResult = [ANSDataCheckRouter checkLengthOfAliasId:aliasId];
+        ANSDataCheckLog *checkResult = [ANSDataCheckRouter checkLengthOfAliasId:aliasId];
         if (checkResult) {
-            ANSWarning(@"%@",[checkResult messageDisplay]);
+            ANSBriefWarning(@"%@",[checkResult messageDisplay]);
             return ;
         }
         checkResult = [ANSDataCheckRouter checkAliasOriginalId:originalId];
         if (checkResult) {
-            ANSWarning(@"%@",[checkResult messageDisplay]);
+            ANSBriefWarning(@"%@",[checkResult messageDisplay]);
             return ;
         }
-        [self->_propertiesLock lock];
+        ANSPropertyLock();
         NSMutableDictionary *tmpCommonProperties = [NSMutableDictionary dictionaryWithDictionary:self->_commonProperties];
         [tmpCommonProperties setValue:aliasId forKey:ANSEventAlias];
         [tmpCommonProperties setValue:originalId forKey:ANSOriginalId];
@@ -589,26 +626,35 @@ void* AnalysysQueueTag = &AnalysysQueueTag;
         } else {
             [properties setValue:self.commonProperties[ANSUUID] forKey:ANSOriginalId];
         }
-        [self->_propertiesLock unlock];
+        ANSPropertyUnlock();
         NSDictionary *aliasInfo = [ANSDataProcessing processAliasSDKProperties:properties];
         [self saveUploadInfo:aliasInfo event:ANSEventAlias handler:^{}];
         [self upProfileSetOnce];
     };
-    [self dispatchOnSerialQueue:block];
+    [ANSQueue dispatchAsyncLogSerialQueueWithBlock:block];
 }
 
 - (NSString *)getDistinctIdInternal {
-    [_propertiesLock lock];
+    ANSPropertyLock();
     NSString *anonymousId = self.commonProperties[ANSAnonymousId];
     NSString *distictId;
     if (anonymousId.length > 0) {
         distictId = anonymousId;
     } else {
         distictId = self.commonProperties[ANSUUID];
+        if (!distictId) {
+            distictId = [[NSUUID UUID] UUIDString];
+
+            NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithDictionary:self.commonProperties];
+            dic[ANSUUID] = distictId;
+            self.commonProperties = [NSDictionary dictionaryWithDictionary:dic];
+            [ANSFileManager archiveCommonProperties:self.commonProperties];
+        }
     }
-    [_propertiesLock unlock];
+    ANSPropertyUnlock();
     return distictId;
 }
+
 /** 获取用户的匿名ID*/
 - (NSString *)getDistinctId {
     NSString * returnedDistinctId = [self getDistinctIdInternal];
@@ -618,11 +664,10 @@ void* AnalysysQueueTag = &AnalysysQueueTag;
 /** 设置用户属性 */
 - (void)profileSet:(NSDictionary *)property {
     NSDictionary *sProperties = [property mutableCopy];
-    dispatch_block_t block = ^(){
+    [ANSQueue dispatchAsyncLogSerialQueueWithBlock:^{
         NSDictionary *upInfo = [ANSDataProcessing processProfileSetProperties:sProperties];
         [self saveUploadInfo:upInfo event:ANSEventProfileSet handler:^{}];
-    };
-    [self dispatchOnSerialQueue:block];
+    }];
 }
 
 - (void)profileSet:(NSString *)propertyName propertyValue:(id)propertyValue {
@@ -636,11 +681,10 @@ void* AnalysysQueueTag = &AnalysysQueueTag;
 /** 设置用户固有属性 */
 - (void)profileSetOnce:(NSDictionary *)property {
     NSDictionary *sProperties = [property mutableCopy];
-    dispatch_block_t block = ^(){
+    [ANSQueue dispatchAsyncLogSerialQueueWithBlock:^{
         NSDictionary *upInfo = [ANSDataProcessing processProfileSetOnceProperties:sProperties SDKProperties:nil];
         [self saveUploadInfo:upInfo event:ANSEventProfileSetOnce handler:^{}];
-    };
-    [self dispatchOnSerialQueue:block];
+    }];
 }
 
 - (void)profileSetOnce:(NSString *)propertyName propertyValue:(id)propertyValue {
@@ -653,18 +697,17 @@ void* AnalysysQueueTag = &AnalysysQueueTag;
 
 /** 设置用户属性相对变化值 */
 - (void)profileIncrement:(NSDictionary<NSString*, NSNumber*> *)property {
-    NSDictionary *sProperties = [property mutableCopy];
-    __block NSDictionary *blockProperty = sProperties;
+    __block NSDictionary *blockProperty = [property mutableCopy];
     dispatch_block_t block = ^(){
-        ANSConsoleLog *checkResult = [ANSDataCheckRouter checkIncrementProperties:&blockProperty];
+        ANSDataCheckLog *checkResult = [ANSDataCheckRouter checkIncrementProperties:&blockProperty];
         if (checkResult && checkResult.resultType < AnalysysResultSuccess) {
-            ANSWarning(@"%@",[checkResult messageDisplay]);
+            ANSBriefWarning(@"%@",[checkResult messageDisplay]);
         }
         
         NSDictionary *upInfo = [ANSDataProcessing processProfileIncrementProperties:blockProperty];
         [self saveUploadInfo:upInfo event:ANSEventProfileIncrement handler:^{}];
     };
-    [self dispatchOnSerialQueue:block];
+    [ANSQueue dispatchAsyncLogSerialQueueWithBlock:block];
 }
 
 /** profileIncrement */
@@ -678,19 +721,18 @@ void* AnalysysQueueTag = &AnalysysQueueTag;
 
 /** 增加列表类型的属性 */
 - (void)profileAppend:(NSDictionary *)property {
-    NSDictionary *sProperties = [property mutableCopy];
-    __block NSDictionary *blockProperty = sProperties;
+    __block NSDictionary *blockProperty = [property mutableCopy];
     dispatch_block_t block = ^(){
-        ANSConsoleLog *checkResult = nil;
+        ANSDataCheckLog *checkResult = nil;
         checkResult = [ANSDataCheckRouter checkAppendProperties:&blockProperty];
         if (checkResult && checkResult.resultType < AnalysysResultSuccess) {
-            ANSWarning(@"%@",[checkResult messageDisplay]);
+            ANSBriefWarning(@"%@",[checkResult messageDisplay]);
         }
         
         NSDictionary *upInfo = [ANSDataProcessing processProfileAppendProperties:blockProperty];
         [self saveUploadInfo:upInfo event:ANSEventProfileAppend handler:^{}];
     };
-    [self dispatchOnSerialQueue:block];
+    [ANSQueue dispatchAsyncLogSerialQueueWithBlock:block];
 }
 
 /** 增加key-value用户属性 */
@@ -716,20 +758,18 @@ void* AnalysysQueueTag = &AnalysysQueueTag;
     if (propertyName.length == 0) {
         return;
     }
-    dispatch_block_t block = ^(){
+    [ANSQueue dispatchAsyncLogSerialQueueWithBlock:^{
         NSDictionary *upInfo = [ANSDataProcessing processProfileUnsetWithSDKProperties:@{propertyName: @""}];
         [self saveUploadInfo:upInfo event:ANSEventProfileUnset handler:^{}];
-    };
-    [self dispatchOnSerialQueue:block];
+    }];
 }
 
 /** 删除当前用户的所有属性 */
 - (void)profileDelete {
-    dispatch_block_t block = ^(){
+    [ANSQueue dispatchAsyncLogSerialQueueWithBlock:^{
         NSDictionary *upInfo = [ANSDataProcessing processProfileDelete];
         [self saveUploadInfo:upInfo event:ANSEventProfileDelete handler:^{}];
-    };
-    [self dispatchOnSerialQueue:block];
+    }];
 }
 
 #pragma mark - 清除本地设置
@@ -750,7 +790,7 @@ void* AnalysysQueueTag = &AnalysysQueueTag;
     @try {
         return [ANSHybrid excuteRequest:request webView:webView];
     } @catch (NSException *exception) {
-        ANSError(@"Hyrbrid error:%@!", exception.description);
+        ANSBriefError(@"Hyrbrid error:%@!", exception.description);
     }
 }
 
@@ -793,7 +833,7 @@ void* AnalysysQueueTag = &AnalysysQueueTag;
         NSDictionary *upInfo = [ANSDataProcessing processProfileSetProperties:pushDic];
         [self saveUploadInfo:upInfo event:ANSEventPush handler:^{}];
     };
-    [self dispatchOnSerialQueue:block];
+    [ANSQueue dispatchAsyncLogSerialQueueWithBlock:block];
 }
 
 /** 追踪活动推广，可回调用户自定义信息 */
@@ -805,12 +845,12 @@ void* AnalysysQueueTag = &AnalysysQueueTag;
                 userCallback(analysysPushInfo);
             }
             //  防止App活着时，收到推送消息处理早于start事件，造成session不一致
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), self->_serialQueue, ^{
+            [ANSQueue dispatchAfterSeconds:0.5 onLogSerialQueueWithBlock:^{
                 [self handlePushInfo:analysysPushInfo isClick:isClick];
-            });
+            }];
         }
     };
-    [self dispatchOnSerialQueue:block];
+    [ANSQueue dispatchAsyncLogSerialQueueWithBlock:block];
 }
 
 /** 处理推送通知 */
@@ -837,23 +877,12 @@ void* AnalysysQueueTag = &AnalysysQueueTag;
 
 #pragma mark - --------- private method ---------
 
-#pragma mark - 队列
-
-/** 串行队列 */
-- (void)dispatchOnSerialQueue:(void(^)(void))dispatchBlock {
-    if (dispatch_get_specific(AnalysysQueueTag)) {
-        dispatchBlock();
-    } else {
-        dispatch_async(_serialQueue, dispatchBlock);
-    }
-}
-
 #pragma mark - 重要信息改变
 
 /** appKey是否更改 */
 - (BOOL)isAppKeyChanged:(NSString *)appKey {
-    NSString *lastAppKey = [ANSFileManager usedAppKey];
-    [ANSFileManager saveAppKey:appKey];
+    NSString *lastAppKey = [ANSFileManager userDefaultValueWithKey:ANSAppKey];
+    [ANSFileManager saveUserDefaultWithKey:ANSAppKey value:appKey];
     
     if (lastAppKey.length > 0 && ![lastAppKey isEqualToString:appKey]) {
         return YES;
@@ -908,11 +937,10 @@ void* AnalysysQueueTag = &AnalysysQueueTag;
     _appBecomeActiveTime = [ANSUtil nowTimeMilliseconds];
     
     if (!_isAppLaunched) {
-        dispatch_block_t block = ^(){
+        [ANSQueue dispatchAsyncLogSerialQueueWithBlock:^{
             [self trackAppStartEvent];
             [ANSPageAutoTrack autoTrackLastVisitPage];
-        };
-        [self dispatchOnSerialQueue:block];
+        }];
     }
     _isAppLaunched = NO;
 }
@@ -922,20 +950,20 @@ void* AnalysysQueueTag = &AnalysysQueueTag;
     _isAppLaunched = NO;
     _isBackgroundActive = YES;
     _appResignActiveTime = [ANSUtil nowTimeMilliseconds];
-    dispatch_block_t block = ^(){
+    
+    [ANSQueue dispatchAsyncLogSerialQueueWithBlock:^{
         [[ANSSession shareInstance] updatePageDisappearDate];
         
         NSDictionary *endEvent = [ANSDataProcessing processAppEnd];
         [self saveUploadInfo:endEvent event:ANSEventAppEnd handler:^{}];
-    };
-    [self dispatchOnSerialQueue:block];
+    }];
 }
 
 /** 数据上传 */
 - (void)flushDataNotification:(NSNotification *)notification {
-    dispatch_async(self->_serialQueue, ^{
+    [ANSQueue dispatchAsyncLogSerialQueueWithBlock:^{
         [self flushDataIfIgnorePolicy:NO];
-    });
+    }];
 }
 
 #pragma mark - 事件处理
@@ -950,7 +978,7 @@ void* AnalysysQueueTag = &AnalysysQueueTag;
         [ANSOpenURLAutoTrack saveUtmParameters:nil];
         NSDictionary *startEvent = [ANSDataProcessing processAppStartProperties:utm];
         if (!startEvent) {
-            ANSConsoleLog *checkResult = [[ANSConsoleLog alloc] init];
+            ANSDataCheckLog *checkResult = [[ANSDataCheckLog alloc] init];
             checkResult.remarks = @"trackAppStartEvent failed!";
             ANSBriefWarning(@"%@",[checkResult messageDisplay]);
             return;
@@ -966,14 +994,14 @@ void* AnalysysQueueTag = &AnalysysQueueTag;
         //  渠道追踪
         [self upFirstInstallation];
     };
-    [self dispatchOnSerialQueue:block];
+    [ANSQueue dispatchAsyncLogSerialQueueWithBlock:block];
 }
 
 /** 页面数据 */
 - (void)trackPageView:(NSString *)pageName properties:(NSDictionary *)properties {
     dispatch_block_t block = ^(){
         NSMutableDictionary *pageProperties = [NSMutableDictionary dictionary];
-        [pageProperties setValue:pageName forKey:ANSPageName];
+        [pageProperties setValue:pageName forKey:ANSPageTitle];
         if ([properties isKindOfClass:[NSDictionary class]]) {
             [pageProperties addEntriesFromDictionary:properties];
          } else if (properties) {
@@ -983,40 +1011,38 @@ void* AnalysysQueueTag = &AnalysysQueueTag;
         
         [self saveUploadInfo:pageInfo event:ANSEventPageView handler:^{}];
     };
-    [self dispatchOnSerialQueue:block];
+    [ANSQueue dispatchAsyncLogSerialQueueWithBlock:block];
 }
 
 /** 上传一次 set_once 数据 */
 - (void)upProfileSetOnce {
-    dispatch_block_t block = ^(){
+    [ANSQueue dispatchAsyncLogSerialQueueWithBlock:^{
         if (AnalysysConfig.autoProfile) {
-            NSDictionary *properties = @{ANSPresetFirstVisitTime: [self appFirstStartTime],
+            NSDictionary *properties = @{ANSPresetFirstVisitTime: [self appFirstLauchDate],
                                          ANSPresetFirstVisitLanguage: [ANSDeviceInfo getDeviceLanguage]};
             NSDictionary *setOnce = [ANSDataProcessing processProfileSetOnceProperties:nil SDKProperties:properties];
             [self saveUploadInfo:setOnce event:ANSEventProfileSetOnce handler:^{}];
         }
-    };
-    [self dispatchOnSerialQueue:block];
+    }];
 }
 
 /** 渠道追踪 */
 - (void)upFirstInstallation {
-    dispatch_block_t block = ^(){
+    [ANSQueue dispatchAsyncLogSerialQueueWithBlock:^{
         if (self->_canSendAutoInstallation && AnalysysConfig.autoInstallation) {
             self->_canSendAutoInstallation = NO;
             NSDictionary *utm = [ANSOpenURLAutoTrack utmParameters];
             NSDictionary *attribute = [ANSDataProcessing processInstallationSDKProperties:utm];
             [self saveUploadInfo:attribute event:ANSEventInstallation handler:^{}];
         }
-    };
-    [self dispatchOnSerialQueue:block];
+    }];
 }
 
 /** 重置本地缓存 */
 - (void)profileResetWithType:(ANSResetType)resetType {
     dispatch_block_t block = ^(){
         
-        [self->_propertiesLock lock];
+        ANSPropertyLock();
         NSMutableDictionary *tmp = [NSMutableDictionary dictionaryWithDictionary:self->_commonProperties];
         if (resetType == ANSProfileReset) {
             [tmp setValue:[[NSUUID UUID] UUIDString] forKey:ANSUUID];
@@ -1029,7 +1055,7 @@ void* AnalysysQueueTag = &AnalysysQueueTag;
         [ANSFileManager archiveSuperProperties:self->_superProperties];
         self->_commonProperties = tmp;
         [ANSFileManager archiveCommonProperties:self->_commonProperties];
-        [self->_propertiesLock unlock];
+        ANSPropertyUnlock();
         
         [self updateUserId];
         
@@ -1041,14 +1067,14 @@ void* AnalysysQueueTag = &AnalysysQueueTag;
         
         [self->_dbHelper clearDB];
     };
-    [self dispatchOnSerialQueue:block];
+    [ANSQueue dispatchAsyncLogSerialQueueWithBlock:block];
 }
 
 /** 发送reset事件 */
 - (void)sendResetInfo {
-    dispatch_block_t block = ^(){
+    [ANSQueue dispatchAsyncLogSerialQueueWithBlock:^{
         if (AnalysysConfig.autoProfile) {
-            ANSConsoleLog *checkResult = [[ANSConsoleLog alloc] init];
+            ANSDataCheckLog *checkResult = [[ANSDataCheckLog alloc] init];
             checkResult.remarks = @"send reset info.";
             ANSBriefLog(@"%@",[checkResult messageDisplay]);
             
@@ -1056,27 +1082,33 @@ void* AnalysysQueueTag = &AnalysysQueueTag;
             NSDictionary *upInfo = [ANSDataProcessing processProfileSetOnceProperties:nil SDKProperties:@{ANSPresetResetTime: dateStr}];
             [self saveUploadInfo:upInfo event:ANSEventProfileSetOnce handler:^{}];
         }
-    };
-    [self dispatchOnSerialQueue:block];
+    }];
 }
 
 #pragma mark - 数据存储及上传
 
 /** 首次启动 */
-- (void)checkAppFirstStart {
+- (NSString *)appFirstLauchDate {
     NSString *launchDate = [ANSFileManager userDefaultValueWithKey:ANSAppLaunchDate];
     if (!launchDate) {
+        launchDate = [[ANSDateUtil dateFormat] stringFromDate:[NSDate date]];
+        [ANSFileManager saveUserDefaultWithKey:ANSAppLaunchDate value:launchDate];
+        
         _canSendProfileSetOnce = YES;
         _canSendAutoInstallation = YES;
-        [_propertiesLock lock];
-        NSMutableDictionary *tmp = [NSMutableDictionary dictionaryWithDictionary:_commonProperties];
-        [tmp setValue:[[NSUUID UUID] UUIDString] forKey:ANSUUID];
-        self.commonProperties = tmp;
+        ANSPropertyLock();
+        NSString *uuid = self.commonProperties[ANSUUID];
+        if (!uuid) {
+            NSMutableDictionary *tmp = [NSMutableDictionary dictionaryWithDictionary:_commonProperties];
+            [tmp setValue:[[NSUUID UUID] UUIDString] forKey:ANSUUID];
+            self.commonProperties = tmp;
+        }
         [ANSFileManager archiveCommonProperties:self.commonProperties];
-        [_propertiesLock unlock];
+        ANSPropertyUnlock();
         
         [self updateUserId];
     }
+    return launchDate;
 }
 
 /** 数据存储 */
@@ -1084,14 +1116,15 @@ void* AnalysysQueueTag = &AnalysysQueueTag;
     if (!dataInfo) {
         return;
     }
-    BOOL success = [_dbHelper insertRecordObject:dataInfo event:event];
-    if (success) {
-        if (handler) {
-            handler();
+    
+    [_dbHelper insertRecordObject:dataInfo event:event maxCacheSize:_maxCacheSize result:^(BOOL success) {
+        if (success) {
+            if (handler) {
+                handler();
+            }
+            [self uploadDataType:event];
         }
-        //ANSLog(@"event:%@",dataInfo);
-        [self uploadDataType:event];
-    }
+    }];
 }
 
 /** 根据条件上传数据 */
@@ -1111,7 +1144,7 @@ static BOOL isSendingData = NO;
 - (void)flushDataIfIgnorePolicy:(BOOL)ignoreDelay {
     
     if (![[ANSTelephonyNetwork shareInstance] hasNetwork]) {
-        ANSConsoleLog *checkResult = [[ANSConsoleLog alloc] init];
+        ANSDataCheckLog *checkResult = [[ANSDataCheckLog alloc] init];
         checkResult.remarks = @"Please check the network status";
         ANSBriefWarning(@"%@",[checkResult messageDisplay]);
         return;
@@ -1147,13 +1180,13 @@ static BOOL isSendingData = NO;
                               //  base64解密 -> 解压
                               responseDict = [NSJSONSerialization JSONObjectWithData:unzipData options:NSJSONReadingAllowFragments error:&error];
                           } else {
-                              AnsDebug(@"Data parsing failed!");
+                              ANSDebug(@"Data parsing failed!");
                               AgentUnlock()
                               return ;
                           }
                       }
                       if (error) {
-                          AnsDebug(@"Server response unzip error!");
+                          ANSDebug(@"Server response unzip error!");
                           AgentUnlock()
                           return ;
                       }
@@ -1172,22 +1205,21 @@ static BOOL isSendingData = NO;
                       if ([responseDict[@"code"] integerValue] == 500) {
                           id policyInfo = responseDict[@"policy"];
                           if ([policyInfo isKindOfClass:[NSDictionary class]]) {
-                              dispatch_block_t block = ^(){
+                              [ANSQueue dispatchAsyncLogSerialQueueWithBlock:^{
                                   [ANSStrategyManager saveServerStrategyInfo:policyInfo];
-                              };
-                              [self dispatchOnSerialQueue:block];
+                              }];
                           }
                       }
-                      ANSConsoleLog *checkResult = [[ANSConsoleLog alloc] init];
+                      ANSDataCheckLog *checkResult = [[ANSDataCheckLog alloc] init];
                       checkResult.remarks = [NSString stringWithFormat:@"Send message failed. \nreason: %@",responseDict];
                       ANSBriefWarning(@"%@",[checkResult messageDisplay]);
                       AgentUnlock()
                   } @catch (NSException *exception) {
-                      AnsDebug(@"PostRequest exception: %@", exception);
+                      ANSDebug(@"PostRequest exception: %@", exception);
                       AgentUnlock()
                   }
               } failure:^(NSError *error) {
-                  ANSConsoleLog *checkResult = [[ANSConsoleLog alloc] init];
+                  ANSDataCheckLog *checkResult = [[ANSDataCheckLog alloc] init];
                   checkResult.remarks = [NSString stringWithFormat:@"Send message failed. reason: %@",error.description];
                   ANSBriefWarning(@"%@",[checkResult messageDisplay]);
                   AgentUnlock()
@@ -1196,14 +1228,14 @@ static BOOL isSendingData = NO;
             AgentLock()
             return uploadStatus;
         } @catch (NSException *exception) {
-            AnsDebug(@"UploadBlock exception: %@", exception);
+            ANSDebug(@"UploadBlock exception: %@", exception);
             AgentUnlock()
         }
     };
     
-    dispatch_async(self->_requestQueue, ^{
+    [ANSQueue dispatchRequestSerialQueueWithBlock:^{
         [self uploadDataWithType:@"" limitCount:100 block:uploadBlock];
-    });
+    }];
 }
 
 /** 获取本地上传数据并回调 */
@@ -1217,15 +1249,15 @@ static BOOL isSendingData = NO;
             return;
         }
         
-        ANSConsoleLog *checkResult = [[ANSConsoleLog alloc] init];
+        ANSDataCheckLog *checkResult = [[ANSDataCheckLog alloc] init];
         
         __block NSString *blockServerUrl = nil;
         __block NSString *blockUploadData = nil ;
         __block NSDictionary *blockHttpHeader = nil;
         
-        dispatch_sync(self->_serialQueue, ^{
+        [ANSQueue dispatchSyncLogSerialQueueWithBlock:^{
             blockServerUrl = [[[ANSStrategyManager sharedManager] currentUrl] copy];
-        });
+        }];
         if (blockServerUrl == nil || blockServerUrl.length == 0) {
             checkResult.remarks = @"Please set uploadURL";
             ANSBriefWarning(@"%@",[checkResult messageDisplay]);
@@ -1236,17 +1268,19 @@ static BOOL isSendingData = NO;
         }
         
         __block NSArray *dataArray = nil;
-        dispatch_sync(self->_serialQueue, ^{
-            dataArray = [self->_dbHelper getTopRecords:dataCount type:type];
-            if (dataArray.count > 0) {
-                dataArray = [[ANSTimeCheckManager shared] checkDataArray:dataArray];
-                blockHttpHeader = [ANSEncryptUtis httpHeaderInfo];
-                NSString *jsonString = [NSString stringWithFormat:@"[%@]",[dataArray componentsJoinedByString:@","]];
-                blockUploadData = [[ANSEncryptUtis processUploadBody:jsonString param:blockHttpHeader] copy];
-                checkResult.remarks = [NSString stringWithFormat:@"Send message to server: %@ \ndata:\n%@\n", blockServerUrl, jsonString];
-                ANSBriefLog(@"%@",[checkResult messageDisplay]);
-            }
-        });
+        [ANSQueue dispatchSyncLogSerialQueueWithBlock:^{
+            [self->_dbHelper getTopRecords:dataCount type:type result:^(BOOL success, NSArray *resultArray) {
+                dataArray = resultArray;
+                if (success && (dataArray.count > 0)) {
+                    dataArray = [[ANSTimeCheckManager shared] checkDataArray:dataArray];
+                    blockHttpHeader = [ANSEncryptUtis httpHeaderInfo];
+                    NSString *jsonString = [NSString stringWithFormat:@"[%@]",[dataArray componentsJoinedByString:@","]];
+                    blockUploadData = [[ANSEncryptUtis processUploadBody:jsonString param:blockHttpHeader] copy];
+                    checkResult.remarks = [NSString stringWithFormat:@"Send message to server: %@ \ndata:\n%@\n", blockServerUrl, jsonString];
+                    ANSBriefLog(@"%@",[checkResult messageDisplay]);
+                }
+            }];
+        }];
         
         if (dataArray == nil || dataArray.count == 0) {
             [_isSendingDataLock lock];
@@ -1259,25 +1293,25 @@ static BOOL isSendingData = NO;
             checkResult.remarks = @"Send message success";
             
             __block BOOL cleanResult = NO;
-            dispatch_sync(self->_serialQueue, ^{
+            [ANSQueue dispatchSyncLogSerialQueueWithBlock:^{
                 ANSBriefLog(@"%@",[checkResult messageDisplay]);
                 [[ANSStrategyManager sharedManager] resetDelayStrategyFailedTry];
                 cleanResult = [self->_dbHelper deleteUploadRecordsWithType:type];
-            });
+            }];
             if (!cleanResult) {
-                AnsDebug(@"Database delete error!");
+                ANSDebug(@"Database delete error!");
                 shouldUploadAgain = NO;
             }
         } else {
-            dispatch_sync(self->_serialQueue, ^{
+            [ANSQueue dispatchSyncLogSerialQueueWithBlock:^{
                 [self->_dbHelper resetUploadRecordsWithType:type];
                 [[ANSStrategyManager sharedManager] increaseDelayStrategyFailCount];
-            });
+            }];
             shouldUploadAgain = NO;
         }
         
     } @catch (NSException *exception) {
-        AnsDebug(@"Database query exception: %@", exception);
+        ANSDebug(@"Database query exception: %@", exception);
         shouldUploadAgain = NO;
     }
     [_isSendingDataLock lock];
@@ -1285,28 +1319,30 @@ static BOOL isSendingData = NO;
     [_isSendingDataLock unlock];
     
     if (shouldUploadAgain) {
-        dispatch_async(self->_serialQueue, ^{
-            [self flushDataIfIgnorePolicy:NO];
-        });
+        [self flushDataNotification:nil];
     }
 }
 
 #pragma mark - other
 
-/** app首次启动时间 */
-- (NSString *)appFirstStartTime {
-    NSString *launchDate = [ANSFileManager userDefaultValueWithKey:ANSAppLaunchDate];
-    if (!launchDate) {
-        launchDate = [[ANSDateUtil dateFormat] stringFromDate:[NSDate date]];
-        [ANSFileManager saveUserDefaultWithKey:ANSAppLaunchDate value:launchDate];
-    }
-    return launchDate;
+- (BOOL)isIgnoreTrackWithClassName:(NSString *)className {
+    ANSPropertyLock();
+    BOOL retValue = [_pageViewBlackList containsObject:className];
+    ANSPropertyUnlock();
+    return retValue;
 }
 
-- (BOOL)isIgnoreTrackWithClassName:(NSString *)className {
-    [_propertiesLock lock];
-    BOOL retValue = [_ignoredViewControllers containsObject:className];
-    [_propertiesLock unlock];
+- (BOOL)isTrackWithClassName:(NSString *)className {
+    ANSPropertyLock();
+    BOOL retValue = [_pageViewWhiteList containsObject:className];
+    ANSPropertyUnlock();
+    return retValue;
+}
+
+- (BOOL)hasPageViewWhiteList {
+    ANSPropertyLock();
+    BOOL retValue = (_pageViewWhiteList.count > 0);
+    ANSPropertyUnlock();
     return retValue;
 }
 
@@ -1335,8 +1371,8 @@ static BOOL isSendingData = NO;
     self.userId = xwho;
 }
 
-+ (NSLock *)getUserDefaultLock {
-    return [AnalysysSDK sharedManager]->_userDefaultsLock;
+- (ANSDatabase *)getDBHelper {
+    return self->_dbHelper;
 }
 
 @end

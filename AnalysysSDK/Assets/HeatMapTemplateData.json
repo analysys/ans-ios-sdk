@@ -19,7 +19,6 @@
             "$language",
             "$is_first_day",
             "$session_id",
-            
             "$page_width",
             "$page_height",
             "$click_x",
@@ -28,7 +27,6 @@
             "$element_x",
             "$element_y",
             "$element_path",
-            
             "$element_id",
             "$element_name",
             "$element_type",

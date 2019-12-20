@@ -1,5 +1,5 @@
 //
-//  ANSSessionManager.h
+//  ANSSession.h
 //  AnalysysAgent
 //
 //  Created by SoDo on 2018/12/5.
@@ -32,14 +32,10 @@
 /** 当前session */
 @property (nonatomic, copy) NSString *sessionId;
 
-/**
- 生成session
- */
+/// 生成session
 - (void)generateSessionId;
 
-/**
- session重置
- */
+/// session重置
 - (void)resetSession;
 
 /// 获取本地session

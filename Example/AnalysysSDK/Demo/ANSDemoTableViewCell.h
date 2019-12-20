@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface ANSDemoTableViewCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UIButton *detailBtn;
+@property (weak, nonatomic) IBOutlet UIButton *likeBtn;
 
 @end
 

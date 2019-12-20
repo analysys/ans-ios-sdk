@@ -41,7 +41,7 @@
 
 #import <CommonCrypto/CommonDigest.h>
 #import <Security/SecRandom.h>
-#import "ANSConsoleLog.h"
+#import "AnalysysLogger.h"
 
 #if OS_OBJECT_USE_OBJC_RETAIN_RELEASE
 #define ans_dispatch_retain(x)
@@ -457,7 +457,7 @@ static __strong NSData *CRLFCRLF;
     NSInteger responseCode = CFHTTPMessageGetResponseStatusCode(_receivedHTTPHeaders);
 
     if (responseCode >= 400) {
-        AnsDebug(@"Request failed with response code %d", responseCode);
+        ANSDebug(@"Request failed with response code %d", responseCode);
         [self _failWithError:[NSError errorWithDomain:ANSWebSocketErrorDomain code:2132 userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"received bad response code from server %ld", (long)responseCode]}]];
         return;
 
@@ -503,7 +503,7 @@ static __strong NSData *CRLFCRLF;
         CFHTTPMessageAppendBytes(websocket->_receivedHTTPHeaders, (const UInt8 *)data.bytes, (CFIndex)data.length);
 
         if (CFHTTPMessageIsHeaderComplete(websocket->_receivedHTTPHeaders)) {
-            AnsDebug(@"Finished reading headers %@", CFBridgingRelease(CFHTTPMessageCopyAllHeaderFields(websocket->_receivedHTTPHeaders)));
+            ANSDebug(@"Finished reading headers %@", CFBridgingRelease(CFHTTPMessageCopyAllHeaderFields(websocket->_receivedHTTPHeaders)));
             [websocket _HTTPHeadersDidFinish];
         } else {
             [websocket _readHTTPHeader];
@@ -516,12 +516,12 @@ static __strong NSData *CRLFCRLF;
     CFHTTPMessageRef request = CFHTTPMessageCreateRequest(NULL, CFSTR("GET"), (__bridge CFURLRef)_url, kCFHTTPVersion1_1);
 
     // Set host first so it defaults
-    CFHTTPMessageSetHeaderFieldValue(request, CFSTR("Host"), (__bridge CFStringRef)(_url.port ? [NSString stringWithFormat:@"%@:%@", _url.host, _url.port] : _url.host));
+    CFHTTPMessageSetHeaderFieldValue(request, CFSTR("Host"), (__bridge CFStringRef)(_url.port != nil ? [NSString stringWithFormat:@"%@:%@", _url.host, _url.port] : _url.host));
 
     NSMutableData *keyBytes = [[NSMutableData alloc] initWithLength:16];
     int result = SecRandomCopyBytes(kSecRandomDefault, keyBytes.length, keyBytes.mutableBytes);
     if (result != 0) {
-        AnsDebug(@"Failed to generate random bytes with status: %d", result);
+        ANSDebug(@"Failed to generate random bytes with status: %d", result);
     }
     _secKey = [keyBytes base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
     assert(_secKey.length == 24);
@@ -582,7 +582,7 @@ static __strong NSData *CRLFCRLF;
 
 #if DEBUG
         [SSLOptions setValue:@NO forKey:(__bridge id)kCFStreamSSLValidatesCertificateChain];
-        AnsDebug(@"SocketRocket: In debug mode.  Allowing connection to any root cert");
+        ANSDebug(@"SocketRocket: In debug mode.  Allowing connection to any root cert");
 #endif
 
         [_outputStream setProperty:SSLOptions
@@ -637,7 +637,7 @@ static __strong NSData *CRLFCRLF;
 
         self.readyState = ANSWebSocketStateClosing;
 
-        AnsDebug(@"Closing with code %d reason %@", code, reason);
+        ANSDebug(@"Closing with code %d reason %@", code, reason);
 
         if (wasConnecting) {
             [self _disconnect];
@@ -692,7 +692,7 @@ static __strong NSData *CRLFCRLF;
 
             self.readyState = ANSWebSocketStateClosed;
 
-            AnsDebug(@"Failing with error %@", error.localizedDescription);
+            ANSDebug(@"Failing with error %@", error.localizedDescription);
 
             [self _disconnect];
             [self _scheduleCleanup];
@@ -746,7 +746,7 @@ static __strong NSData *CRLFCRLF;
 
 - (void)_handleMessage:(id)message
 {
-    AnsDebug(@"Received message");
+    ANSDebug(@"Received message");
     [self _performDelegateBlock:^{
         [self.delegate webSocket:self didReceiveMessage:message];
     }];
@@ -794,7 +794,7 @@ static inline BOOL closeCodeIsValid(int closeCode) {
 
 //    NSArray *syms = [NSThread  callStackSymbols];
     
-    AnsDebug(@"Received close frame");
+    ANSDebug(@"Received close frame");
 
     if (dataSize == 1) {
         // TODO handle error
@@ -831,7 +831,7 @@ static inline BOOL closeCodeIsValid(int closeCode) {
 - (void)_disconnect;
 {
     [self assertOnWorkQueue];
-    AnsDebug(@"Trying to disconnect");
+    ANSDebug(@"Trying to disconnect");
     _closeWhenFinishedWriting = YES;
     [self _pumpWriting];
 }
@@ -1395,7 +1395,7 @@ static const size_t ANSFrameHeaderOverhead = 32;
         uint8_t *mask_key = frame_buffer + frame_buffer_size;
         int result = SecRandomCopyBytes(kSecRandomDefault, sizeof(uint32_t), mask_key);
         if (result != 0) {
-            AnsDebug(@"Failed to generate random bytes with status: %d", result);
+            ANSDebug(@"Failed to generate random bytes with status: %d", result);
         }
         frame_buffer_size += sizeof(uint32_t);
 
@@ -1449,7 +1449,7 @@ static const size_t ANSFrameHeaderOverhead = 32;
     dispatch_async(_workQueue, ^{
         switch (eventCode) {
             case NSStreamEventOpenCompleted: {
-                AnsDebug(@"NSStreamEventOpenCompleted %@", aStream);
+                ANSDebug(@"NSStreamEventOpenCompleted %@", aStream);
                 if (self.readyState >= ANSWebSocketStateClosing) {
                     return;
                 }
@@ -1464,7 +1464,7 @@ static const size_t ANSFrameHeaderOverhead = 32;
             }
 
             case NSStreamEventErrorOccurred: {
-                AnsDebug(@"NSStreamEventErrorOccurred %@ %@", aStream, [[aStream streamError] copy]);
+                ANSDebug(@"NSStreamEventErrorOccurred %@ %@", aStream, [[aStream streamError] copy]);
                 /// TODO specify error better!
                 [self _failWithError:aStream.streamError];
                 self->_readBufferOffset = 0;
@@ -1474,7 +1474,7 @@ static const size_t ANSFrameHeaderOverhead = 32;
 
             case NSStreamEventEndEncountered: {
                 [self _pumpScanner];
-                AnsDebug(@"NSStreamEventEndEncountered %@", aStream);
+                ANSDebug(@"NSStreamEventEndEncountered %@", aStream);
                 if (aStream.streamError) {
                     [self _failWithError:aStream.streamError];
                 } else {
@@ -1498,7 +1498,7 @@ static const size_t ANSFrameHeaderOverhead = 32;
             }
 
             case NSStreamEventHasBytesAvailable: {
-                AnsDebug(@"NSStreamEventHasBytesAvailable %@", aStream);
+                ANSDebug(@"NSStreamEventHasBytesAvailable %@", aStream);
                 const int bufferSize = 2048;
                 uint8_t buffer[bufferSize];
 
@@ -1520,13 +1520,13 @@ static const size_t ANSFrameHeaderOverhead = 32;
             }
 
             case NSStreamEventHasSpaceAvailable: {
-                AnsDebug(@"NSStreamEventHasSpaceAvailable %@", aStream);
+                ANSDebug(@"NSStreamEventHasSpaceAvailable %@", aStream);
                 [self _pumpWriting];
                 break;
             }
 
             default:
-                AnsDebug(@"(default) %@", aStream);
+                ANSDebug(@"(default) %@", aStream);
                 break;
         }
     });
@@ -1635,7 +1635,7 @@ static const size_t ANSFrameHeaderOverhead = 32;
         scheme = @"http";
     }
 
-    if (self.port) {
+    if (self.port != nil) {
         return [NSString stringWithFormat:@"%@://%@:%@/", scheme, self.host, self.port];
     } else {
         return [NSString stringWithFormat:@"%@://%@/", scheme, self.host];

@@ -19,11 +19,11 @@
 @interface ANSObjectSelector : NSObject
 
 /** 控件路径 */
-@property (nonatomic, strong, readonly) NSString *string;
+@property (nonatomic, strong, readonly) NSString *pathString;
 
 /** 根据path路径生成selector对象 */
 + (ANSObjectSelector *)objectSelectorWithString:(NSString *)string;
-- (instancetype)initWithString:(NSString *)string;
+- (instancetype)initWithPathString:(NSString *)string;
 
 /** 从上往下（父视图->子视图） 查找路径匹配的对象 */
 - (NSArray *)selectFromRoot:(id)root;
@@ -36,6 +36,5 @@
 - (Class)selectedClass;
 - (BOOL)pathContainsObjectOfClass:(Class)klass;
 - (NSString *)description;
-
 
 @end

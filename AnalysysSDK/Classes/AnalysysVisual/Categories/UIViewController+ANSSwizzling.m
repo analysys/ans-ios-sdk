@@ -15,16 +15,16 @@
 +(void)load {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [UIViewController AnsExchangeOriginalSel:@selector(viewWillAppear:)
+        [UIViewController ansExchangeOriginalSel:@selector(viewWillAppear:)
                                        replacedSel:@selector(ans_ViewWillAppear:)];
         
-        [UIViewController AnsExchangeOriginalSel:@selector(viewDidAppear:)
+        [UIViewController ansExchangeOriginalSel:@selector(viewDidAppear:)
                                        replacedSel:@selector(ans_ViewDidAppear:)];
         
-        [UIViewController AnsExchangeOriginalSel:@selector(viewWillDisappear:)
+        [UIViewController ansExchangeOriginalSel:@selector(viewWillDisappear:)
                                        replacedSel:@selector(ans_ViewWillDisappear:)];
         
-        [UIViewController AnsExchangeOriginalSel:@selector(viewDidDisappear:)
+        [UIViewController ansExchangeOriginalSel:@selector(viewDidDisappear:)
                                        replacedSel:@selector(ans_ViewDidDisappear:)];
     });
 }

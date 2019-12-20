@@ -12,7 +12,7 @@
 #import "ANSVisualSDK.h"
 #import "ANSUIControlBinding.h"
 #import "ANSUITableViewBinding.h"
-#import "ANSConsoleLog.h"
+#import "AnalysysLogger.h"
 
 @implementation ANSEventBinding
 
@@ -20,7 +20,7 @@
 + (ANSEventBinding *)bindingWithJSONObject:(NSDictionary *)object
 {
     if (object == nil) {
-        AnsDebug(@"must supply an JSON object to initialize from");
+        ANSDebug(@"must supply an JSON object to initialize from");
         return nil;
     }
     
@@ -48,17 +48,15 @@
     [[ANSVisualSDK sharedManager] trackObject:object withEvent:eventBinding.eventName];
 }
 
-- (instancetype)initWithEventName:(NSString *)eventName
-                           onPath:(NSString *)path
-                        matchText:(NSString *)matchText
-                      bindingInfo:(NSDictionary *)bindingInfo
+- (instancetype)initWithEventBindingInfo:(NSDictionary *)bindingInfo
 {
     if (self = [super init]) {
-        self.eventName = eventName;
-        self.path = [[ANSObjectSelector alloc] initWithString:path];
+        self.eventName = bindingInfo[@"event_id"];
+        self.path = [[ANSObjectSelector alloc] initWithPathString:bindingInfo[@"path"]];
         self.name = [[NSUUID UUID] UUIDString];
         self.running = NO;
-        self.matchText = matchText;
+        self.matchText = bindingInfo[@"match_text"];
+        self.targetPage = bindingInfo[@"target_page"];
         self.bindingInfo = bindingInfo;
     }
     return self;
@@ -94,31 +92,29 @@
 
 #pragma mark - 编码解码
 
-- (instancetype)initWithCoder:(NSCoder *)aDecoder
-{
-    NSString *path = [aDecoder decodeObjectForKey:@"path"];
-    NSString *eventName = [aDecoder decodeObjectForKey:@"eventName"];
-    NSString *matchText = [aDecoder decodeObjectForKey:@"matchText"];
-    NSDictionary *bindingInfo = [aDecoder decodeObjectForKey:@"bindingInfo"];
-    if (self = [self initWithEventName:eventName
-                                onPath:path
-                             matchText:matchText
-                           bindingInfo:bindingInfo]) {
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+    if (self = [super init]) {
         self.ID = [[aDecoder decodeObjectForKey:@"ID"] unsignedLongValue];
         self.name = [aDecoder decodeObjectForKey:@"name"];
+        NSString *pathString = [aDecoder decodeObjectForKey:@"path"];
+        self.path = [[ANSObjectSelector alloc] initWithPathString:pathString];
+        self.eventName = [aDecoder decodeObjectForKey:@"eventName"];
         self.swizzleClass = NSClassFromString([aDecoder decodeObjectForKey:@"swizzleClass"]);
+        self.matchText = [aDecoder decodeObjectForKey:@"matchText"];
+        self.targetPage = [aDecoder decodeObjectForKey:@"targetPage"];
+        self.bindingInfo = [aDecoder decodeObjectForKey:@"bindingInfo"];
     }
     return self;
 }
 
-- (void)encodeWithCoder:(NSCoder *)aCoder
-{
+- (void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:@(_ID) forKey:@"ID"];
     [aCoder encodeObject:_name forKey:@"name"];
-    [aCoder encodeObject:_path.string forKey:@"path"];
+    [aCoder encodeObject:_path.pathString forKey:@"path"];
     [aCoder encodeObject:_eventName forKey:@"eventName"];
     [aCoder encodeObject:NSStringFromClass(_swizzleClass) forKey:@"swizzleClass"];
     [aCoder encodeObject:_matchText forKey:@"matchText"];
+    [aCoder encodeObject:_targetPage forKey:@"targetPage"];
     [aCoder encodeObject:_bindingInfo forKey:@"bindingInfo"];
 }
 
@@ -128,11 +124,12 @@
 - (BOOL)isEqual:(id)other {
     if (other == self) {
         return YES;
-    } else if (![other isKindOfClass:[ANSEventBinding class]]) {
-        return NO;
-    } else {
-        return [self.eventName isEqual:((ANSEventBinding *)other).eventName] && [self.path isEqual:((ANSEventBinding *)other).path];
     }
+    if (![other isKindOfClass:[ANSEventBinding class]]) {
+        return NO;
+    }
+    
+    return [self.eventName isEqual:((ANSEventBinding *)other).eventName] && [self.path isEqual:((ANSEventBinding *)other).path];
 }
 
 /** 重写hash方法 */

@@ -66,6 +66,13 @@
 @property (nonatomic, assign) BOOL autoInstallation;
 
 /**
+ 是否允许崩溃追踪
+ 
+ 默认为 NO
+ */
+@property (nonatomic, assign) BOOL autoTrackCrash;
+
+/**
  数据上传加密类型
  */
 @property (nonatomic, assign) AnalysysEncryptType encryptType;

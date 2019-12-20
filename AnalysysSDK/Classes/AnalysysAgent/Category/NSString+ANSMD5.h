@@ -12,9 +12,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface NSString (ANSMD5)
 
-- (NSString *)AnsMD5ToUpper32Bit;
+/// MD5 32位字符串
+- (NSString *)ansMD532Bit;
 
-- (NSString *)AnsMD5ToUpper16Bit;
+/// MD5 16位字符串
+- (NSString *)ansMD516Bit;
 
 @end
 

@@ -18,7 +18,6 @@
 
 #pragma mark IPv6 Support
 //Reachability fully support IPv6.  For full details, see ReadMe.md.
-#import "ANSConsoleLog.h"
 
 NSString *const ANSNetworkChangedNotification = @"ANSNetworkChangedNotification";
 
@@ -100,7 +99,7 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReach
             }
         }
     } @catch (NSException *exception) {
-        AnsDebug(@"Reachablity start exception.");
+
     }
     
 	return returnValue;

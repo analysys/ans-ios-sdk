@@ -8,6 +8,7 @@
 
 #import "ANSControllerUtils.h"
 #import "NSThread+ANSHelper.h"
+#import "ANSUtil.h"
 
 @implementation ANSControllerUtils
 
@@ -110,14 +111,11 @@
 + (UIViewController *)currentViewController {
     __block UIViewController *currentViewController = nil;
     void (^block)(void) = ^{
-        UIWindow *window = [[UIApplication sharedApplication] keyWindow];
-        if (!window) {
-            window = [UIApplication sharedApplication].delegate.window;
-        }
+        UIWindow *window = [ANSUtil currentWindow];
         UIViewController *rootViewController = window.rootViewController;
         currentViewController = [ANSControllerUtils findCurrentVCFromRootVC:rootViewController isRoot:YES];
     };
-    [NSThread AnsRunOnMainThread:block];
+    [NSThread ansRunOnMainThread:block];
 
     return currentViewController;
 }
@@ -132,7 +130,7 @@
 
 + (NSString *)titleFromViewController:(UIViewController *)viewController {
     __block NSString *title;
-    [NSThread AnsRunOnMainThread:^{
+    [NSThread ansRunOnMainThread:^{
         title = viewController.navigationItem.title ?: viewController.title;
         if (!title) {
             UIView *titleView = viewController.navigationItem.titleView;
@@ -253,11 +251,8 @@
 
 + (UIWindow *)topWindow {
     __block UIWindow *window;
-    [NSThread AnsRunOnMainThread:^{
-        window = [[UIApplication sharedApplication] keyWindow];
-        if (!window) {
-            window = [UIApplication sharedApplication].delegate.window;
-        }
+    [NSThread ansRunOnMainThread:^{
+        window = [ANSUtil currentWindow];
         if (window.windowLevel != UIWindowLevelNormal) {
             NSArray *windows = [[UIApplication sharedApplication] windows];
             for(UIWindow * tmpWin in windows){
@@ -273,7 +268,7 @@
 
 /** 递归获取文本内容 */
 + (void)getContentFromView:(UIView *)view contentArray:(NSMutableArray *)contentArray {
-    [NSThread AnsRunOnMainThread:^{
+    [NSThread ansRunOnMainThread:^{
         for (UIView *subview in view.subviews) {
             if (subview.hidden) {
                 continue;

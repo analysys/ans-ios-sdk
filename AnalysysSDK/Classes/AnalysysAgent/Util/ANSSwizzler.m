@@ -10,7 +10,7 @@
 #import <objc/runtime.h>
 
 #import "ANSSwizzler.h"
-#import "ANSConsoleLog.h"
+#import "AnalysysLogger.h"
 #import <UIKit/UIKit.h>
 
 @implementation ANSSwizzler
@@ -41,7 +41,8 @@ extern ANSSwizzle * __strong *getSwizzleByName (NSString * name);
     }
     Method aMethod = class_getInstanceMethod(aClass,aSelector);
     if (!aMethod) {
-        [NSException raise:@"SwizzleBoolException" format:@"Cannot find method for %@ on %@", NSStringFromSelector(aSelector), NSStringFromClass(aClass)];
+        ANSBriefError(@"Cannot find method for %@ on %@", NSStringFromSelector(aSelector), NSStringFromClass(aClass));
+        return;
     }
     IMP aSwizzleMethod = getSwizzleIMPBySELName(NSStringFromSelector(aSelector));
     ANSSwizzle * __strong * swizzle = getSwizzleByName(NSStringFromSelector(aSelector));
@@ -62,13 +63,13 @@ extern ANSSwizzle * __strong *getSwizzleByName (NSString * name);
         
         // Add the swizzle as a new local method on the class.
         if (!class_addMethod(aClass, aSelector, aSwizzleMethod, method_getTypeEncoding(aMethod))) {
-            AnsDebug(@"SwizzleException:Could not add swizzled for %@::%@, even though it didn't already exist locally", NSStringFromClass(aClass), NSStringFromSelector(aSelector));
+            ANSDebug(@"SwizzleException:Could not add swizzled for %@::%@, even though it didn't already exist locally", NSStringFromClass(aClass), NSStringFromSelector(aSelector));
             return;
         }
         // Now re-get the Method, it should be the one we just added.
         Method newMethod = class_getInstanceMethod(aClass, aSelector);
         if (aMethod == newMethod) {
-            AnsDebug(@"SwizzleException:Newly added method for %@::%@ was the same as the old method", NSStringFromClass(aClass), NSStringFromSelector(aSelector));
+            ANSDebug(@"SwizzleException:Newly added method for %@::%@ was the same as the old method", NSStringFromClass(aClass), NSStringFromSelector(aSelector));
             return;
         }
         *swizzle = [[ANSSwizzle alloc] initWithBlock:aBlock named:aName forClass:aClass selector:aSelector originalMethod:originalMethod];

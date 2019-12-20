@@ -7,17 +7,21 @@
 //
 
 #import "ANSDeviceInfo.h"
-#import "AnalysysSDK.h"
 #import <sys/sysctl.h>
 #import <CoreTelephony/CTTelephonyNetworkInfo.h>
 #import <CoreTelephony/CTCarrier.h>
-#import "NSThread+ANSHelper.h"
-@interface ANSDeviceInfo () {
-    
-}
+#import "ANSKeychainItemWrapper.h"
+#import "ANSLock.h"
+
+static NSString *const ANSKeychainIdentifier = @"Analysys";
+
+@interface ANSDeviceInfo ()
+
 @property (nonatomic,strong) NSString *carrierName;
 @property (nonatomic,strong) CTTelephonyNetworkInfo *networkInfo;
+
 @end
+
 @implementation ANSDeviceInfo
 
 + (instancetype)shareInstance {
@@ -43,9 +47,9 @@
 }
 
 + (NSString *)getDeviceLanguage {
-    [[AnalysysSDK getUserDefaultLock] lock];
+    ANSUserDefaultsLock();
     NSString * retValue = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"AppleLanguages"] firstObject] copy];
-    [[AnalysysSDK getUserDefaultLock] unlock];
+    ANSUserDefaultsUnlock();
     return retValue;
 }
 
@@ -105,6 +109,20 @@
     }
     
     return nil;
+}
+
++ (NSString *)getDeviceID {
+    ANSKeychainItemWrapper *keychainItem = [[ANSKeychainItemWrapper alloc] initWithIdentifier:ANSKeychainIdentifier accessGroup:nil];
+    NSString *uuid = [[keychainItem objectForKey:(__bridge id)kSecValueData] objectForKey:@"UUID"]?:@"";
+    NSLog(@"uuid = %@",uuid);
+    
+    if (uuid.length > 0) {
+        return uuid;
+    } else {
+        uuid = [[NSUUID UUID] UUIDString];
+        [keychainItem setObject:@{@"UUID":(uuid?:@"")} forKey:(__bridge id)kSecValueData];
+        return uuid;
+    }
 }
 
 + (CGFloat)getScreenWidth {

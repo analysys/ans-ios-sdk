@@ -1,5 +1,5 @@
 //
-//  ANSSessionManager.m
+//  ANSSession.m
 //  AnalysysAgent
 //
 //  Created by SoDo on 2018/12/5.
@@ -7,7 +7,6 @@
 //
 
 #import "ANSSession.h"
-#import "AnalysysSDK.h"
 #import "NSString+ANSMD5.h"
 #import "ANSFileManager.h"
 
@@ -17,7 +16,6 @@ static const NSTimeInterval ANSSessionInterval = 30.0;
 @implementation ANSSession {
     NSDate *_lastPageStartDate; //  上一页面开始时间，用于跨天session切换
     NSDate *_lastPageEndDate; //  上一页面结束时间，用于30秒session切换
-    BOOL _isWakeUp; //  本次是否被唤醒
 }
 
 + (instancetype)shareInstance {
@@ -35,9 +33,10 @@ static const NSTimeInterval ANSSessionInterval = 30.0;
         _sessionId = [self localSession];
         _lastPageEndDate = [self lastPageDisappearDate];
         _lastPageStartDate = [self lastPageAppearDate];
-        if (!_sessionId || !_lastPageEndDate || !_lastPageStartDate
-            || ![_lastPageEndDate isKindOfClass:NSDate.class]
-            || ![_lastPageStartDate isKindOfClass:NSDate.class]) {
+        //  兼容老数据
+        if (!_sessionId || !_lastPageEndDate || !_lastPageStartDate ||
+            ![_lastPageEndDate isKindOfClass:NSDate.class] ||
+            ![_lastPageStartDate isKindOfClass:NSDate.class]) {
             [self resetSession];
         }
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWakedUpNotification:) name:@"ANSAppWakedUpNotification" object:nil];
@@ -52,9 +51,6 @@ static const NSTimeInterval ANSSessionInterval = 30.0;
         [self resetSession];
     } else if ([self isPageChangedWithDate:_lastPageEndDate]) {
         //  页面事件超过30秒
-        [self resetSession];
-    } else if (_isWakeUp) {
-        //  App调起
         [self resetSession];
     }
 }
@@ -86,11 +82,7 @@ static const NSTimeInterval ANSSessionInterval = 30.0;
 
 /** App被唤醒重置session */
 - (void)appWakedUpNotification:(NSNotification *)notification {
-    [[AnalysysSDK sharedManager] dispatchOnSerialQueue:^{
-        self->_isWakeUp = YES;
-        [self createSessionId];
-        self->_isWakeUp = NO;
-    }];
+    [self resetSession];
 }
 
 #pragma mark - private method
@@ -98,8 +90,8 @@ static const NSTimeInterval ANSSessionInterval = 30.0;
 /** session标识 */
 - (void)createSessionId {
     NSTimeInterval nowtime = [[NSDate date] timeIntervalSince1970]*1000;
-    NSString *str = [NSString stringWithFormat:@"iOS%@%u",[NSNumber numberWithLongLong:nowtime], arc4random()%1000000];
-    NSString *sessionId = [str AnsMD5ToUpper16Bit];
+    NSString *randomString = [NSString stringWithFormat:@"iOS%@%u",[NSNumber numberWithLongLong:nowtime], arc4random()%1000000];
+    NSString *sessionId = [randomString ansMD516Bit];
     _sessionId = sessionId;
     [self saveSession:_sessionId];
 }
@@ -117,32 +109,35 @@ static const NSTimeInterval ANSSessionInterval = 30.0;
 }
 
 #pragma mark - 存储
+static NSString *const AnalysysSession = @"AnalysysSession";
+static NSString *const AnalysysPageAppearDate = @"AnalysysPageAppearDate";
+static NSString *const AnalysysPageDisappearDate = @"AnalysysPageDisappearDate";
 
 /** 会话session */
 - (void)saveSession:(NSString *)sessionId {
-    [ANSFileManager saveUserDefaultWithKey:@"AnalysysSession" value:sessionId];
+    [ANSFileManager saveUserDefaultWithKey:AnalysysSession value:sessionId];
 }
 
 - (NSString *)localSession {
-    return [ANSFileManager userDefaultValueWithKey:@"AnalysysSession"];
+    return [ANSFileManager userDefaultValueWithKey:AnalysysSession];
 }
 
 /** 上一页面展示时间 */
 - (void)saveLastPageAppearDate:(NSDate *)date {
-    [ANSFileManager saveUserDefaultWithKey:@"AnalysysPageAppearDate" value:date];
+    [ANSFileManager saveUserDefaultWithKey:AnalysysPageAppearDate value:date];
 }
 
 - (NSDate *)lastPageAppearDate {
-    return [ANSFileManager userDefaultValueWithKey:@"AnalysysPageAppearDate"];
+    return [ANSFileManager userDefaultValueWithKey:AnalysysPageAppearDate];
 }
 
 /** 上一页面结束时间 */
 - (void)saveLastPageDisappearDate:(NSDate *)date {
-    [ANSFileManager saveUserDefaultWithKey:@"AnalysysPageDisappearDate" value:date];
+    [ANSFileManager saveUserDefaultWithKey:AnalysysPageDisappearDate value:date];
 }
 
 - (NSDate *)lastPageDisappearDate {
-    return [ANSFileManager userDefaultValueWithKey:@"AnalysysPageDisappearDate"];
+    return [ANSFileManager userDefaultValueWithKey:AnalysysPageDisappearDate];
 }
 
 

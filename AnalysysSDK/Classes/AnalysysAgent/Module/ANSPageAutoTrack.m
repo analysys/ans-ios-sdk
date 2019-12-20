@@ -10,6 +10,7 @@
 
 #import <UIKit/UIKit.h>
 
+#import "ANSQueue.h"
 #import "ANSSwizzler.h"
 #import "ANSSession.h"
 #import "AnalysysSDK.h"
@@ -38,26 +39,25 @@
 }
 
 + (void)autoTrack {
-    [NSThread AnsRunOnMainThread:^{
+    [NSThread ansRunOnMainThread:^{
         void (^viewDidAppearBlock)(id, SEL, id) = ^(id obj, SEL sel, NSNumber *num) {
             UIViewController *controller = (UIViewController *)obj;
-            [[ANSPageAutoTrack shareInstance] viewDidAppear:controller];
+            [[ANSPageAutoTrack shareInstance] trackViewAppear:controller isFromBackground:NO];
         };
         void (^viewWillDisappearBlock)(id, SEL, id) = ^(id obj, SEL sel, NSNumber *num) {
             UIViewController *controller = (UIViewController *)obj;
-            [[ANSPageAutoTrack shareInstance] viewWillDisappear:controller];
+            [[ANSPageAutoTrack shareInstance] trackViewDisappear:controller];
         };
 
         [ANSSwizzler swizzleSelector:@selector(viewDidAppear:) onClass:[UIViewController class] withBlock:viewDidAppearBlock named:@"ANSViewDidAppear"];
-        [ANSSwizzler swizzleSelector:@selector(viewWillDisappear:) onClass:[UIViewController class] withBlock:viewWillDisappearBlock named:@"ANSViewDidDisappear"];
+        [ANSSwizzler swizzleSelector:@selector(trackViewDisappear:) onClass:[UIViewController class] withBlock:viewWillDisappearBlock named:@"ANSViewDidDisappear"];
     }];
 }
 
 + (void)autoTrackLastVisitPage {
-    NSDictionary *pageInfo = [[ANSPageAutoTrack shareInstance] lastControllerInfo];
-    if (pageInfo.allKeys.count) {
-        [[AnalysysSDK sharedManager] autoPageView:nil properties:pageInfo];
-    }
+    UIViewController *lastVC = [ANSPageAutoTrack shareInstance].lastViewController;
+    //  需要判断黑白名单
+    [[ANSPageAutoTrack shareInstance] trackViewAppear:lastVC isFromBackground:YES];
 }
 
 #pragma mark - private method
@@ -68,54 +68,59 @@
     if (!vClass) {
         return NO;
     }
-    if (![[AnalysysSDK sharedManager] isViewAutoTrack]) {
-        return NO;
-    }
-    NSString *className = NSStringFromClass(vClass);
-    if ([[AnalysysSDK sharedManager] isIgnoreTrackWithClassName:className]) {
-        return NO;
-    }
-//    if ([controller childViewControllers].count > 0) {
-//        return NO;
-//    }
-    if ([[ANSControllerUtils systemBuildInClasses] containsObject:className]) {
-        return NO;
-    }
     if ([controller isKindOfClass:[UINavigationController class]] ||
         [controller isKindOfClass:[UITabBarController class]]) {
         return NO;
     }
-    return YES;
+    NSString *className = NSStringFromClass(vClass);
+    if ([[ANSControllerUtils systemBuildInClasses] containsObject:className]) {
+        return NO;
+    }
+    
+    if ([[AnalysysSDK sharedManager] isViewAutoTrack]) {
+        if ([[AnalysysSDK sharedManager] isIgnoreTrackWithClassName:className]) {
+            return NO;
+        } else if ([[AnalysysSDK sharedManager] hasPageViewWhiteList]) {
+            if ([[AnalysysSDK sharedManager] isTrackWithClassName:className]) {
+                return YES;
+            } else {
+                return NO;
+            }
+        } else {
+            return YES;
+        }
+    } else {
+        return NO;
+    }
 }
 
 /** 页面显示 */
-- (void)viewDidAppear:(UIViewController *)controller {
-    if (self.lastViewController == controller) {
-        return;
-    }
-    
-    [[AnalysysSDK sharedManager] dispatchOnSerialQueue:^{
+- (void)trackViewAppear:(UIViewController *)controller isFromBackground:(BOOL)background {
+    [ANSQueue dispatchAsyncLogSerialQueueWithBlock:^{
         //  先生成session 后记录时间
         [[ANSSession shareInstance] generateSessionId];
         [[ANSSession shareInstance] updatePageAppearDate];
         
         if ([self canTrackViewController:controller]) {
+            if (!background && self.lastViewController == controller) {
+                //  前台页面切换 防止右滑手势多次触发
+                return ;
+            }
             [self autoTrackViewController:controller];
         }
+        self.lastViewController = controller;
     }];
 }
 
 /** 页面消失 */
-- (void)viewWillDisappear:(UIViewController *)controller {
-    [[AnalysysSDK sharedManager] dispatchOnSerialQueue:^{
+- (void)trackViewDisappear:(UIViewController *)controller {
+    [ANSQueue dispatchAsyncLogSerialQueueWithBlock:^{
         [[ANSSession shareInstance] updatePageDisappearDate];
     }];
 }
 
 /** 自定义参数 */
-- (void)autoTrackViewController:(UIViewController *)controller {
-    self.lastViewController = controller;
-    
+- (void)autoTrackViewController:(UIViewController *)controller {    
     NSMutableDictionary *pageProperties = [NSMutableDictionary dictionary];
     [pageProperties addEntriesFromDictionary:[self lastControllerInfo]];
     

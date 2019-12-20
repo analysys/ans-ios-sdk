@@ -220,6 +220,11 @@
             "valueType":0,
             "value":"ANSDataFunc.isTimeCalibration",
             "required":true
-        }
+        },
+        "$start_source":{
+            "valueType":0,
+            "value":"ANSAppStartSource.getStartSource",
+            "required":true
+        },
     }
 }
