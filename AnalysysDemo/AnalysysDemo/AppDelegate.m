@@ -21,14 +21,20 @@
     // Override point for customization after application launch.
     
     
-    [self _initAnalysysSDK];
+    [self _initAnalysysSDKWithOptions:launchOptions];
     
     return YES;
 }
 
-- (void)_initAnalysysSDK {
+- (void)_initAnalysysSDKWithOptions:(NSDictionary *)launchOptions {
     
     CFAbsoluteTime startTime = CFAbsoluteTimeGetCurrent();
+    
+//    [AnalysysAgent monitorAppDelegate:self launchOptions:launchOptions];
+    
+//    [AnalysysAgent setAutomaticCollection:YES];
+//    [AnalysysAgent setAutomaticHeatmap:YES];
+//    [AnalysysAgent setAutoTrackClick:YES];
     
 #if DEBUG
     [AnalysysAgent setDebugMode:AnalysysDebugButTrack];
