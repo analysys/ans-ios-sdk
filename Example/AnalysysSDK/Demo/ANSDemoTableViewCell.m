@@ -20,5 +20,11 @@
 
     // Configure the view for the selected state
 }
+- (IBAction)likeAction:(id)sender {
+    NSLog(@"like action");
+}
+- (IBAction)indexAction:(id)sender {
+    NSLog(@"index action");
+}
 
 @end

@@ -10,8 +10,7 @@
 #import "ANSABTestDesignerConnection.h"
 #import "ANSDesignerEventBindingMessage.h"
 #import "ANSEventBinding.h"
-#import "ANSConsoleLog.h"
-#import "ANSFileManager.h"
+#import "AnalysysLogger.h"
 
 NSString *const ANSDesignerEventBindingRequestMessageType = @"event_binding_request";
 
@@ -52,10 +51,10 @@ NSString *const Binding_Delete = @"delete";
     if (operate.length > 0) {
         [self batchBindingPayload:bindingPayload operate:operate];
     } else {
-        //        NSLog(@"--------兼容4.0.5及之前版本---------");
+        //  兼容4.0.5及之前版本
         [self allBindingPayload:bindingPayload];
     }
-    AnsDebug(@"WebSocket Binding. OperateType: %@ \n %@",operate, bindingPayload);
+    ANSDebug(@"WebSocket Binding. OperateType: %@ \n %@",operate, bindingPayload);
 }
 
 #pragma mark - 服务器数据下发处理
@@ -115,7 +114,7 @@ NSString *const Binding_Delete = @"delete";
     } else if ([operate isEqualToString:Binding_Delete]) {
         [self receivedDeleteTypeBinding:binding];
     } else {
-        AnsDebug(@"可视化operate类型错误:%@",operate);
+        ANSDebug(@"可视化operate类型错误:%@",operate);
     }
 }
 
@@ -127,10 +126,10 @@ NSString *const Binding_Delete = @"delete";
  @param binding 埋点对象
  */
 - (void)receivedAllTypeBinding:(ANSEventBinding *)binding {
-    AnsDebug(@"-------- all埋点：%@ --------",binding.eventName);
+    ANSDebug(@"-------- all埋点：%@ --------",binding.eventName);
     //  控件绑定
     [binding executeVisualEventBinding];
-    
+
     [self.allBindings addObject:binding];
     
     [_singleBatchBindings addObject:binding];
@@ -143,7 +142,8 @@ NSString *const Binding_Delete = @"delete";
  @param binding 埋点对象
  */
 - (void)receivedSaveTypeBinding:(ANSEventBinding *)binding {
-    AnsDebug(@"-------- save埋点：%@ --------",binding.eventName);
+    ANSDebug(@"-------- save埋点：%@ --------",binding.eventName);
+    
     //  控件绑定
     [binding executeVisualEventBinding];
     
@@ -159,16 +159,16 @@ NSString *const Binding_Delete = @"delete";
  @param binding 埋点对象
  */
 - (void)receivedUpdateTypeBinding:(ANSEventBinding *)binding {
-//    AnsDebug(@"-------- 修改埋点：%@ --------",binding.eventName);
+//    ANSDebug(@"-------- 修改埋点：%@ --------",binding.eventName);
     //  ① 注意 localBinding 和 binding 的操作
     //  ② 由于需要替换数组内数据，使用 NSEnumerator 迭代器
     NSEnumerator *enumerator = [self.allBindings reverseObjectEnumerator];
     ANSEventBinding *localBinding = nil;
     while (localBinding = [enumerator nextObject]) {
-        if ([binding.path.string isEqualToString:localBinding.path.string]) {
+        if ([binding.path.pathString isEqualToString:localBinding.path.pathString]) {
             NSInteger index = [self.allBindings indexOfObject:localBinding];
             if (index != NSNotFound) {
-                AnsDebug(@"-------- update埋点：%@ --------",binding.eventName);
+                ANSDebug(@"-------- update埋点：%@ --------",binding.eventName);
                 [localBinding stop];
                 [binding executeVisualEventBinding];
                 
@@ -187,12 +187,12 @@ NSString *const Binding_Delete = @"delete";
  @param binding 埋点对象
  */
 - (void)receivedDeleteTypeBinding:(ANSEventBinding *)binding {
-//    AnsDebug(@"-------- 删除埋点：%@ --------",binding.eventName);
+//    ANSDebug(@"-------- 删除埋点：%@ --------",binding.eventName);
     NSEnumerator *enumerator = [self.allBindings reverseObjectEnumerator];
     ANSEventBinding *localBinding = nil;
     while (localBinding = [enumerator nextObject]) {
-        if ([binding.path.string isEqualToString:localBinding.path.string]) {
-            AnsDebug(@"-------- delete埋点：%@ --------",binding.eventName);
+        if ([binding.path.pathString isEqualToString:localBinding.path.pathString]) {
+            ANSDebug(@"-------- delete埋点：%@ --------",binding.eventName);
             [localBinding stop];
             [self.allBindings removeObject:localBinding];
             

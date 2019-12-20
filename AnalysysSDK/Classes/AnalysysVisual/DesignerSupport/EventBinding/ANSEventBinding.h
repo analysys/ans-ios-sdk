@@ -25,29 +25,18 @@
 @property (nonatomic, copy) NSString *matchText;
 /** 服务器下发原始json数据，用于Hybrid传输 */
 @property (nonatomic, copy) NSDictionary *bindingInfo;
+/** 是否当前页面生效 */
+@property (nonatomic, copy) NSString *targetPage;
 
 //  tableview对应的代理类
 @property (nonatomic, assign) Class swizzleClass;
 
-/*!
- @property
- 
- @abstract
- Whether this specific binding is currently running on the device.
- 
- @discussion
- This property will not be restored on unarchive, as the binding will need
- to be run again once the app is restarted.
- */
 @property (nonatomic) BOOL running;
 
 + (id)bindingWithJSONObject:(id)object;
 
 - (instancetype)init __unavailable;
-- (instancetype)initWithEventName:(NSString *)eventName
-                           onPath:(NSString *)path
-                        matchText:(NSString *)matchText
-                      bindingInfo:(NSDictionary *)bindingInfo;
+- (instancetype)initWithEventBindingInfo:(NSDictionary *)bindingInfo;
 
 /*!
  Intercepts track calls and adds a property indicating the track event

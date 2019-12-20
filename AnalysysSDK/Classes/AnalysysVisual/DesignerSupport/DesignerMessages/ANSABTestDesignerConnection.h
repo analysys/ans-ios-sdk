@@ -12,20 +12,13 @@
 
 @protocol ANSABTestDesignerMessage;
 
-/**
- 数据上传状态
-
- - ANSAppStatusOK: 正常数据上传
- - ANSViewUnload: 页面未加载完成
- - ANSAppInBackground: app退入后台
- - ANSKeyboardShow: 系统键盘弹出
- */
-typedef NS_ENUM(NSInteger, ANSAppStatus) {
-    ANSAppStatusOK,
-    ANSViewUnload,
-    ANSAppInBackground,
-    ANSKeyboardShow 
-};
+//  数据上传状态
+typedef enum : NSUInteger {
+    ANSAppStatusOK, //  正常数据上传
+    ANSViewUnload, //  页面未加载完成
+    ANSAppInBackground,  //  app退入后台
+    ANSKeyboardShow    //  系统键盘弹出
+} ANSAppStatus;
 
 
 @interface ANSABTestDesignerConnection : NSObject

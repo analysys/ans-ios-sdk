@@ -10,6 +10,8 @@
 
 @interface NSThread (ANSHelper)
 
-+ (void)AnsRunOnMainThread:(void (^)(void))block;
+/// 主线程执行
+/// @param block 回调
++ (void)ansRunOnMainThread:(void (^)(void))block;
 
 @end

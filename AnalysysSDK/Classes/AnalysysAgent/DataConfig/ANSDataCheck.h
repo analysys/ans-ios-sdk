@@ -24,50 +24,50 @@ static NSUInteger const ANSPropertySetCapacity = 100;
  * 如：ANSDataCheck.getAppId
  */
 
-@class ANSConsoleLog;
+@class ANSDataCheckLog;
 @interface ANSDataCheck : NSObject
 
 /** appkey校验 */
-+ (ANSConsoleLog *)checkAppKey:(NSString *)appKey;
++ (ANSDataCheckLog *)checkAppKey:(NSString *)appKey;
 
 /** xwho校验 */
-+ (ANSConsoleLog *)checkXwho:(NSString *)xwho;
++ (ANSDataCheckLog *)checkXwho:(NSString *)xwho;
 
 /** 保留字段校验 */
-+ (ANSConsoleLog *)checkReservedKey:(NSString *)word;
++ (ANSDataCheckLog *)checkReservedKey:(NSString *)word;
 
 /** xwho字符串长度校验 */
-+ (ANSConsoleLog *)checkLengthOfXwho:(NSString *)xwho;
++ (ANSDataCheckLog *)checkLengthOfXwho:(NSString *)xwho;
 
 /** property.key是否为字符串类型 */
-+ (ANSConsoleLog *)checkTypeOfPropertyKey:(id)key;
++ (ANSDataCheckLog *)checkTypeOfPropertyKey:(id)key;
 
 /** property.key长度校验 */
-+ (ANSConsoleLog *)checkLengthOfPropertyKey:(NSString *)key;
++ (ANSDataCheckLog *)checkLengthOfPropertyKey:(NSString *)key;
 
 /** xwho 字符串类型检查 */
-+ (ANSConsoleLog *)checkCharsOfXwho:(NSString *)xwho;
++ (ANSDataCheckLog *)checkCharsOfXwho:(NSString *)xwho;
 
 /** 匿名id合法性检查 */
-+ (ANSConsoleLog *)checkLengthOfIdentify:(NSString *)anonymousId;
++ (ANSDataCheckLog *)checkLengthOfIdentify:(NSString *)anonymousId;
 
 /** aliasId是否合法 */
-+ (ANSConsoleLog*)checkLengthOfAliasId:(NSString *)aliasId;
++ (ANSDataCheckLog*)checkLengthOfAliasId:(NSString *)aliasId;
 
 /** originalId检查 */
-+ (ANSConsoleLog *)checkAliasOriginalId:(NSString *)originalId;
++ (ANSDataCheckLog *)checkAliasOriginalId:(NSString *)originalId;
 
 /** 检查 自定义属性value值 */
-+(ANSConsoleLog *)checkPropertyValueWithKey:(NSString *)key value:(id)value;
++(ANSDataCheckLog *)checkPropertyValueWithKey:(NSString *)key value:(id)value;
 
 /** property.value类型检查 */
-+ (ANSConsoleLog *)checkTypeOfPropertyValueWithKey:(NSString *)key  value:(id )value;
++ (ANSDataCheckLog *)checkTypeOfPropertyValueWithKey:(NSString *)key  value:(id )value;
 
 /** 检查profile_increment.value */
-+ (ANSConsoleLog *)checkTypeOfIncrementPropertyValueWithKey:(NSString *)key value:(id)value;
++ (ANSDataCheckLog *)checkTypeOfIncrementPropertyValueWithKey:(NSString *)key value:(id)value;
 
 /** 检查profile_append.value */
-+ (ANSConsoleLog *)checkTypeOfAppendPropertyValueWithKey:(NSString *)key value:(id)value;
++ (ANSDataCheckLog *)checkTypeOfAppendPropertyValueWithKey:(NSString *)key value:(id)value;
 
 
 @end

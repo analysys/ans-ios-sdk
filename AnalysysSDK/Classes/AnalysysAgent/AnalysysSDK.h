@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "ANSConst.h"
+#import "ANSDatabase.h"
 
 @class AnalysysAgentConfig;
 
@@ -53,6 +54,7 @@
  @param autoTrack YES/NO
  */
 - (void)setAutomaticHeatmap:(BOOL)autoTrack;
+
 
 #pragma mark - SDK发送策略
 
@@ -121,9 +123,39 @@
 - (BOOL)isViewAutoTrack;
 
 /**
+ 只采集部分页面
+*/
+- (void)setPageViewWhiteListByPages:(NSSet<NSString *> *)controllers;
+
+/**
+ 忽略部分页面自动采集
+*/
+- (void)setPageViewBlackListByPages:(NSSet<NSString *> *)controllers;
+
+/**
  忽略部分页面自动采集
  */
 - (void)setIgnoredAutomaticCollectionControllers:(NSArray<NSString *> *)controllers;
+
+#pragma mark - 热图模块儿接口
+
+/**
+ 忽略部分页面上所有的点击事件
+
+ 仅在热图模式下生效
+
+ @param controllerNames 控制器类名字符串数组
+*/
+- (void)setHeatmapIgnoreAutoClickByPage:(NSSet<NSString *> *)controllerNames;
+
+/**
+  只上报部分页面内点击事件
+ 
+  仅在热图模式下生效
+ 
+  @param controllerNames 控制器类名字符串数组
+*/
+- (void)setHeatmapAutoClickByPage:(NSSet<NSString *> *)controllerNames;
 
 #pragma mark - 通用属性
 
@@ -275,6 +307,20 @@
 - (BOOL)isIgnoreTrackWithClassName:(NSString *)className;
 
 /**
+ 只采集部分页面
+
+ @param className 类名
+ @return bool
+*/
+- (BOOL)isTrackWithClassName:(NSString *)className;
+
+/**
+ $page_view 事件是否有白名单
+ @return bool
+*/
+- (BOOL)hasPageViewWhiteList;
+
+/**
  App运行时长
 
  @return 时长
@@ -295,18 +341,10 @@
  */
 - (NSDictionary *)getCommonProperties;
 
-/**
- userdefault锁
 
- @return lock
- */
-+ (NSLock *)getUserDefaultLock;
+- (ANSDatabase *)getDBHelper;
 
-/**
- 内部获取队列函数 ，严禁对外暴露
- */
-- (void)dispatchOnSerialQueue:(void(^)(void))dispatchBlock;
-
+- (void)saveUploadInfo:(NSDictionary *)dataInfo event:(NSString *)event handler:(void(^)(void))handler;
 @end
 
 

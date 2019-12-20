@@ -10,18 +10,11 @@
 
 @interface NSInvocation (ANSHelper)
 
-/**
- 设置参数
+/// 设置参数
+/// @param argumentArray 参数列表
+- (void)ansSetArgumentsFromArray:(NSArray *)argumentArray;
 
- @param argumentArray 参数列表
- */
-- (void)AnsSetArgumentsFromArray:(NSArray *)argumentArray;
-
-/**
- 返回值
-
- @return object
- */
-- (id)AnsReturnValue;
+/// 获取反射调用返回值
+- (id)ansReturnValue;
 
 @end

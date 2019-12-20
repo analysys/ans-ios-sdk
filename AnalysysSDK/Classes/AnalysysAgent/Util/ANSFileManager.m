@@ -7,40 +7,31 @@
 //
 
 #import "ANSFileManager.h"
-#import "AnalysysSDK.h"
-#import "ANSConsoleLog.h"
-#import "NSThread+ANSHelper.h"
+#import "AnalysysLogger.h"
+#import "ANSLock.h"
 
 @implementation ANSFileManager
 
 
 #pragma mark - NSUserDefaults
 
-+ (void)saveAppKey:(NSString *)appKey {
-    [self saveUserDefaultWithKey:@"AnalysysAppKey" value:appKey];
-}
-
-+ (NSString *)usedAppKey {
-    return [self userDefaultValueWithKey:@"AnalysysAppKey"];
-}
-
 + (void)saveUserDefaultWithKey:(NSString *)key value:(id)value {
     @try {
-        [[AnalysysSDK getUserDefaultLock] lock];
+        ANSUserDefaultsLock();
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         [defaults setObject:value forKey:key];
         [defaults synchronize];
-        [[AnalysysSDK getUserDefaultLock] unlock];
+        ANSUserDefaultsUnlock();
     } @catch (NSException *exception) {
         
     }
 }
 
 + (id)userDefaultValueWithKey:(NSString *)key {
-    [[AnalysysSDK getUserDefaultLock] lock];
+    ANSUserDefaultsLock();
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     id retVaule = [[defaults valueForKey:key] copy];
-    [[AnalysysSDK getUserDefaultLock] unlock];
+    ANSUserDefaultsUnlock();
     return retVaule;
 }
 
@@ -76,16 +67,26 @@
     return [ANSFileManager archiveObject:commonProperties withFilePath:filePath];
 }
 
+/** 写入通用属性 */
++ (BOOL)archiveSuperProperties:(NSDictionary *)superProperties {
+    NSString *filePath = [self filePathWithName:@"superProperties.plist"];
+    return [ANSFileManager archiveObject:superProperties withFilePath:filePath];
+}
+
 /** 读取通用属性 */
 + (NSMutableDictionary *)unarchiveSuperProperties {
     NSString *filePath = [self filePathWithName:@"superProperties.plist"];
     return [self unarchiveDataAtFilePath:filePath asClass:[NSDictionary class]] ?: [NSMutableDictionary dictionary];
 }
 
-/** 写入通用属性 */
-+ (BOOL)archiveSuperProperties:(NSDictionary *)superProperties {
-    NSString *filePath = [self filePathWithName:@"superProperties.plist"];
++ (BOOL)archiveHybridSuperProperties:(NSDictionary *)superProperties {
+    NSString *filePath = [self filePathWithName:@"hybirdSuperProperties.plist"];
     return [ANSFileManager archiveObject:superProperties withFilePath:filePath];
+}
+
++ (NSMutableDictionary *)unarchiveHybridSuperProperties {
+    NSString *filePath = [self filePathWithName:@"hybirdSuperProperties.plist"];
+    return [self unarchiveDataAtFilePath:filePath asClass:[NSDictionary class]] ?: [NSMutableDictionary dictionary];
 }
 
 /** 读取本地事件绑定数据 */
@@ -112,7 +113,7 @@
     if (!error) {
         [fileManager createFileAtPath:filePath contents:nil attributes:nil];
     } else {
-        AnsDebug(@"Directory create failure！");
+        ANSDebug(@"Directory create failure！");
     }
 }
 
@@ -122,7 +123,7 @@
             return NO;
         }
     } @catch (NSException* exception) {
-        AnsError(@"Data archive error: %@!", exception);
+        ANSBriefError(@"Data archive error: %@!", exception);
         return NO;
     }
     
@@ -145,7 +146,7 @@
         NSError *error = NULL;
         BOOL removed = [[NSFileManager defaultManager] removeItemAtPath:filePath error:&error];
         if (!removed) {
-            AnsDebug(@"File removed failure: %@", error);
+            ANSDebug(@"File removed failure: %@", error);
         }
     }
     return unarchivedData;

@@ -8,7 +8,46 @@
 
 #import "AnalysysAgent.h"
 #import "AnalysysSDK.h"
+#import "ANSAppStartSource.h"
+#import <objc/runtime.h>
+#import "ANSAllBuryPoint.h"
+#import "ANSUncaughtExceptionHandler.h"
+@implementation UIViewController (ANSViewController)
 
+- (void)setAutoClickBlackPage:(BOOL)ansIgnorePageAutoClick {
+    objc_setAssociatedObject(self, @selector(autoClickBlackPage), @(ansIgnorePageAutoClick), OBJC_ASSOCIATION_ASSIGN);
+}
+- (BOOL)autoClickBlackPage {
+    return [objc_getAssociatedObject(self, @selector(autoClickBlackPage)) boolValue];
+}
+
+@end
+
+@implementation UIView (ANSView)
+
+- (void)setAnsViewID:(NSString *)ansViewID {
+    objc_setAssociatedObject(self, @selector(ansViewID), ansViewID, OBJC_ASSOCIATION_COPY_NONATOMIC);
+}
+- (NSString *)ansViewID {
+    return objc_getAssociatedObject(self, @selector(ansViewID));
+}
+
+- (void)setAutoClickBlackView:(BOOL)ignoreAutoClick {
+    objc_setAssociatedObject(self, @selector(autoClickBlackView), @(ignoreAutoClick), OBJC_ASSOCIATION_ASSIGN);
+}
+- (BOOL)autoClickBlackView {
+    return [objc_getAssociatedObject(self, @selector(autoClickBlackView)) boolValue];
+}
+
+//static const char * ans_custom_props = "ans_custom_props";
+//- (void)setAnsViewProperty:(NSDictionary *)ansViewCustomProps {
+//    objc_setAssociatedObject(self, ans_custom_props, ansViewCustomProps, OBJC_ASSOCIATION_COPY_NONATOMIC);
+//}
+//- (NSDictionary *)ansViewProperty {
+//    return objc_getAssociatedObject(self, ans_custom_props);
+//}
+
+@end
 
 @implementation AnalysysAgent
 
@@ -18,6 +57,10 @@
 
 + (NSString *)SDKVersion {
     return [AnalysysSDK SDKVersion];
+}
+
++ (void)monitorAppDelegate:(id<UIApplicationDelegate>)delegate launchOptions:(NSDictionary *)launchOptions {
+    [[ANSAppStartSource sharedManager] startMonitorAppDelegate:delegate launchOptions:launchOptions];
 }
 
 #pragma mark - 服务器地址设置
@@ -96,8 +139,51 @@
     return [[AnalysysSDK sharedManager] isViewAutoTrack];
 }
 
++ (void)setPageViewWhiteListByPages:(NSSet<NSString *> *)controllers {
+    [[AnalysysSDK sharedManager] setPageViewWhiteListByPages:controllers];
+}
+
++ (void)setPageViewBlackListByPages:(NSSet<NSString *> *)controllers {
+    [[AnalysysSDK sharedManager] setPageViewBlackListByPages:controllers];
+}
+
 + (void)setIgnoredAutomaticCollectionControllers:(NSArray<NSString *> *)controllers {
     [[AnalysysSDK sharedManager] setIgnoredAutomaticCollectionControllers:controllers];
+}
+
+#pragma mark - 全埋点模块接口
++ (void)setAutoTrackClick:(BOOL)isAuto {
+    [ANSAllBuryPoint allBuryPointAutoTrack:isAuto];
+}
+
++ (void)setAutoClickBlackListByPages:(NSSet<NSString *> *)controllerNames {
+    [[ANSAllBuryPoint sharedManager] setAutoClickBlackListByPages:controllerNames];
+}
+
++ (void)setAutoClickBlackListByViewTypes:(NSSet<NSString *> *)viewNames {
+    [[ANSAllBuryPoint sharedManager] setAutoClickBlackListByViewTypes:viewNames];
+}
+
++ (void)setAutoClickWhiteListByPages:(NSSet<NSString *> *)controllerNames {
+    [[ANSAllBuryPoint sharedManager] setAutoClickWhiteListByPages:controllerNames];
+}
+
++ (void)setAutoClickWhiteListByViewTypes:(NSSet<NSString *> *)viewNames {
+    [[ANSAllBuryPoint sharedManager] setAutoClickWhiteListByViewTypes:viewNames];
+}
+
+#pragma mark - 热图模块儿接口
++ (void)setHeatMapBlackListByPages:(NSSet<NSString *> *)controllerNames {
+    [[AnalysysSDK sharedManager] setHeatmapIgnoreAutoClickByPage:controllerNames];
+}
+
++ (void)setHeatMapWhiteListByPages:(NSSet<NSString *> *)controllerNames {
+    [[AnalysysSDK sharedManager] setHeatmapAutoClickByPage:controllerNames];
+}
+
+#pragma mark - 崩溃模块接口
++ (void)reportException:(NSException *)exception {
+    [ANSUncaughtExceptionHandler reportException:exception];
 }
 
 #pragma mark - 通用属性
@@ -134,6 +220,10 @@
 
 + (void)identify:(NSString *)anonymousId {
     [[AnalysysSDK sharedManager] identify:anonymousId];
+}
+
++ (void)alias:(NSString *)aliasId {
+    [self alias:aliasId originalId:nil];
 }
 
 + (void)alias:(NSString *)aliasId originalId:(NSString *)originalId {

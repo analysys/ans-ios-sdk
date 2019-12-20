@@ -10,8 +10,6 @@
 #import "UIView+ANSHelper.h"
 
 #import <objc/runtime.h>
-#import <QuartzCore/QuartzCore.h>
-#import <CommonCrypto/CommonDigest.h>
 #import "ANSControllerUtils.h"
 
 // NB If you add any more fingerprint methods, increment this.
@@ -19,29 +17,16 @@
 
 @implementation UIView (ANSHelper)
 
-- (UIImage *)AnsSnapshotImage {
-    UIImage *image = nil;
-    CGSize size = self.layer.bounds.size;
-    UIGraphicsBeginImageContext(size);
-    @try {
-        [self drawViewHierarchyInRect:CGRectMake(0.0f, 0.0f, size.width, size.height) afterScreenUpdates:YES];
-        image = UIGraphicsGetImageFromCurrentImageContext();
-    } @catch (NSException *exception) {
-        NSLog(@"exception getting snapshot image %@ for view %@", exception, self);
+- (NSString *)encryptString:(id)input {
+    if ([input isKindOfClass:[NSString class]]) {
+        NSData *data = [input dataUsingEncoding:NSUTF8StringEncoding];
+        NSData *base64Data = [data base64EncodedDataWithOptions:0];
+        return [[NSString alloc] initWithData:base64Data encoding:NSUTF8StringEncoding];
     }
-    UIGraphicsEndImageContext();
-    
-    return image;
+    return nil;
 }
 
-- (UIImage *)AnsSnapshotForBlur {
-    UIImage *image = [self AnsSnapshotImage];
-    // hack, helps with colors when blurring
-    NSData *imageData = UIImageJPEGRepresentation(image, 1);
-    return [UIImage imageWithData:imageData];
-}
-
-- (NSArray *)ans_targetActions {
+- (NSArray *)targetActions {
     NSMutableArray *targetActions = [NSMutableArray array];
     if ([self isKindOfClass:[UIControl class]]) {
         for (id target in [(UIControl *)(self) allTargets]) {
@@ -50,7 +35,7 @@
                 UIControlEvents event = allEvents & (0x01 << e);
                 if (event) {
                     NSArray *actions = [(UIControl *)(self) actionsForTarget:target forControlEvent:event];
-                    NSArray *ignoreActions = @[@"preVerify:forEvent:", @"execute:forEvent:"];
+                    NSArray *ignoreActions = @[@"ans_preVerify:forEvent:", @"ans_execute:forEvent:"];
                     for (NSString *action in actions) {
                         if ([ignoreActions indexOfObject:action] == NSNotFound)
                         {
@@ -64,19 +49,7 @@
     return [targetActions copy];
 }
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wundeclared-selector"
-// Set by a userDefinedRuntimeAttr in the EGTagNibs.rb script
-- (void)setAnsViewId:(id)object {
-    objc_setAssociatedObject(self, @selector(AnsViewId), [object copy], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (NSString *)AnsViewId {
-    return objc_getAssociatedObject(self, @selector(AnsViewId));
-}
-#pragma clang diagnostic pop
-
-- (NSString *)ans_controllerVariable {
+- (NSString *)controllerVariable {
     NSString *result = nil;
     if ([self isKindOfClass:[UIControl class]]) {
         UIResponder *responder = [self nextResponder];
@@ -99,9 +72,9 @@
     if (result) {
         return result;
     }
-    
     return nil;
 }
+
 /*
  Creates a short string which is a fingerprint of a UIButton's image property.
  It does this by downsampling the image to 8x8 and then downsampling the resulting
@@ -111,13 +84,17 @@
  Returns a base64 encoded string representing an 8x8 bitmap of 8 bit rgba data
  (2 bits per component).
  */
-- (NSString *)ans_imageFingerprint {
+- (NSString *)imageFingerprint {
     NSString *result = nil;
     UIImage *originalImage = nil;
     if ([self isKindOfClass:[UIButton class]]) {
-        originalImage = [((UIButton *)self) imageForState:UIControlStateNormal];
+        UIButton *btn = (UIButton *)self;
+        originalImage = [btn imageForState:btn.state];
     } else if ([NSStringFromClass([self.superview class]) isEqual:@"UITabBarButton"] && [self respondsToSelector:@selector(image)]) {
         originalImage = (UIImage *)[self performSelector:@selector(image)];
+    } else if ([self isKindOfClass:UIImageView.class]) {
+        UIImageView *imageView = (UIImageView *)self;
+        originalImage = imageView.image;
     }
     
     if (originalImage) {
@@ -142,7 +119,30 @@
     return result;
 }
 
-- (NSString *)AnsElementText {
+-(void)setAnsViewId:(NSString *)ansViewId {
+    objc_setAssociatedObject(self, @selector(ansViewId), [ansViewId copy], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+-(NSString *)ansViewId {
+    return objc_getAssociatedObject(self, @selector(ansViewId));
+}
+
+- (UIImage *)ansSnapshotImage {
+    UIImage *image = nil;
+    CGSize size = self.layer.bounds.size;
+    UIGraphicsBeginImageContext(size);
+    @try {
+        [self drawViewHierarchyInRect:CGRectMake(0.0f, 0.0f, size.width, size.height) afterScreenUpdates:YES];
+        image = UIGraphicsGetImageFromCurrentImageContext();
+    } @catch (NSException *exception) {
+        NSLog(@"exception getting snapshot image %@ for view %@", exception, self);
+    }
+    UIGraphicsEndImageContext();
+    
+    return image;
+}
+
+- (NSString *)ansElementText {
     NSString *text = nil;
     SEL titleSelector = @selector(title);
     if ([self isKindOfClass:[UILabel class]]) {
@@ -161,60 +161,9 @@
         //   该判断热图 获取热图信息需一致(analysysElementContent)
         text = [ANSControllerUtils contentFromView:self];
     }
-    /*else {
-        //  获取文本信息
-        NSArray *subViews = self.subviews;
-        if (subViews.count == 0) {
-            return nil;
-        }
-        UIView *curView = subViews[0];
-        while (curView) {
-            SEL textSelector = @selector(text);
-            SEL titleStateSelector = @selector(titleForState:);
-            if ([curView respondsToSelector:textSelector]) {
-                IMP textImp = [curView methodForSelector:textSelector];
-                void *(*func)(id, SEL) = (void *(*)(id, SEL))textImp;
-                id textStr = (__bridge id)func(curView, textSelector);
-                if ([textStr isKindOfClass:[NSString class]]) {
-                    text = textStr;
-                    break;
-                }
-            } else if ([curView respondsToSelector:titleStateSelector]) {
-                IMP stateImp = [curView methodForSelector:titleStateSelector];
-                void *(*func)(id, SEL, UIControlState) = (void *(*)(id, SEL, UIControlState))stateImp;
-                id textStr = (__bridge id)func(curView, titleStateSelector, UIControlStateNormal);
-                if ([textStr isKindOfClass:[NSString class]]) {
-                    text = textStr;
-                    break;
-                }
-            }
-            if (curView.subviews.count == 0) {
-                break;
-            }
-            curView = curView.subviews[0];
-        }
-    }
-     */
     return text;
 }
 
-static NSString *ans_encryptHelper(id input) {
-    //    NSString *SALT = @"1l0v3c4a8s4n018cl3d93kxled3kcle3j19384jdo2dk3";
-    //    NSMutableString *encryptedStuff = nil;
-    if ([input isKindOfClass:[NSString class]]) {
-        //        NSData *data = [[input stringByAppendingString:SALT]  dataUsingEncoding:NSASCIIStringEncoding];
-        //        uint8_t digest[CC_SHA256_DIGEST_LENGTH];
-        //        CC_SHA256(data.bytes, (CC_LONG)data.length, digest);
-        //        encryptedStuff = [NSMutableString stringWithCapacity:CC_SHA256_DIGEST_LENGTH * 2];
-        //        for (int i = 0; i < CC_SHA1_DIGEST_LENGTH; i++) {
-        //            [encryptedStuff appendFormat:@"%02x", digest[i]];
-        //        }
-        NSData *data = [input dataUsingEncoding:NSUTF8StringEncoding];
-        NSData *base64Data = [data base64EncodedDataWithOptions:0];
-        return [[NSString alloc] initWithData:base64Data encoding:NSUTF8StringEncoding];
-    }
-    return nil;
-}
 #pragma mark - Aliases for compatibility
 //  自定义属性，匹配服务器下发属性
 //  **** 切勿随意修改 ****
@@ -223,28 +172,28 @@ static NSString *ans_encryptHelper(id input) {
 }
 
 - (NSString *)eg_varA {
-    return ans_encryptHelper([self AnsViewId]);
+    return [self encryptString:[self ansViewId]];
 }
 
 - (NSString *)eg_varB {
-    return ans_encryptHelper([self ans_controllerVariable]);
+    return [self encryptString:[self controllerVariable]];
 }
 
 - (NSString *)eg_varC {
-    return ans_encryptHelper([self ans_imageFingerprint]);
+    return [self encryptString:[self imageFingerprint]];
 }
 
 - (NSArray *)eg_varSetD {
-    NSArray *targetActions = [self ans_targetActions];
+    NSArray *targetActions = [self targetActions];
     NSMutableArray *encryptedActions = [NSMutableArray array];
     for (id targetAction in targetActions) {
-        [encryptedActions addObject:ans_encryptHelper(targetAction)];
+        [encryptedActions addObject:[self encryptString:targetAction]];
     }
     return encryptedActions;
 }
 
 - (NSString *)eg_varE {
-    NSString *varE = ans_encryptHelper([self AnsElementText]);
+    NSString *varE = [self encryptString:[self ansElementText]];
     return varE;
 }
 

@@ -12,7 +12,7 @@
 
 @implementation NSObject (ANSSwizzling)
 
-+ (void)AnsExchangeOriginalSel:(SEL)originalSel replacedSel:(SEL)replacedSel {
++ (void)ansExchangeOriginalSel:(SEL)originalSel replacedSel:(SEL)replacedSel {
 
     Method originalMethod = class_getInstanceMethod(self, originalSel);
     Method replacedMethod = class_getInstanceMethod(self, replacedSel);

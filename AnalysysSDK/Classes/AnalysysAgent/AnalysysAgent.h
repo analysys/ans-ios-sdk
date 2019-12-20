@@ -8,13 +8,14 @@
 
 
 // ********************************
-// ***** 当前 SDK 版本号：4.3.5 *****
+// ***** 当前 SDK 版本号：4.4.0 *****
 // ********************************
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 #import "ANSConst.h"
 #import "AnalysysAgentConfig.h"
-
+#import <UIKit/UIKit.h>
 
 
 /**
@@ -44,6 +45,39 @@
  @return 页面标识
  */
 - (NSString *)registerPageUrl;
+
+@end
+
+@interface UIViewController (ANSViewController)
+
+/**
+ 是否忽略当前页面上所有的事件采集
+ 
+ 仅在全埋点生效
+
+ 默认为 NO
+*/
+@property (nonatomic, assign) BOOL autoClickBlackPage;
+
+@end
+
+@interface UIView (ANSView)
+
+/**
+ 给控件添加控件ID
+ 
+ 仅在全埋点生效
+*/
+@property (nonatomic, copy) NSString* ansViewID;
+
+/**
+ 是否忽略当前控件的事件采集
+ 
+ 仅在全埋点生效
+
+ 默认为 NO
+*/
+@property (nonatomic, assign) BOOL autoClickBlackView;
 
 @end
 
@@ -77,6 +111,17 @@
  @return SDK版本
  */
 + (NSString *)SDKVersion;
+
+
+/**
+ 跟踪App启动方式
+ 前提：必须实现相应启动方式的回调方法
+ 如：通过通知启动，则需实现通知相应不同版本的回调方法
+ 
+ @param delegate 遵循<UIApplicationDelegate>协议的类
+ @param launchOptions 启动参数
+ */
++ (void)monitorAppDelegate:(id<UIApplicationDelegate>)delegate launchOptions:(NSDictionary *)launchOptions;
 
 #pragma mark - 服务器地址设置
 
@@ -217,14 +262,91 @@
 + (BOOL)isViewAutoTrack;
 
 /**
- 忽略部分页面自动采集
- 
- 仅在已设置为autoTrack模式下生效
+ 设置页面统计白名单
+*/
++ (void)setPageViewWhiteListByPages:(NSSet<NSString *> *)controllers;
+
+/**
+ 设置页面统计黑名单
  
  @param controllers UIViewController类名字符串数组
  */
-+ (void)setIgnoredAutomaticCollectionControllers:(NSArray<NSString *> *)controllers;
++ (void)setPageViewBlackListByPages:(NSSet<NSString *> *)controllers;
 
+/**
+ 设置页面统计黑名单
+ 
+ @param controllers UIViewController类名字符串数组
+ */
++ (void)setIgnoredAutomaticCollectionControllers:(NSArray<NSString *> *)controllers __attribute__((deprecated("已过时！建议使用setPageViewBlackListByPages:接口")));
+
+#pragma mark - 全埋点功能模块接口
+
+/**
+ 设置全埋点事件是否允许自动采集
+ 
+ @param isAuto 开关值，默认为NO关闭，设置YES为开
+ */
++ (void)setAutoTrackClick:(BOOL)isAuto;
+
+/**
+ 忽略部分页面上所有的点击事件
+
+ 仅在全埋点模式下生效
+
+ @param controllerNames 控制器类名字符串数组
+*/
++ (void)setAutoClickBlackListByPages:(NSSet<NSString *> *)controllerNames;
+
+/**
+  忽略某些类名控件点击事件
+ 
+  仅在全埋点模式下生效
+  
+  @param viewNames UI控件类名字符串数组
+*/
++ (void)setAutoClickBlackListByViewTypes:(NSSet<NSString *> *)viewNames;
+
+/**
+  只上报部分页面内点击事件
+ 
+  仅在全埋点模式下生效
+ 
+  @param controllerNames 控制器类名字符串数组
+*/
++ (void)setAutoClickWhiteListByPages:(NSSet<NSString *> *)controllerNames;
+
+/**
+  只上报某些类名控件点击事件
+ 
+  仅在全埋点模式下生效
+ 
+  @param viewNames UI控件类名字符串数组
+*/
++ (void)setAutoClickWhiteListByViewTypes:(NSSet<NSString *> *)viewNames;
+
+#pragma mark - 热图功能模块接口
+
+/**
+ 忽略部分页面上所有的点击事件
+
+ 仅在热图模式下生效
+
+ @param controllerNames 控制器类名字符串数组
+*/
++ (void)setHeatMapBlackListByPages:(NSSet<NSString *> *)controllerNames;
+
+/**
+ 只上报部分页面内点击事件
+
+ 仅在热图模式下生效
+
+ @param controllerNames 控制器类名字符串数组
+*/
++ (void)setHeatMapWhiteListByPages:(NSSet<NSString *> *)controllerNames;
+
+#pragma mark - 崩溃收集功能模块接口
++ (void)reportException:(NSException *)exception;
 
 #pragma mark - 通用属性
 
@@ -299,13 +421,18 @@
  */
 + (void)identify:(NSString *)anonymousId;
 
+
+/// 用户关联。小于255字符
+/// @param aliasId 当前用户标识
++ (void)alias:(NSString *)aliasId;
+
 /**
  用户关联。小于255字符
  
  @param aliasId 当前用户标识
  @param originalId 原有用户标识
  */
-+ (void)alias:(NSString *)aliasId originalId:(NSString *)originalId;
++ (void)alias:(NSString *)aliasId originalId:(NSString *)originalId __attribute__((deprecated("已过时！建议使用alias:接口")));
 
 /**
  获取匿名ID

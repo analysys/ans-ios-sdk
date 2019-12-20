@@ -8,11 +8,9 @@
 //  Copyright (c) 2014 Mixpanel. All rights reserved.
 
 #import "ANSUITableViewBinding.h"
-
-#import <objc/runtime.h>
 #import <UIKit/UIKit.h>
 #import "ANSSwizzler.h"
-#import "ANSConsoleLog.h"
+#import "AnalysysLogger.h"
 
 @implementation ANSUITableViewBinding
 
@@ -26,26 +24,23 @@
 {
     NSString *path = object[@"path"];
     if (![path isKindOfClass:[NSString class]] || path.length < 1) {
-        AnsDebug(@"must supply a view path to bind by");
+        ANSDebug(@"must supply a view path to bind by");
         return nil;
     }
     
     NSString *eventName = object[@"event_name"];
     if (![eventName isKindOfClass:[NSString class]] || eventName.length < 1 ) {
-        AnsDebug(@"binding requires an event name");
+        ANSDebug(@"binding requires an event name");
         return nil;
     }
     
     Class tableDelegate = NSClassFromString(object[@"table_delegate"]);
     if (!tableDelegate) {
-        AnsDebug(@"binding requires a table_delegate class");
+        ANSDebug(@"binding requires a table_delegate class");
         return nil;
     }
     
-    return [[ANSUITableViewBinding alloc] initWithEventName:eventName
-                                                    onPath:path
-                                              withDelegate:tableDelegate
-                                               bindingInfo:object];
+    return [[ANSUITableViewBinding alloc] initWithBindingInfo:object];
 }
 
 #pragma clang diagnostic push
@@ -56,12 +51,10 @@
 }
 #pragma clang diagnostic pop
 
-- (instancetype)initWithEventName:(NSString *)eventName
-                           onPath:(NSString *)path
-                     withDelegate:(Class)delegateClass
-                      bindingInfo:(NSDictionary *)bindingInfo
+- (instancetype)initWithBindingInfo:(NSDictionary *)bindingInfo
 {
-    if (self = [super initWithEventName:eventName onPath:path matchText:@"" bindingInfo:bindingInfo]) {
+    if (self = [super initWithEventBindingInfo:bindingInfo]) {
+        Class delegateClass = NSClassFromString(bindingInfo[@"table_delegate"]);
         [self setSwizzleClass:delegateClass];
     }
     return self;

@@ -13,6 +13,10 @@
 
 + (instancetype)sharedManager;
 
+@property (nonatomic, copy) NSString *currentPage;//  当前点击页面
+@property (nonatomic, copy) NSString *controlText;//  控件文本
+
+
 #pragma mark - SDK配置
 
 /** 初始化埋点及下发地址 */
@@ -26,9 +30,6 @@
 
 
 #pragma mark - 可视化操作
-
-/** 摇一摇连接可视化 */
-- (void)connectVisualUseShake;
 
 /**
  触发可视化埋点事件

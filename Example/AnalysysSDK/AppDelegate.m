@@ -36,10 +36,12 @@
     //    [AnalysysAgent identify:@"testIdentify"];
     //    [AnalysysAgent alias:@"18600008888" originalId:@""];
     
+    //  页面自动采集
     [AnalysysAgent setAutomaticCollection:YES];
-    //    [AnalysysAgent setIgnoredAutomaticCollectionControllers:@[@"ANSHomeViewController",@"SettingViewController", @"ScrollViewController", @"PopViewController"]];
-    
-//    [AnalysysAgent setAutomaticHeatmap:YES];
+    //  热图采集
+    [AnalysysAgent setAutomaticHeatmap:YES];
+    //  全埋点事件
+    [AnalysysAgent setAutoTrackClick:YES];
     
     //  默认的 debugmode = debugoff 不打印log。 应该先设置debugmode，然后设置 superproperty 避免 log 丢失。
 //    [AnalysysAgent registerSuperProperties:@{@"Sex": @"male", @"bobby": @[@"football",@"pingpang"]}];
@@ -54,7 +56,7 @@
     [AnalysysAgent setUploadURL:@"https://arksdk.analysys.cn:4089"];
     
     //  AnalysysAgent SDK配置信息
-    AnalysysConfig.appKey = @"sdktest201907";
+    AnalysysConfig.appKey = @"04bf9dd9ec538df7";
     AnalysysConfig.channel = @"App Store";
     AnalysysConfig.autoProfile = YES;
     AnalysysConfig.autoInstallation = YES;

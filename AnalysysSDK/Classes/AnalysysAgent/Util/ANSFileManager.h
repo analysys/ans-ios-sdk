@@ -21,17 +21,7 @@
 
 @interface ANSFileManager : NSObject
 
-#pragma mark - NSUserDefaults
-
-/**
- 本地存储appkey
-
- @param appKey appkey
- */
-+ (void)saveAppKey:(NSString *)appKey;
-
-+ (NSString *)usedAppKey;
-
+#pragma mark - NSUserDefaults （用户清理不影响）
 
 /**
  简易数据存储
@@ -42,6 +32,7 @@
 + (void)saveUserDefaultWithKey:(NSString *)key value:(id)value;
 
 + (id)userDefaultValueWithKey:(NSString *)key;
+
 
 #pragma mark - NSFileManager
 
@@ -107,6 +98,21 @@
  @return property
  */
 + (NSMutableDictionary *)unarchiveSuperProperties;
+
+/**
+ 序列化Hybird超级属性
+
+ @param superProperties property
+ @return yes/no
+ */
++ (BOOL)archiveHybridSuperProperties:(NSDictionary *)superProperties;
+
+/**
+ 读取Hybird超级属性
+
+ @return property
+ */
++ (NSMutableDictionary *)unarchiveHybridSuperProperties;
 
 
 @end

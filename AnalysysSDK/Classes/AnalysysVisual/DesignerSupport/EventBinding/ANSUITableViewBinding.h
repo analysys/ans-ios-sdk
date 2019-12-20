@@ -13,10 +13,7 @@
 
 
 - (instancetype)init __unavailable;
-- (instancetype)initWithEventName:(NSString *)eventName
-                           onPath:(NSString *)path
-                     withDelegate:(Class)delegateClass
-                      bindingInfo:(NSDictionary *)bindingInfo;
+- (instancetype)initWithBindingInfo:(NSDictionary *)bindingInfo;
 
 
 

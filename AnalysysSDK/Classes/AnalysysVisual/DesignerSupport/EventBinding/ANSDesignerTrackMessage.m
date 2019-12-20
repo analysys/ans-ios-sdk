@@ -8,7 +8,7 @@
 //  Copyright (c) 2014 Mixpanel. All rights reserved.
 
 #import "ANSDesignerEventBindingMessage.h"
-#import "ANSConsoleLog.h"
+#import "AnalysysLogger.h"
 
 @implementation ANSDesignerTrackMessage {
     NSDictionary *_payload;
@@ -39,7 +39,7 @@
     NSError *error = nil;
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonObject options:(NSJSONWritingOptions)0 error:&error];
     if (error) {
-        AnsDebug(@"Failed to serialize test designer message: %@", error);
+        ANSDebug(@"Failed to serialize test designer message: %@", error);
     }
     
     return jsonData;

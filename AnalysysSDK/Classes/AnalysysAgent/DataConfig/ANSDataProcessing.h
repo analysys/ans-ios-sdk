@@ -27,6 +27,13 @@
 #pragma mark - 事件接口
 
 /**
+App崩溃
+
+@return 启动数据
+*/
++ (NSDictionary *)processAppCrashProperties:(NSDictionary *)properties;
+
+/**
  App启动
 
  @return 启动数据

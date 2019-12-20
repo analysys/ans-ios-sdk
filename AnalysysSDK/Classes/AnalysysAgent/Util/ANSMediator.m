@@ -1,5 +1,5 @@
 //
-//  ANSReflect.m
+//  ANSMediator.m
 //  AnalysysAgent
 //
 //  Created by SoDo on 2019/2/21.
@@ -20,7 +20,7 @@
     SEL selector = NSSelectorFromString(actionName);
     NSMethodSignature *signature = [target methodSignatureForSelector:selector];
     if (signature == nil) {
-        //AnsDebug(@"MethodSignature failure:%@ !", actionName);
+        //ANSDebug(@"MethodSignature failure:%@ !", actionName);
         return nil;
     }
     NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
@@ -28,12 +28,12 @@
     invocation.selector = selector;
     
     if (parameters.count) {
-        [invocation AnsSetArgumentsFromArray:parameters];
+        [invocation ansSetArgumentsFromArray:parameters];
     }
     [invocation invoke];
     id returnValue = nil;
     if (signature.methodReturnLength) {
-        returnValue = [invocation AnsReturnValue];
+        returnValue = [invocation ansReturnValue];
     }
     return returnValue;
 }

@@ -66,5 +66,18 @@
     return txt;
 }
 
++ (UIWindow *)currentWindow {
+    UIWindow* window = nil;
+    if ([UIDevice currentDevice].systemVersion.floatValue >= 13.0) {
+        for (UIWindowScene* windowScene in [UIApplication sharedApplication].connectedScenes) {
+            if (windowScene.activationState == UISceneActivationStateForegroundActive) {
+                window = windowScene.windows.firstObject;
+                break;
+            }
+        }
+    }
+    return window ?: [UIApplication sharedApplication].keyWindow;
+}
+
 
 @end

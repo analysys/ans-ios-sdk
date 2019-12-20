@@ -1,18 +1,22 @@
 //
-//  ANSDemoViewController.m
+//  ANSCaseViewController.m
 //  AnalysysSDK-iOS
 //
 //  Created by SoDo on 2019/3/13.
 //  Copyright © 2019 shaochong du. All rights reserved.
 //
 
-#import "ANSDemoViewController.h"
-#import <AnalysysSDK/AnalysysAgent.h>
+#import "ANSCaseViewController.h"
+#import "AnalysysAgent.h"
 #import "ANSDemoTableViewCell.h"
 #import "UnitTestCase.h"
 #import "ANSSearchTableViewController.h"
+#import "ANSTableHeaderFooterView.h"
 
-@interface ANSDemoViewController ()<UITableViewDelegate, UITableViewDataSource, UISearchControllerDelegate, UISearchResultsUpdating>
+static NSString *cellIdenfity = @"ANSDemoTableViewCell";
+static NSString *headerViewIdentify = @"HeaderView";
+
+@interface ANSCaseViewController ()<UITableViewDelegate, UITableViewDataSource, UISearchControllerDelegate, UISearchResultsUpdating>
 
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic,copy)NSArray* dataSource;
@@ -20,7 +24,7 @@
 
 @end
 
-@implementation ANSDemoViewController
+@implementation ANSCaseViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -44,6 +48,9 @@
         self.tableView.tableHeaderView = self.searchController.searchBar;
         self.automaticallyAdjustsScrollViewInsets = NO;
 //    }
+    [self.tableView registerNib:[UINib nibWithNibName:@"ANSDemoTableViewCell" bundle:nil] forCellReuseIdentifier:cellIdenfity];
+
+    [self.tableView registerNib:[UINib nibWithNibName:@"ANSTableHeaderFooterView" bundle:nil] forHeaderFooterViewReuseIdentifier:headerViewIdentify];
 }
 
 - (UIView *)headerView {
@@ -60,6 +67,7 @@
     btn.frame = CGRectMake(0, 0, 100, 30);
     [btn setBackgroundColor:[UIColor magentaColor]];
     [btn setTitle:@"自定义标题" forState:UIControlStateNormal];
+    [btn addTarget:self action:@selector(touchTitle) forControlEvents:UIControlEventTouchUpInside];
     [bgView addSubview:btn];
     
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(100, 0, 80, 30)];
@@ -69,6 +77,10 @@
     [bgView addSubview:label];
 
     return bgView;
+}
+
+- (void)touchTitle {
+    NSLog(@"点击标题");
 }
 
 - (UISearchController *)searchController {
@@ -206,14 +218,9 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    static NSString *cellIdenfity = @"ANSDemoTableViewCell";
     ANSDemoTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdenfity];
-    if (!cell) {
-        cell = [[[NSBundle mainBundle] loadNibNamed:@"ANSDemoTableViewCell" owner:self options:nil] lastObject];
-    }
     cell.titleLabel.text = self.dataSource[indexPath.section][indexPath.row];
-    [cell.detailBtn setTitle:[NSString stringWithFormat:@"%d-%d", indexPath.section,indexPath.row] forState:UIControlStateNormal];
+    [cell.detailBtn setTitle:[NSString stringWithFormat:@"%ld-%ld", (long)indexPath.section, (long)indexPath.row] forState:UIControlStateNormal];
 //
 //    static NSString *cellIdentify = @"cell";
 //    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentify];
@@ -235,6 +242,9 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    [tableView deselectRowAtIndexPath:indexPath animated:NO];
+    
     NSString *selStr = self.dataSource[indexPath.section][indexPath.row];
     [UnitTestCase performSelector:NSSelectorFromString(selStr)];
 }
@@ -244,15 +254,11 @@
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    CGSize size = [UIScreen mainScreen].bounds.size;
-    UIView *sectionHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, size.width, 50)];
-    sectionHeaderView.backgroundColor = [UIColor greenColor];
-    UILabel *subView = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, size.width, sectionHeaderView.frame.size.height)];
-    subView.textAlignment = NSTextAlignmentCenter;
-    subView.text = self.titleArr[section];
-    [sectionHeaderView addSubview:subView];
     
-    return sectionHeaderView;
+    ANSTableHeaderFooterView *headerView = [tableView dequeueReusableHeaderFooterViewWithIdentifier:headerViewIdentify];
+    headerView.titleLabel.text = self.titleArr[section];
+    
+    return headerView;
 }
 
 

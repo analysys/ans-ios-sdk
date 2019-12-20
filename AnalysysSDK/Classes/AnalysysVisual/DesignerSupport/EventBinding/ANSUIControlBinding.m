@@ -8,11 +8,11 @@
 //  Copyright (c) 2014 Mixpanel. All rights reserved.
 
 #import "ANSUIControlBinding.h"
-
 #import "ANSSwizzler.h"
-#import "ANSConsoleLog.h"
+#import "AnalysysLogger.h"
 #import "NSThread+AnsHelper.h"
-#import "UIView+ANSHelper.h"
+#import "ANSVisualSDK.h"
+#import "ANSUtil.h"
 
 @interface ANSUIControlBinding()
 
@@ -42,28 +42,22 @@
 + (ANSEventBinding *)bindingWithJSONObject:(NSDictionary *)object {
     NSString *path = object[@"path"];
     if (![path isKindOfClass:[NSString class]] || path.length < 1) {
-        AnsDebug(@"must supply a view path to bind by");
+        ANSDebug(@"must supply a view path to bind by");
         return nil;
     }
     
     NSString *eventName = object[@"event_id"];
     if (![eventName isKindOfClass:[NSString class]] || eventName.length < 1 ) {
-        AnsDebug(@"binding requires an event name");
+        ANSDebug(@"binding requires an event name");
         return nil;
     }
     
     if (!([object[@"control_event"] unsignedIntegerValue] & UIControlEventAllEvents)) {
-        AnsDebug(@"must supply a valid UIControlEvents value for control_event");
+        ANSDebug(@"must supply a valid UIControlEvents value for control_event");
         return nil;
     }
     
-    UIControlEvents verifyEvent = [object[@"verify_event"] unsignedIntegerValue];
-    return [[ANSUIControlBinding alloc] initWithEventName:eventName
-                                                  onPath:path
-                                        withControlEvent:[object[@"control_event"] unsignedIntegerValue]
-                                          andVerifyEvent:verifyEvent
-                                               matchText:object[@"match_text"]
-                                             bindingInfo:object];
+    return [[ANSUIControlBinding alloc] initWithBindingInfo:object];
 }
 
 #pragma clang diagnostic push
@@ -73,24 +67,21 @@
 }
 #pragma clang diagnostic pop
 
-- (instancetype)initWithEventName:(NSString *)eventName
-                           onPath:(NSString *)path
-                 withControlEvent:(UIControlEvents)controlEvent
-                   andVerifyEvent:(UIControlEvents)verifyEvent
-                        matchText:(NSString *)matchText
-                      bindingInfo:(NSDictionary *)bindingInfo {
-    if (self = [super initWithEventName:eventName onPath:path matchText:matchText bindingInfo:bindingInfo]) {
+- (instancetype)initWithBindingInfo:(NSDictionary *)bindingInfo {
+    if (self = [super initWithEventBindingInfo:bindingInfo]) {
         // iOS 12: UITextField now implements -didMoveToWindow, without calling the parent implementation. so Swizzle UIControl won't work
+        NSString *path = bindingInfo[@"path"];
         if ([UIDevice currentDevice].systemVersion.floatValue >= 12.0) {
             [self setSwizzleClass:[path containsString:@"UITextField"] ? [UITextField class] : [UIControl class]];
         } else {
             [self setSwizzleClass:[UIControl class]];
         }
-        _controlEvent = controlEvent;
+        _controlEvent = [bindingInfo[@"control_event"] unsignedIntegerValue];
+        UIControlEvents verifyEvent = [bindingInfo[@"verify_event"] unsignedIntegerValue];
         if (verifyEvent == 0) {
-            if (controlEvent & UIControlEventAllTouchEvents) {
+            if (_controlEvent & UIControlEventAllTouchEvents) {
                 verifyEvent = UIControlEventTouchDown;
-            } else if (controlEvent & UIControlEventAllEditingEvents) {
+            } else if (_controlEvent & UIControlEventAllEditingEvents) {
                 verifyEvent = UIControlEventEditingDidBegin;
             }
         }
@@ -123,42 +114,43 @@
     
     if (!self.running) {
         void (^executeBlock)(id, SEL) = ^(id view, SEL command) {
-            [NSThread AnsRunOnMainThread:^{
+            [NSThread ansRunOnMainThread:^{
                 NSArray *objects;
-                NSObject *root = [self getRootObject];
-                if (view && [self.appliedTo containsObject:view]) {
-                    //  离开页面 移除绑定
-                    if (![self.path fuzzyIsLeafSelected:view fromRoot:root]) {
-                        [self stopOnView:view];
-                        [self.appliedTo removeObject:view];
-                    }
-                } else {
-                    // select targets based off path
-                    if (view) {
-                        //  进入页面
-                        if ([self.path fuzzyIsLeafSelected:view fromRoot:root]) {
-                            objects = @[view];
-                        } else {
-                            objects = @[];
+                NSArray *rootArray = [self getRootObject];
+                for (NSObject *root in rootArray) {
+                    if (view && [self.appliedTo containsObject:view]) {
+                        //  离开页面 移除绑定
+                        if (![self.path fuzzyIsLeafSelected:view fromRoot:root]) {
+                            [self stopOnView:view];
+                            [self.appliedTo removeObject:view];
                         }
                     } else {
-                        //  新增埋点
-                        objects = [self.path fuzzySelectFromRoot:root];
-                    }
-                    
-                    //  绑定事件
-                    for (UIControl *control in objects) {
-                        if ([control isKindOfClass:[UIControl class]]) {
-                            if (self.verifyEvent != 0 && self.verifyEvent != self.controlEvent) {
-                                [control addTarget:self
-                                            action:@selector(ans_preVerify:forEvent:)
-                                  forControlEvents:self.verifyEvent];
+                        // select targets based off path
+                        if (view) {
+                            if ([self.path fuzzyIsLeafSelected:view fromRoot:root]) {
+                                objects = @[view];
+                            } else {
+                                objects = @[];
                             }
-                            
-                            [control addTarget:self
-                                        action:@selector(ans_execute:forEvent:)
-                              forControlEvents:self.controlEvent];
-                            [self.appliedTo addObject:control];
+                        } else {
+                            //  首次请求数据立即埋点绑定
+                            objects = [self.path fuzzySelectFromRoot:root];
+                        }
+                        
+                        //  绑定事件
+                        for (UIControl *control in objects) {
+                            if ([control isKindOfClass:[UIControl class]]) {
+                                if (self.verifyEvent != 0 && self.verifyEvent != self.controlEvent) {
+                                    [control addTarget:self
+                                                action:@selector(ans_preVerify:forEvent:)
+                                      forControlEvents:self.verifyEvent];
+                                }
+                                
+                                [control addTarget:self
+                                            action:@selector(ans_execute:forEvent:)
+                                  forControlEvents:self.controlEvent];
+                                [self.appliedTo addObject:control];
+                            }
                         }
                     }
                 }
@@ -202,7 +194,7 @@
 }
 
 - (void)stopOnView:(UIControl *)view {
-    [NSThread AnsRunOnMainThread:^{
+    [NSThread ansRunOnMainThread:^{
         if (self.verifyEvent != 0 && self.verifyEvent != self.controlEvent) {
             [view removeTarget:self
                         action:@selector(ans_preVerify:forEvent:)
@@ -218,8 +210,13 @@
 #pragma mark -- To execute for Target-Action event firing
 
 - (BOOL)verifyControlMatchesPath:(id)control {
-    NSObject *root = [self getRootObject];
-    return [self.path isLeafSelected:control fromRoot:root];
+    NSArray *rootArray = [self getRootObject];
+    for (NSObject *root in rootArray) {
+        if ([self.path isLeafSelected:control fromRoot:root]) {
+            return YES;
+        }
+    }
+    return NO;
 }
 
 - (void)ans_preVerify:(id)sender forEvent:(UIEvent *)event {
@@ -238,11 +235,14 @@
         shouldTrack = [self verifyControlMatchesPath:sender];
     }
     if (shouldTrack) {
-        //  文本匹配
-        if (!self.matchText ||
-            (self.matchText && [self.matchText isEqualToString:[sender AnsElementText]]) ) {
-            [[self class] trackObject:sender withEventBinding:self];
+        if (self.targetPage && ![self.targetPage isEqualToString:[ANSVisualSDK sharedManager].currentPage]) {
+            return;
         }
+        //  文本匹配
+        if (self.matchText && ![self.matchText isEqualToString:[ANSVisualSDK sharedManager].controlText]) {
+            return;
+        }
+        [[self class] trackObject:sender withEventBinding:self];
     }
 }
 
@@ -263,12 +263,33 @@
 }
 
 /** 获取根视图 */
-- (NSObject *)getRootObject {
-    NSObject *root = [UIApplication sharedApplication].keyWindow.rootViewController;
-    if (!root) {
-        root = [UIApplication sharedApplication].delegate.window.rootViewController;
+- (NSArray *)getRootObject {
+    NSMutableArray *rootArray = [NSMutableArray array];
+    UIWindow *window = [ANSUtil currentWindow];
+    if (!window) {
+        return @[];
     }
-    return root;
+    NSObject *rootVC = window.rootViewController;
+    if (!rootVC) {
+        return @[];
+    }
+    [rootArray addObject:rootVC];
+    
+    for (UIView *view in [window subviews]) {
+        if ([view isKindOfClass:NSClassFromString(@"UITransitionView")]) {
+            continue;
+        } else if ([view isKindOfClass:NSClassFromString(@"UILayoutContainerView")]) {
+            continue;
+        } else if (view.alpha < 0.1 || view.hidden == YES) {
+            continue;
+        } else {
+            //  视图直接添加至UIWindow
+            [rootArray addObject:[UIApplication sharedApplication].keyWindow];
+            break;
+        }
+    }
+    
+    return [rootArray copy];
 }
 
 #pragma mark - 对象比较
@@ -277,13 +298,13 @@
 - (BOOL)isEqual:(id)other {
     if (other == self) {
         return YES;
-    } else if (![other isKindOfClass:[ANSUIControlBinding class]]) {
-        return NO;
-    } else {
-        return [super isEqual:other] &&
-        self.controlEvent == ((ANSUIControlBinding *)other).controlEvent &&
-        self.verifyEvent == ((ANSUIControlBinding *)other).verifyEvent;
     }
+    if (![other isKindOfClass:[ANSUIControlBinding class]]) {
+        return NO;
+    }
+    return [super isEqual:other] &&
+    self.controlEvent == ((ANSUIControlBinding *)other).controlEvent &&
+    self.verifyEvent == ((ANSUIControlBinding *)other).verifyEvent;
 }
 
 /** 重写hash方法 */

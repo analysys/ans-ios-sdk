@@ -59,6 +59,9 @@
 /** idfa */
 + (NSString *)getIDFA;
 
+/** 设备标识 */
++ (NSString *)getDeviceID;
+
 /** 屏幕宽度 */
 + (CGFloat)getScreenWidth;
 
@@ -70,6 +73,7 @@
 
 /** 运营商信息 */
 + (NSString *)getCarrierName;
+
 @end
 
 

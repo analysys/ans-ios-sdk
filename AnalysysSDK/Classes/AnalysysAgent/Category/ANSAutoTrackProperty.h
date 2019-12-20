@@ -24,12 +24,16 @@
 @property (nonatomic, copy, readonly) NSString *analysysViewId;
 /** 元素所在页面标识 */
 @property (nonatomic, copy, readonly) NSString *analysysViewControllerName;
+/** 元素所在页面名称 */
+@property (nonatomic, copy, readonly) NSString *analysysViewControllerTitle;
 /** 元素类型 如：uibutton、uiswitch等 */
 @property (nonatomic, copy, readonly) NSString *analysysElementType;
 /** 文本信息 */
 @property (nonatomic, copy, readonly) NSString *analysysElementContent;
 /** 元素路径 */
 @property (nonatomic, copy, readonly) NSString *analysysElementPath;
+/** 去除末尾节点的路径信息 */
+@property (nonatomic, copy, readonly) NSString *analysysIndexElementPath;
 /** 是否可点击控件 */
 @property (nonatomic, assign, readonly) BOOL analysysElementClickable;
 

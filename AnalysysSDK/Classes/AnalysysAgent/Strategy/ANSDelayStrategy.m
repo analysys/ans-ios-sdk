@@ -8,7 +8,7 @@
 
 #import "ANSDelayStrategy.h"
 #import "ANSFileManager.h"
-#import "ANSConsoleLog.h"
+#import "AnalysysLogger.h"
 #import "ANSStrategyManager.h"
 #import "ANSServerStrategy.h"
 
@@ -75,7 +75,7 @@ static BOOL ANSCanSendData = YES;//  控制是否再次发起延迟策略
             //  发送数据上传通知
             ANSCanSendData = YES;
         });
-        AnsWarning(@"*********** Upload failure times: %ld, after %.f seconds to upload again! ***********",_currentFailedCount, delayInterval);
+        ANSBriefWarning(@"*********** Upload failure times: %ld, after %.f seconds to upload again! ***********",_currentFailedCount, delayInterval);
         ANSCanSendData = NO;
         return NO;
     }

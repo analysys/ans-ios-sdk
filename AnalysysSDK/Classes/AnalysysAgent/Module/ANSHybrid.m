@@ -7,13 +7,20 @@
 //
 
 #import "ANSHybrid.h"
-#import "AnalysysSDK.h"
-#import "AnalysysAgent.h"
-#import <UIKit/UIKit.h>
-#import "ANSConsoleLog.h"
-#import "ANSJsonUtil.h"
 
-static NSString *ANSAnalysysHybridId = @" AnalysysAgent/Hybrid";
+#import <UIKit/UIKit.h>
+#import "AnalysysAgent.h"
+#import "AnalysysLogger.h"
+#import "ANSJsonUtil.h"
+#import "ANSFileManager.h"
+#import "ANSLock.h"
+
+#import "AnalysysSDK.h"
+#import "ANSQueue.h"
+#import "ANSDataCheckLog.h"
+#import "ANSDataCheckRouter.h"
+
+static NSString *ANSHybridId = @" AnalysysAgent/Hybrid";
 static NSString *ANSUserAgentId = @"UserAgent";
 
 @interface ANSHybrid()
@@ -70,7 +77,7 @@ static NSString *ANSUserAgentId = @"UserAgent";
                 ((void (*)(id, SEL, NSMutableArray*, id))[hybridInstance methodForSelector:selector])(hybridInstance, selector, desArray, webView);
             }
         } else {
-            AnsWarning(@"Hybrid: Did not match to the js method: %@.",funcName);
+            ANSBriefWarning(@"Hybrid: Did not match to the js method: %@.",funcName);
         }
         return YES;
     }
@@ -81,17 +88,15 @@ static NSString *ANSUserAgentId = @"UserAgent";
 /** 删除自定义UA */
 + (void)resetHybridModel {
     dispatch_block_t block = ^(){
-        [[AnalysysSDK getUserDefaultLock] lock];
-        NSString *ansUserAgent = [[[NSUserDefaults standardUserDefaults] objectForKey:ANSUserAgentId] copy];
-        [[AnalysysSDK getUserDefaultLock] unlock];
+        NSString *ansUserAgent = [ANSFileManager userDefaultValueWithKey:ANSUserAgentId];
         if (ansUserAgent) {
             UIWebView *webView = [[UIWebView alloc] initWithFrame:CGRectZero];
             NSString *userAgent = [webView stringByEvaluatingJavaScriptFromString:@"navigator.userAgent"];
-            userAgent = [userAgent stringByReplacingOccurrencesOfString:ANSAnalysysHybridId withString:@""];
+            userAgent = [userAgent stringByReplacingOccurrencesOfString:ANSHybridId withString:@""];
             NSDictionary *userAgentDict = @{ANSUserAgentId: userAgent};
-            [[AnalysysSDK getUserDefaultLock] lock];
+            ANSUserDefaultsLock();
             [[NSUserDefaults standardUserDefaults] registerDefaults:userAgentDict];
-            [[AnalysysSDK getUserDefaultLock] unlock];
+            ANSUserDefaultsUnlock();
             webView = nil;
         }
     };
@@ -108,18 +113,16 @@ static NSString *ANSUserAgentId = @"UserAgent";
 - (void)addUserAgent:(id)webView {
     @try {
         dispatch_block_t block = ^(){
-            [[AnalysysSDK getUserDefaultLock] lock];
-            NSString *ansUserAgent = [[[NSUserDefaults standardUserDefaults] objectForKey:ANSUserAgentId] copy];
-            [[AnalysysSDK getUserDefaultLock] unlock];
-            if (ansUserAgent == nil || [ansUserAgent rangeOfString:ANSAnalysysHybridId].location == NSNotFound) {
+            NSString *ansUserAgent = [ANSFileManager userDefaultValueWithKey:ANSUserAgentId];
+            if (ansUserAgent == nil || [ansUserAgent rangeOfString:ANSHybridId].location == NSNotFound) {
                 UIWebView *web = [[UIWebView alloc] initWithFrame:CGRectZero];
                 NSString *userAgent = [web stringByEvaluatingJavaScriptFromString:@"navigator.userAgent"];
-                userAgent = [userAgent stringByAppendingString:ANSAnalysysHybridId];
+                userAgent = [userAgent stringByAppendingString:ANSHybridId];
                 NSDictionary *userAgentDict = @{ANSUserAgentId: userAgent};
                 //  回写
-                [[AnalysysSDK getUserDefaultLock] lock];
+                ANSUserDefaultsLock();
                 [[NSUserDefaults standardUserDefaults] registerDefaults:userAgentDict];
-                [[AnalysysSDK getUserDefaultLock] unlock];
+                ANSUserDefaultsUnlock();
                 web = nil;
                 
                 //  WKWebView 需要设置 setCustomUserAgent:
@@ -152,7 +155,7 @@ static NSString *ANSUserAgentId = @"UserAgent";
             return [ANSJsonUtil convertToStringWithObject:converObject];
         }
     } @catch (NSException *exception) {
-        AnsDebug(@"exception:%@",exception.description);
+        ANSDebug(@"exception:%@",exception.description);
     }
 }
 
@@ -184,7 +187,7 @@ static NSString *ANSUserAgentId = @"UserAgent";
     }
     id pageId = param[0];
     if (![pageId isKindOfClass:[NSString class]]) {
-        AnsWarning(@"Hybrid: pageView identify must be string.");
+        ANSBriefWarning(@"Hybrid: pageView identify must be string.");
         return;
     }
     if (param.count == 2) {
@@ -192,7 +195,7 @@ static NSString *ANSUserAgentId = @"UserAgent";
         if ([properties isKindOfClass:[NSDictionary class]]) {
             [AnalysysAgent pageView:pageId properties:properties];
         } else {
-            AnsWarning(@"Hybrid: pageView parameter must be {key:value}.");
+            ANSBriefWarning(@"Hybrid: pageView parameter must be {key:value}.");
         }
     } else {
         [AnalysysAgent pageView:pageId];
@@ -206,7 +209,7 @@ static NSString *ANSUserAgentId = @"UserAgent";
     }
     NSString *eventId = param[0];
     if (![eventId isKindOfClass:[NSString class]]) {
-        AnsWarning(@"Hybrid: track identify must be string.");
+        ANSBriefWarning(@"Hybrid: track identify must be string.");
         return;
     }
     if (param.count == 2) {
@@ -214,7 +217,7 @@ static NSString *ANSUserAgentId = @"UserAgent";
         if ([properties isKindOfClass:[NSDictionary class]]) {
             [AnalysysAgent track:eventId properties:properties];
         } else {
-            AnsWarning(@"Hybrid: track parameter must be {key:value}.");
+            ANSBriefWarning(@"Hybrid: track parameter must be {key:value}.");
         }
     } else {
         [AnalysysAgent track:eventId];
@@ -226,11 +229,15 @@ static NSString *ANSUserAgentId = @"UserAgent";
 /** 单个通用属性 */
 - (void)registerSuperProperty:(NSArray *)param {
     if (param.count != 2) {
-        AnsWarning(@"Hybrid: registerSuperProperty parameter must be {key:value}.");
+        ANSBriefWarning(@"Hybrid: registerSuperProperty parameter must be {key:value}.");
     }
     NSString *superPropertyName = param[0];
     id superPropertyValue = param[1];
-    [AnalysysAgent registerSuperProperty:superPropertyName value:superPropertyValue];
+    if (superPropertyName && superPropertyValue) {
+        NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+        [dic setValue:superPropertyValue forKey:superPropertyName];
+        [self registerHybirdSuperProperties:dic];
+    }
 }
 
 /** 多个通用属性 */
@@ -240,9 +247,9 @@ static NSString *ANSUserAgentId = @"UserAgent";
     }
     id properties = param[0];
     if ([properties isKindOfClass:[NSDictionary class]]) {
-        [AnalysysAgent registerSuperProperties:properties];
+        [self registerHybirdSuperProperties:properties];
     } else {
-        AnsWarning(@"Hybrid: registerSuperProperty parameter must be {key:value}.");
+        ANSBriefWarning(@"Hybrid: registerSuperProperty parameter must be {key:value}.");
     }
 }
 
@@ -253,15 +260,15 @@ static NSString *ANSUserAgentId = @"UserAgent";
     }
     id superPropertyName = param[0];
     if ([superPropertyName isKindOfClass:[NSString class]]) {
-        [AnalysysAgent unRegisterSuperProperty:superPropertyName];
+        [self unRegisterHybirdSuperProperty:superPropertyName];
     } else {
-        AnsWarning(@"Hybrid: unRegisterSuperProperty parameter must be string.");
+        ANSBriefWarning(@"Hybrid: unRegisterSuperProperty parameter must be string.");
     }
 }
 
 /** 清除所有通用属性 */
 - (void)clearSuperProperties:(NSArray *)param {
-    [AnalysysAgent clearSuperProperties];
+    [self clearHybirdSuperProperties];
 }
 
 /** 获取某个通用属性，并回调JS */
@@ -271,7 +278,7 @@ static NSString *ANSUserAgentId = @"UserAgent";
     }
     id superPropertyName = param[0];
     if ([superPropertyName isKindOfClass:[NSString class]]) {
-        id superPropertyValue = [AnalysysAgent getSuperProperty:superPropertyName];
+        id superPropertyValue = [[AnalysysSDK sharedManager] getSuperProperty:superPropertyName];
         NSString *methodStr;
         if (superPropertyValue) {
             NSString *jsonString = [self jsonStringWithobject:superPropertyValue];
@@ -281,13 +288,13 @@ static NSString *ANSUserAgentId = @"UserAgent";
         }
         [self jsCallBackMethod:methodStr withWebView:webView];
     } else {
-        AnsWarning(@"Hybrid: getSuperProperty parameter must be string.");
+        ANSBriefWarning(@"Hybrid: getSuperProperty parameter must be string.");
     }
 }
 
 /** 获取所有通用属性，并回调JS */
 - (void)getSuperProperties:(NSArray *)param webView:(id)webView {
-    NSDictionary *superProperties = [AnalysysAgent getSuperProperties];
+    NSDictionary *superProperties = [[AnalysysSDK sharedManager] getSuperPropertiesValue];
     NSString *jsMethod;
     if (superProperties) {
         NSString *jsonStr = [self jsonStringWithobject:superProperties];
@@ -309,7 +316,7 @@ static NSString *ANSUserAgentId = @"UserAgent";
     if ([distinctId isKindOfClass:[NSString class]]) {
         [AnalysysAgent identify:distinctId];
     } else {
-        AnsWarning(@"Hybrid: identify parameter must be string.");
+        ANSBriefWarning(@"Hybrid: identify parameter must be string.");
     }
 }
 
@@ -325,7 +332,7 @@ static NSString *ANSUserAgentId = @"UserAgent";
             }
         }
     }
-    AnsWarning(@"Hybrid: alias method must have 2 parameter.");
+    ANSBriefWarning(@"Hybrid: alias method must have 2 parameter.");
 }
 
 - (void)getDistinctId:(NSArray *)params webView:(UIWebView *)webView {
@@ -358,7 +365,7 @@ static NSString *ANSUserAgentId = @"UserAgent";
             return;
         }
     }
-    AnsWarning(@"Hybrid: profileSet parameter must be {key:value}.");
+    ANSBriefWarning(@"Hybrid: profileSet parameter must be {key:value}.");
 }
 
 /** 首次设置用户的Profile的内容 */
@@ -378,7 +385,7 @@ static NSString *ANSUserAgentId = @"UserAgent";
             return;
         }
     }
-    AnsWarning(@"Hybrid: profileSetOnce parameter must be {key:value}.");
+    ANSBriefWarning(@"Hybrid: profileSetOnce parameter must be {key:value}.");
 }
 
 /** 给数值类型的Profile增加数值 */
@@ -400,7 +407,7 @@ static NSString *ANSUserAgentId = @"UserAgent";
             }
         }
     }
-    AnsWarning(@"Hybrid: profileIncrement parameter key must be string, value number.");
+    ANSBriefWarning(@"Hybrid: profileIncrement parameter key must be string, value number.");
 }
 
 /** 向prifile中追加属性 */
@@ -424,7 +431,7 @@ static NSString *ANSUserAgentId = @"UserAgent";
             return;
         }
     }
-    AnsWarning(@"Hybrid: check profileAppend.");
+    ANSBriefWarning(@"Hybrid: check profileAppend.");
 }
 
 /** 删除某个Profile key对应的全部内容 */
@@ -436,7 +443,7 @@ static NSString *ANSUserAgentId = @"UserAgent";
     if ([propertyName isKindOfClass:[NSString class]]) {
         [AnalysysAgent profileUnset:propertyName];
     } else {
-        AnsWarning(@"Hybrid: profileUnset paramter must be string.");
+        ANSBriefWarning(@"Hybrid: profileUnset paramter must be string.");
     }
 }
 
@@ -449,7 +456,72 @@ static NSString *ANSUserAgentId = @"UserAgent";
     [AnalysysAgent reset];
 }
 
+#pragma mark - hybird通用属性
 
+/** 注册hybird通用属性 */
+- (void)registerHybirdSuperProperties:(NSDictionary *)superProperties {
+    {
+        __block NSDictionary *blockSuperProperties = [superProperties mutableCopy];
+        dispatch_block_t block = ^(){
+            ANSDataCheckLog *checkResult = [ANSDataCheckRouter checkSuperProperties:&blockSuperProperties];
+            if (checkResult && checkResult.resultType <= AnalysysResultSuccess) {
+                ANSBriefWarning(@"%@",[checkResult messageDisplay]);
+                if (blockSuperProperties == nil) {
+                    return;
+                }
+            }
+            ANSPropertyLock();
+            NSDictionary *tmp = [ANSFileManager unarchiveHybridSuperProperties];
+            NSMutableDictionary *hybirdSuperProperty = [NSMutableDictionary dictionaryWithDictionary:tmp];
+            [hybirdSuperProperty addEntriesFromDictionary:blockSuperProperties];
+            BOOL result = [ANSFileManager archiveHybridSuperProperties:hybirdSuperProperty];
+            ANSPropertyUnlock();
+            if (result) {
+                ANSDataCheckLog *checkResult = [[ANSDataCheckLog alloc] init];
+                checkResult.resultType = AnalysysResultSetSuccess;
+                ANSLog(@"%@",[checkResult messageDisplay]);
+            } else {
+                ANSDataCheckLog *checkResult = [[ANSDataCheckLog alloc] init];
+                checkResult.resultType = AnalysysResultSetFailed;
+                ANSBriefWarning(@"%@",[checkResult messageDisplay]);
+            }
+        };
+        [ANSQueue dispatchAsyncLogSerialQueueWithBlock:block];
+    }
+}
+
+/** 删除hybird单个通用属性 */
+- (void)unRegisterHybirdSuperProperty:(NSString *)superPropertyName {
+    dispatch_block_t block = ^(){
+        ANSPropertyLock();
+        NSDictionary *tmp = [ANSFileManager unarchiveHybridSuperProperties];
+        NSMutableDictionary *hybirdSuperProperty = [NSMutableDictionary dictionaryWithDictionary:tmp];
+        [hybirdSuperProperty removeObjectForKey:superPropertyName];
+        BOOL result = [ANSFileManager archiveHybridSuperProperties:hybirdSuperProperty];
+        ANSPropertyUnlock();
+        if (result) {
+            ANSDataCheckLog *checkResult = [[ANSDataCheckLog alloc] init];
+            checkResult.value = superPropertyName;
+            checkResult.resultType = AnalysysResultSetSuccess;
+            ANSLog(@"%@",[checkResult messageDisplay]);
+        }
+    };
+    [ANSQueue dispatchAsyncLogSerialQueueWithBlock:block];
+}
+
+/** 清除hybird所有通用属性 */
+- (void)clearHybirdSuperProperties {
+    [ANSQueue dispatchAsyncLogSerialQueueWithBlock:^{
+        ANSPropertyLock();
+        BOOL result = [ANSFileManager archiveHybridSuperProperties:[NSDictionary dictionary]];
+        ANSPropertyUnlock();
+        if (result) {
+            ANSDataCheckLog *checkResult = [[ANSDataCheckLog alloc] init];
+            checkResult.resultType = AnalysysResultSetSuccess;
+            ANSLog(@"%@",[checkResult messageDisplay]);
+        }
+    }];
+}
 
 
 @end

@@ -15,6 +15,30 @@
             "$is_login"
         ]
     },
+    "$app_crash":{
+        "xcontext":[
+            "$network",
+            "$os_version",
+            "$is_first_day",
+            "$model",
+            "$os",
+            "$screen_width",
+            "$channel",
+            "$carrier_name",
+            "$brand",
+            "$screen_height",
+            "$language",
+            "$app_version",
+            "$is_time_calibrated",
+            "$time_zone",
+            "$manufacturer",
+            "$session_id",
+            "$crash_name",
+            "$crash_reason",
+            "$crash_data",
+            "$crash_type"
+        ]
+    },
     "$startup":{
         "xcontext":[
             "$is_first_time",
@@ -34,7 +58,8 @@
             "$language",
             "$is_first_day",
             "$session_id",
-            "$is_time_calibrated"
+            "$is_time_calibrated",
+            "$start_source"
         ]
     },
     "$end":{

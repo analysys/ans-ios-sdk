@@ -10,7 +10,7 @@
 
 @implementation ANSConst
 
-NSString *const ANSSDKVersion = @"4.3.5";
+NSString *const ANSSDKVersion = @"4.4.0";
 
 #pragma mark - 基础字段
 
@@ -26,6 +26,7 @@ NSString *const ANSEventAppStart = @"$startup";
 NSString *const ANSEventAppEnd = @"$end";
 NSString *const ANSEventPageView = @"$pageview";
 NSString *const ANSEventTrack = @"$track";
+NSString *const ANSEventCrash = @"$app_crash";
 
 NSString *const ANSEventAlias = @"$alias";
 
@@ -56,15 +57,14 @@ NSString *const ANSPresetManufacturer = @"$manufacturer";
 NSString *const ANSPresetBrand = @"$brand";
 NSString *const ANSPresetModel = @"$model";
 NSString *const ANSPresetOS = @"$os";
-NSString *const ANSSessionId = @"$session_id";
-NSString *const ANSTimeCalibrated = @"$is_time_calibrated";
-NSString *const ANSIsFirstTime = @"$is_first_time";
-NSString *const ANSIsFirstDay = @"$is_first_day";
+NSString *const ANSPresetSessionId = @"$session_id";
+NSString *const ANSPresetTimeCalibrated = @"$is_time_calibrated";
+NSString *const ANSPresetIsFirstTime = @"$is_first_time";
+NSString *const ANSPresetIsFirstDay = @"$is_first_day";
 
 // 页面事件
 NSString *const ANSPageUrl = @"$url";
 NSString *const ANSPageTitle = @"$title";
-NSString *const ANSPageName = @"$pagename";
 NSString *const ANSPageReferrerUrl = @"$referrer";
 
 // profile_set_once事件
@@ -89,6 +89,7 @@ NSString *const ANSUtmCpd = @"$cpd";
 
 #pragma mark - other
 
+NSString *const ANSAppKey = @"AnalysysAppKey";
 NSString *const ANSAnonymousId = @"$distinct_id";
 NSString *const ANSUUID = @"eg_uuid";
 NSString *const ANSOriginalId = @"$original_id";

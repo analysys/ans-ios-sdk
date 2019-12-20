@@ -12,8 +12,7 @@
 
 @implementation NSString (ANSMD5)
 
-/** MD5 32位 */
-- (NSString *)AnsMD5ToUpper32Bit {
+- (NSString *)ansMD532Bit {
     const char *input = [self UTF8String];
     unsigned char result[CC_MD5_DIGEST_LENGTH];
     CC_MD5(input, (CC_LONG)strlen(input), result);
@@ -26,8 +25,8 @@
     return digest;
 }
 
-- (NSString *)AnsMD5ToUpper16Bit {
-    NSString *md5Str = [self AnsMD5ToUpper32Bit];
+- (NSString *)ansMD516Bit {
+    NSString *md5Str = [self ansMD532Bit];
     NSString *string = @"";
     if (md5Str.length > 24) {
         string = [md5Str substringWithRange:NSMakeRange(8, 16)];

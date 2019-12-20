@@ -7,8 +7,9 @@
 //
 //  Copyright (c) 2014 Mixpanel. All rights reserved.
 
-#import "ANSConsoleLog.h"
+
 #import "ANSValueTransformers.h"
+#import "AnalysysLogger.h"
 
 @implementation ANSNSAttributedStringToNSDictionaryValueTransformer
 
@@ -48,7 +49,7 @@
                      @"data": [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]
                      };
         } else {
-            AnsDebug(@"Failed to convert NSAttributedString to HTML: %@", error);
+            ANSDebug(@"Failed to convert NSAttributedString to HTML: %@", error);
         }
     }
     
@@ -69,7 +70,7 @@
                                                                          documentAttributes:NULL
                                                                                       error:&error];
             if (attributedString == nil) {
-                AnsDebug(@"Failed to convert HTML to NSAttributed string: %@", error);
+                ANSDebug(@"Failed to convert HTML to NSAttributed string: %@", error);
             }
             
             return attributedString;

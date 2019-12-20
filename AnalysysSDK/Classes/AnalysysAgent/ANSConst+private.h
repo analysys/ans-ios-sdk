@@ -42,6 +42,8 @@ extern NSString *const ANSEventAppEnd;
 extern NSString *const ANSEventPageView;
 /** track事件 */
 extern NSString *const ANSEventTrack;
+/** crash事件 */
+extern NSString *const ANSEventCrash;
 
 /** 身份标识 */
 extern NSString *const ANSEventAlias;
@@ -98,13 +100,13 @@ extern NSString *const ANSPresetModel;
 /** 操作系统 */
 extern NSString *const ANSPresetOS;
 /** session标识 */
-extern NSString *const ANSSessionId;
+extern NSString *const ANSPresetSessionId;
 /** 时间校准标识 */
-extern NSString *const ANSTimeCalibrated;
+extern NSString *const ANSPresetTimeCalibrated;
 /** 是否首次访问 */
-extern NSString *const ANSIsFirstTime;
+extern NSString *const ANSPresetIsFirstTime;
 /** 是否首天 */
-extern NSString *const ANSIsFirstDay;
+extern NSString *const ANSPresetIsFirstDay;
 
 
 // 页面事件
@@ -113,8 +115,6 @@ extern NSString *const ANSIsFirstDay;
 extern NSString *const ANSPageUrl;
 /** 页面标题 */
 extern NSString *const ANSPageTitle;
-/** 页面名称 */
-extern NSString *const ANSPageName;
 /** 页面来源 */
 extern NSString *const ANSPageReferrerUrl;
 
@@ -146,6 +146,8 @@ extern NSString *const ANSUtmCpd;
 
 #pragma mark - other
 
+/** appkey */
+extern NSString *const ANSAppKey;
 /** 匿名标识 */
 extern NSString *const ANSAnonymousId;
 /** 默认标识 */

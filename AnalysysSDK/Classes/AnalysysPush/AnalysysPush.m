@@ -8,7 +8,8 @@
 
 #import "AnalysysPush.h"
 #import "ANSJsonUtil.h"
-#import "ANSConsoleLog.h"
+#import "AnalysysLogger.h"
+#import "ANSUtil.h"
 #import "ANSControllerUtils.h"
 #import "ANSConst+private.h"
 
@@ -50,7 +51,7 @@ static NSString * const ANSCampaignKey = @"EGPUSH_CINFO";//  易观推送标识
             cpdStr = [[cpdStr stringByReplacingOccurrencesOfString:@"\n" withString:@""] stringByReplacingOccurrencesOfString:@" " withString:@""];
         }
     } @catch (NSException *exception) {
-        AnsDebug(@"xcontextInfo: CPD 非json格式");
+        ANSDebug(@"xcontextInfo: CPD 非json格式");
         return nil;
     }
     
@@ -153,7 +154,7 @@ static NSString * const ANSCampaignKey = @"EGPUSH_CINFO";//  易观推送标识
             [[UIApplication sharedApplication] openURL:openURL];
         }
     } else {
-        AnsWarning(@"%@",[NSString stringWithFormat:@"您所填写的活动链接不合法->%@",urlStr]);
+        ANSBriefWarning(@"%@",[NSString stringWithFormat:@"您所填写的活动链接不合法->%@",urlStr]);
     }
 }
 
@@ -165,7 +166,7 @@ static NSString * const ANSCampaignKey = @"EGPUSH_CINFO";//  易观推送标识
     
     Class nextPageClass = objc_getClass(className);
     if (!nextPageClass) {
-        AnsWarning(@"%@",[NSString stringWithFormat:@"您所填写的活动页面不存在->%@",actionStr]);
+        ANSBriefWarning(@"%@",[NSString stringWithFormat:@"您所填写的活动页面不存在->%@",actionStr]);
         return;
     }
     UIViewController *nextVC;

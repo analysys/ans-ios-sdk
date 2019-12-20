@@ -37,6 +37,9 @@
 		6003F5BC195388D20070C39A /* Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6003F5BB195388D20070C39A /* Tests.m */; };
 		71719F9F1E33DC2100824A3D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 71719F9D1E33DC2100824A3D /* LaunchScreen.storyboard */; };
 		873B8AEB1B1F5CCA007FD442 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 873B8AEA1B1F5CCA007FD442 /* Main.storyboard */; };
+		E8AAE86A23AC6E540034A5E7 /* ANSCaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E8AAE86923AC6E540034A5E7 /* ANSCaseViewController.m */; };
+		E8AAE86E23AC6E8A0034A5E7 /* ANSTableHeaderFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = E8AAE86C23AC6E890034A5E7 /* ANSTableHeaderFooterView.m */; };
+		E8AAE86F23AC6E8A0034A5E7 /* ANSTableHeaderFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E8AAE86D23AC6E8A0034A5E7 /* ANSTableHeaderFooterView.xib */; };
 		E8DC8412236054FC00DC0FC6 /* UnitTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = E8DC83F5236054FC00DC0FC6 /* UnitTestCase.m */; };
 		E8DC8413236054FC00DC0FC6 /* NextViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E8DC83F7236054FC00DC0FC6 /* NextViewController.m */; };
 		E8DC8414236054FC00DC0FC6 /* ANSSearchTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E8DC83F8236054FC00DC0FC6 /* ANSSearchTableViewController.m */; };
@@ -48,7 +51,6 @@
 		E8DC841A236054FC00DC0FC6 /* ANSPresentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E8DC8401236054FC00DC0FC6 /* ANSPresentViewController.m */; };
 		E8DC841B236054FC00DC0FC6 /* ANSMutiThreadTestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E8DC8405236054FC00DC0FC6 /* ANSMutiThreadTestViewController.m */; };
 		E8DC841C236054FC00DC0FC6 /* ANSDemoCollectionHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E8DC8407236054FC00DC0FC6 /* ANSDemoCollectionHeaderView.xib */; };
-		E8DC841D236054FC00DC0FC6 /* ANSDemoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E8DC8409236054FC00DC0FC6 /* ANSDemoViewController.m */; };
 		E8DC841E236054FC00DC0FC6 /* ANSDemoCollectionHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = E8DC840C236054FC00DC0FC6 /* ANSDemoCollectionHeaderView.m */; };
 		E8DC841F236054FC00DC0FC6 /* PageDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E8DC840D236054FC00DC0FC6 /* PageDetailViewController.m */; };
 		E8DC8420236054FC00DC0FC6 /* ANSDemoCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E8DC840F236054FC00DC0FC6 /* ANSDemoCollectionViewCell.m */; };
@@ -117,6 +119,11 @@
 		873B8AEA1B1F5CCA007FD442 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		9B3A7E7A96F966ABD2947612 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		CEE25F8F7FEB44F40A453358 /* Pods-AnalysysSDK_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AnalysysSDK_Example.release.xcconfig"; path = "Target Support Files/Pods-AnalysysSDK_Example/Pods-AnalysysSDK_Example.release.xcconfig"; sourceTree = "<group>"; };
+		E8AAE86823AC6E540034A5E7 /* ANSCaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ANSCaseViewController.h; sourceTree = "<group>"; };
+		E8AAE86923AC6E540034A5E7 /* ANSCaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ANSCaseViewController.m; sourceTree = "<group>"; };
+		E8AAE86B23AC6E890034A5E7 /* ANSTableHeaderFooterView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ANSTableHeaderFooterView.h; sourceTree = "<group>"; };
+		E8AAE86C23AC6E890034A5E7 /* ANSTableHeaderFooterView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ANSTableHeaderFooterView.m; sourceTree = "<group>"; };
+		E8AAE86D23AC6E8A0034A5E7 /* ANSTableHeaderFooterView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ANSTableHeaderFooterView.xib; sourceTree = "<group>"; };
 		E8DC83F5236054FC00DC0FC6 /* UnitTestCase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UnitTestCase.m; sourceTree = "<group>"; };
 		E8DC83F6236054FC00DC0FC6 /* ANSMutiThreadTestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ANSMutiThreadTestViewController.h; sourceTree = "<group>"; };
 		E8DC83F7236054FC00DC0FC6 /* NextViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NextViewController.m; sourceTree = "<group>"; };
@@ -124,7 +131,6 @@
 		E8DC83F9236054FC00DC0FC6 /* ANSDemoCollectionHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ANSDemoCollectionHeaderView.h; sourceTree = "<group>"; };
 		E8DC83FA236054FC00DC0FC6 /* ANSHomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ANSHomeViewController.m; sourceTree = "<group>"; };
 		E8DC83FB236054FC00DC0FC6 /* ANSDemoController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ANSDemoController.m; sourceTree = "<group>"; };
-		E8DC83FC236054FC00DC0FC6 /* ANSDemoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ANSDemoViewController.h; sourceTree = "<group>"; };
 		E8DC83FD236054FC00DC0FC6 /* ANSDemoTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ANSDemoTableViewCell.m; sourceTree = "<group>"; };
 		E8DC83FE236054FC00DC0FC6 /* PageDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PageDetailViewController.h; sourceTree = "<group>"; };
 		E8DC83FF236054FC00DC0FC6 /* ANSDemoCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ANSDemoCollectionViewCell.xib; sourceTree = "<group>"; };
@@ -137,7 +143,6 @@
 		E8DC8406236054FC00DC0FC6 /* UnitTestCase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UnitTestCase.h; sourceTree = "<group>"; };
 		E8DC8407236054FC00DC0FC6 /* ANSDemoCollectionHeaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ANSDemoCollectionHeaderView.xib; sourceTree = "<group>"; };
 		E8DC8408236054FC00DC0FC6 /* ANSDemoTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ANSDemoTableViewCell.h; sourceTree = "<group>"; };
-		E8DC8409236054FC00DC0FC6 /* ANSDemoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ANSDemoViewController.m; sourceTree = "<group>"; };
 		E8DC840A236054FC00DC0FC6 /* ANSDemoController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ANSDemoController.h; sourceTree = "<group>"; };
 		E8DC840B236054FC00DC0FC6 /* ANSHomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ANSHomeViewController.h; sourceTree = "<group>"; };
 		E8DC840C236054FC00DC0FC6 /* ANSDemoCollectionHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ANSDemoCollectionHeaderView.m; sourceTree = "<group>"; };
@@ -333,19 +338,22 @@
 				E8DC83FF236054FC00DC0FC6 /* ANSDemoCollectionViewCell.xib */,
 				E8DC840A236054FC00DC0FC6 /* ANSDemoController.h */,
 				E8DC83FB236054FC00DC0FC6 /* ANSDemoController.m */,
-				E8DC8408236054FC00DC0FC6 /* ANSDemoTableViewCell.h */,
-				E8DC83FD236054FC00DC0FC6 /* ANSDemoTableViewCell.m */,
-				E8DC8400236054FC00DC0FC6 /* ANSDemoTableViewCell.xib */,
-				E8DC83FC236054FC00DC0FC6 /* ANSDemoViewController.h */,
-				E8DC8409236054FC00DC0FC6 /* ANSDemoViewController.m */,
 				E8DC840B236054FC00DC0FC6 /* ANSHomeViewController.h */,
 				E8DC83FA236054FC00DC0FC6 /* ANSHomeViewController.m */,
 				E8DC83F6236054FC00DC0FC6 /* ANSMutiThreadTestViewController.h */,
 				E8DC8405236054FC00DC0FC6 /* ANSMutiThreadTestViewController.m */,
 				E8DC840E236054FC00DC0FC6 /* ANSPresentViewController.h */,
 				E8DC8401236054FC00DC0FC6 /* ANSPresentViewController.m */,
+				E8AAE86823AC6E540034A5E7 /* ANSCaseViewController.h */,
+				E8AAE86923AC6E540034A5E7 /* ANSCaseViewController.m */,
 				E8DC8404236054FC00DC0FC6 /* ANSSearchTableViewController.h */,
 				E8DC83F8236054FC00DC0FC6 /* ANSSearchTableViewController.m */,
+				E8AAE86B23AC6E890034A5E7 /* ANSTableHeaderFooterView.h */,
+				E8AAE86C23AC6E890034A5E7 /* ANSTableHeaderFooterView.m */,
+				E8AAE86D23AC6E8A0034A5E7 /* ANSTableHeaderFooterView.xib */,
+				E8DC8408236054FC00DC0FC6 /* ANSDemoTableViewCell.h */,
+				E8DC83FD236054FC00DC0FC6 /* ANSDemoTableViewCell.m */,
+				E8DC8400236054FC00DC0FC6 /* ANSDemoTableViewCell.xib */,
 				E8DC8403236054FC00DC0FC6 /* NextViewController.h */,
 				E8DC83F7236054FC00DC0FC6 /* NextViewController.m */,
 				E8DC83FE236054FC00DC0FC6 /* PageDetailViewController.h */,
@@ -448,6 +456,7 @@
 				48DA23AD233B6C2700FCD7D9 /* ANSWKWebViewController.xib in Resources */,
 				6003F5A9195388D20070C39A /* Images.xcassets in Resources */,
 				6003F598195388D20070C39A /* InfoPlist.strings in Resources */,
+				E8AAE86F23AC6E8A0034A5E7 /* ANSTableHeaderFooterView.xib in Resources */,
 				E8DC8419236054FC00DC0FC6 /* ANSDemoTableViewCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -512,6 +521,7 @@
 			files = (
 				48DA23C9233B6C3000FCD7D9 /* ANSSlider.m in Sources */,
 				48DA23C5233B6C3000FCD7D9 /* ANSTouchId.m in Sources */,
+				E8AAE86E23AC6E8A0034A5E7 /* ANSTableHeaderFooterView.m in Sources */,
 				E8DC8421236054FC00DC0FC6 /* AppDelegate.m in Sources */,
 				48DA23C6233B6C3000FCD7D9 /* UIColor+Transform.m in Sources */,
 				E8DC8416236054FC00DC0FC6 /* ANSDemoController.m in Sources */,
@@ -520,10 +530,10 @@
 				E8DC8420236054FC00DC0FC6 /* ANSDemoCollectionViewCell.m in Sources */,
 				48DA23A3233B6C0300FCD7D9 /* ANSTabBarController.m in Sources */,
 				E8DC8417236054FC00DC0FC6 /* ANSDemoTableViewCell.m in Sources */,
-				E8DC841D236054FC00DC0FC6 /* ANSDemoViewController.m in Sources */,
 				48DA23C7233B6C3000FCD7D9 /* UIView+KeyboardAnimation.m in Sources */,
 				48DA239A233B6C0300FCD7D9 /* ANSNavigationViewController.m in Sources */,
 				48DA23AF233B6C2700FCD7D9 /* ANSWebViewController.m in Sources */,
+				E8AAE86A23AC6E540034A5E7 /* ANSCaseViewController.m in Sources */,
 				48DA23CA233B6C3000FCD7D9 /* ANSButton.m in Sources */,
 				E8DC841F236054FC00DC0FC6 /* PageDetailViewController.m in Sources */,
 				6003F59A195388D20070C39A /* main.m in Sources */,

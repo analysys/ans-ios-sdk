@@ -8,7 +8,8 @@
 
 #import "ANSDataCheck.h"
 
-#import "ANSConsoleLog.h"
+#import "ANSDataCheckLog.h"
+#import "AnalysysLogger.h"
 #import "ANSDataConfig.h"
 #import "ANSUtil.h"
 
@@ -31,10 +32,10 @@ static NSPredicate *charPredicate = nil;
 #pragma mark - check rules
 
 /** appkey校验 */
-+ (ANSConsoleLog *)checkAppKey:(NSString *)appKey {
-    ANSConsoleLog *checkResult = nil;
++ (ANSDataCheckLog *)checkAppKey:(NSString *)appKey {
+    ANSDataCheckLog *checkResult = nil;
     if (appKey.length == 0) {
-        checkResult = [[ANSConsoleLog alloc] init];
+        checkResult = [[ANSDataCheckLog alloc] init];
         checkResult.resultType = AnalysysResultNotNil;
         checkResult.keyWords = @"appkey";
     }
@@ -42,10 +43,10 @@ static NSPredicate *charPredicate = nil;
 }
 
 /** xwho校验 */
-+ (ANSConsoleLog *)checkXwho:(NSString *)xwho {
-    ANSConsoleLog *checkResult = nil;
++ (ANSDataCheckLog *)checkXwho:(NSString *)xwho {
+    ANSDataCheckLog *checkResult = nil;
     if (xwho.length == 0) {
-        checkResult = [[ANSConsoleLog alloc] init];
+        checkResult = [[ANSDataCheckLog alloc] init];
         checkResult.resultType = AnalysysResultNotNil;
         checkResult.keyWords = @"xwho";
     }
@@ -53,11 +54,11 @@ static NSPredicate *charPredicate = nil;
 }
 
 /** 保留字段校验 */
-+ (ANSConsoleLog *)checkReservedKey:(NSString *)word {
-    ANSConsoleLog *checkResult = nil;
++ (ANSDataCheckLog *)checkReservedKey:(NSString *)word {
+    ANSDataCheckLog *checkResult = nil;
     NSArray *reservedKeywords = [ANSDataConfig sharedManager].dataRules[ANSRulesReservedKeyword];
     if ([reservedKeywords containsObject:word]) {
-        checkResult = [[ANSConsoleLog alloc] init];
+        checkResult = [[ANSDataCheckLog alloc] init];
         checkResult.resultType = AnalysysResultReservedKey;
         checkResult.value = word;
     }
@@ -66,10 +67,10 @@ static NSPredicate *charPredicate = nil;
 
 
 /** xwho字符串长度校验 */
-+ (ANSConsoleLog *)checkLengthOfXwho:(NSString *)xwho {
-    ANSConsoleLog *checkResult = nil;
++ (ANSDataCheckLog *)checkLengthOfXwho:(NSString *)xwho {
+    ANSDataCheckLog *checkResult = nil;
     if (xwho.length == 0 || xwho.length > 99) {
-        checkResult = [[ANSConsoleLog alloc] init];
+        checkResult = [[ANSDataCheckLog alloc] init];
         checkResult.resultType = AnalysysResultOutOfString;
         checkResult.keyWords = @"1-99";
         checkResult.value = xwho;
@@ -78,10 +79,10 @@ static NSPredicate *charPredicate = nil;
 }
 
 /** property.key是否为字符串类型 */
-+ (ANSConsoleLog *)checkTypeOfPropertyKey:(id)key {
-    ANSConsoleLog *checkResult = nil;
++ (ANSDataCheckLog *)checkTypeOfPropertyKey:(id)key {
+    ANSDataCheckLog *checkResult = nil;
     if (![key isKindOfClass:NSString.class]) {
-        checkResult = [[ANSConsoleLog alloc] init];
+        checkResult = [[ANSDataCheckLog alloc] init];
         checkResult.resultType = AnalysysResultTypeError;
         checkResult.keyWords = @"NSString";
         checkResult.value = key;
@@ -90,10 +91,10 @@ static NSPredicate *charPredicate = nil;
 }
 
 /** property.key长度校验 */
-+ (ANSConsoleLog *)checkLengthOfPropertyKey:(NSString *)key {
-    ANSConsoleLog *checkResult = nil;
++ (ANSDataCheckLog *)checkLengthOfPropertyKey:(NSString *)key {
+    ANSDataCheckLog *checkResult = nil;
     if (key.length == 0 || key.length > 99) {
-        checkResult = [[ANSConsoleLog alloc] init];
+        checkResult = [[ANSDataCheckLog alloc] init];
         checkResult.resultType = AnalysysResultOutOfString;
         checkResult.keyWords = @"1-99";
         checkResult.value = key;
@@ -102,10 +103,10 @@ static NSPredicate *charPredicate = nil;
 }
 
 /** xwho 字符串类型检查 */
-+ (ANSConsoleLog *)checkCharsOfXwho:(NSString *)xwho {
-    ANSConsoleLog *checkResult = nil;
++ (ANSDataCheckLog *)checkCharsOfXwho:(NSString *)xwho {
+    ANSDataCheckLog *checkResult = nil;
     if (![[self charPredicate] evaluateWithObject:xwho]) {
-        checkResult = [[ANSConsoleLog alloc] init];
+        checkResult = [[ANSDataCheckLog alloc] init];
         checkResult.resultType = AnalysysResultIllegalOfString;
         checkResult.value = xwho;
     }
@@ -113,10 +114,10 @@ static NSPredicate *charPredicate = nil;
 }
 
 /** 匿名id合法性检查 */
-+ (ANSConsoleLog *)checkLengthOfIdentify:(NSString *)anonymousId {
-    ANSConsoleLog *checkResult = nil;
++ (ANSDataCheckLog *)checkLengthOfIdentify:(NSString *)anonymousId {
+    ANSDataCheckLog *checkResult = nil;
     if (anonymousId.length == 0 || anonymousId.length > 255) {
-        checkResult = [[ANSConsoleLog alloc] init];
+        checkResult = [[ANSDataCheckLog alloc] init];
         checkResult.resultType = AnalysysResultOutOfString;
         checkResult.keyWords = @"1-255";
         checkResult.value = anonymousId;
@@ -125,10 +126,10 @@ static NSPredicate *charPredicate = nil;
 }
 
 /** aliasId是否合法 */
-+ (ANSConsoleLog*)checkLengthOfAliasId:(NSString *)aliasId {
-    ANSConsoleLog *checkResult = nil;
++ (ANSDataCheckLog*)checkLengthOfAliasId:(NSString *)aliasId {
+    ANSDataCheckLog *checkResult = nil;
     if (aliasId.length == 0 || aliasId.length > 255) {
-        checkResult = [[ANSConsoleLog alloc] init];
+        checkResult = [[ANSDataCheckLog alloc] init];
         checkResult.resultType = AnalysysResultOutOfString;
         checkResult.keyWords = @"1-255";
         checkResult.value = aliasId;
@@ -137,13 +138,13 @@ static NSPredicate *charPredicate = nil;
 }
 
 /** originalId检查 */
-+ (ANSConsoleLog *)checkAliasOriginalId:(NSString *)originalId {
++ (ANSDataCheckLog *)checkAliasOriginalId:(NSString *)originalId {
     if (originalId.length == 0 || originalId == nil) {
         return nil;
     }
-    ANSConsoleLog *checkResult = nil;
+    ANSDataCheckLog *checkResult = nil;
     if (originalId.length > 255) {
-        checkResult = [[ANSConsoleLog alloc] init];
+        checkResult = [[ANSDataCheckLog alloc] init];
         checkResult.resultType = AnalysysResultOutOfString;
         checkResult.keyWords = @"0-255";
         checkResult.value = originalId;
@@ -152,8 +153,8 @@ static NSPredicate *charPredicate = nil;
 }
 
 /** 检查 自定义属性value值 */
-+(ANSConsoleLog *)checkPropertyValueWithKey:(NSString *)key value:(id)value {
-    ANSConsoleLog *checkResult = nil;
++(ANSDataCheckLog *)checkPropertyValueWithKey:(NSString *)key value:(id)value {
+    ANSDataCheckLog *checkResult = nil;
     id newValue;
     BOOL valueDidChange = NO;
     NSMutableSet *newSetObject = [NSMutableSet set];
@@ -162,7 +163,7 @@ static NSPredicate *charPredicate = nil;
         if ([value count] == 0) {
             valueDidChange = YES;
             
-            checkResult = [[ANSConsoleLog alloc]init];
+            checkResult = [[ANSDataCheckLog alloc]init];
             checkResult.resultType = AnalysysResultPropertyValueFixed;
             checkResult.value = value;
             checkResult.valueFixed = nil;
@@ -179,30 +180,30 @@ static NSPredicate *charPredicate = nil;
                     NSMutableString *newObject = [NSMutableString stringWithString:[ANSUtil subByteString:valueString byteLength:ANSPropertyValueMaxLength - 1]];
                     [newObject appendString:@"$"];
                     [newSetObject addObject:newObject.copy];
-                    AnsWarning(@"The length of property[%@] value string in NSArray/NSSet (%@) needs to be 1-255!", key, object);
+                    ANSBriefWarning(@"The length of property[%@] value string in NSArray/NSSet (%@) needs to be 1-255!", key, object);
                     valueDidChange = YES;
                 } else {
                     if (objLength > ANSPropertyValueWarningLength) {
-                        AnsWarning(@"The length of property[%@] value string in NSArray/NSSet (%@) needs to be 1-255!", key, object);
+                        ANSBriefWarning(@"The length of property[%@] value string in NSArray/NSSet (%@) needs to be 1-255!", key, object);
                     }
                     if (objLength > 0) {
                         [newSetObject addObject:valueString];
                     } else {
-                        AnsWarning(@"The length of property[%@] value string in NSArray/NSSet needs to be 1-255!", key);
+                        ANSBriefWarning(@"The length of property[%@] value string in NSArray/NSSet needs to be 1-255!", key);
                     }
                 }
             } else if ([object isKindOfClass:[NSNull class]]) {
                 [newSetObject addObject:@""];
                 valueDidChange = YES;
                 
-                checkResult = [[ANSConsoleLog alloc] init];
+                checkResult = [[ANSDataCheckLog alloc] init];
                 checkResult.resultType = AnalysysResultPropertyValueFixed;
                 checkResult.value = value;
                 checkResult.valueFixed = nil;
             } else {
                 [newSetObject addObject:object];
                 
-                checkResult = [[ANSConsoleLog alloc] init];
+                checkResult = [[ANSDataCheckLog alloc] init];
                 checkResult.resultType = AnalysysResultTypeError;
                 checkResult.keyWords = @"NSArray<NSString *>,NSSet<NSString *>";
                 checkResult.value = value;
@@ -212,7 +213,7 @@ static NSPredicate *charPredicate = nil;
         // 检查集合元素个数，并将多余元素删除
         NSInteger count = newSetObject.count;
         if (count > ANSPropertySetCapacity) {
-            AnsWarning(@"The length of property[%@] value count '%@' needs to be 1-100!", key, value);
+            ANSBriefWarning(@"The length of property[%@] value count '%@' needs to be 1-100!", key, value);
         }
         newValue = [newSetObject.allObjects copy];
     } else if ([value isKindOfClass:[NSString class]]) {
@@ -223,20 +224,20 @@ static NSPredicate *charPredicate = nil;
             [newObject appendString:@"$"];
             newValue = [newObject copy];
             valueDidChange = YES;
-            AnsWarning(@"The length of property[%@] value (%@) needs to be 1-255!", key, pvalue);
+            ANSBriefWarning(@"The length of property[%@] value (%@) needs to be 1-255!", key, pvalue);
         } else {
             if (valueLength > ANSPropertyValueWarningLength) {
-                AnsWarning(@"The length of property[%@] value (%@) needs to be 1-255!", key, pvalue);
+                ANSBriefWarning(@"The length of property[%@] value (%@) needs to be 1-255!", key, pvalue);
             }
             if (valueLength == 0) {
-                AnsWarning(@"The length of property[%@] value string needs to be 1-255!", key);
+                ANSBriefWarning(@"The length of property[%@] value string needs to be 1-255!", key);
             }
             newValue = pvalue;
         }
     }
     
     if (valueDidChange) {
-        checkResult = [[ANSConsoleLog alloc]init];
+        checkResult = [[ANSDataCheckLog alloc]init];
         checkResult.resultType = AnalysysResultPropertyValueFixed;
         checkResult.value = value;
         checkResult.valueFixed = newValue;
@@ -246,7 +247,7 @@ static NSPredicate *charPredicate = nil;
 
 
 /** property.value类型检查 */
-+ (ANSConsoleLog *)checkTypeOfPropertyValueWithKey:(NSString *)key  value:(id )value {
++ (ANSDataCheckLog *)checkTypeOfPropertyValueWithKey:(NSString *)key  value:(id )value {
     if([value isKindOfClass:[NSString class]] ||
        [value isKindOfClass:[NSNumber class]] ||
        [value isKindOfClass:[NSArray class]] ||
@@ -255,8 +256,8 @@ static NSPredicate *charPredicate = nil;
        [value isKindOfClass:[NSURL class]]) {
         return nil;
     }
-    ANSConsoleLog *checkResult = nil;
-    checkResult = [[ANSConsoleLog alloc] init];
+    ANSDataCheckLog *checkResult = nil;
+    checkResult = [[ANSDataCheckLog alloc] init];
     checkResult.resultType = AnalysysResultTypeError;
     checkResult.keyWords = @"NSString/NSNumber/NSArray<NSString>/NSSet<NSString>/NSDate/NSURL";
     checkResult.value = value;
@@ -264,10 +265,10 @@ static NSPredicate *charPredicate = nil;
 }
 
 /** 检查profile_increment.value */
-+ (ANSConsoleLog *)checkTypeOfIncrementPropertyValueWithKey:(NSString *)key value:(id)value {
-    ANSConsoleLog *checkResult = nil;
++ (ANSDataCheckLog *)checkTypeOfIncrementPropertyValueWithKey:(NSString *)key value:(id)value {
+    ANSDataCheckLog *checkResult = nil;
     if (![value isKindOfClass:[NSNumber class]]) {
-        checkResult = [[ANSConsoleLog alloc] init];
+        checkResult = [[ANSDataCheckLog alloc] init];
         checkResult.resultType = AnalysysResultTypeError;
         checkResult.keyWords = @"NSNumber";
         checkResult.value = value;
@@ -276,15 +277,15 @@ static NSPredicate *charPredicate = nil;
 }
 
 /** 检查profile_append.value */
-+ (ANSConsoleLog *)checkTypeOfAppendPropertyValueWithKey:(NSString *)key value:(id)value {
-    ANSConsoleLog *checkResult = nil;
++ (ANSDataCheckLog *)checkTypeOfAppendPropertyValueWithKey:(NSString *)key value:(id)value {
+    ANSDataCheckLog *checkResult = nil;
     if ([value isKindOfClass:NSString.class]) {
         value = [NSArray arrayWithObject:value];
     }
     
     if (![value isKindOfClass:[NSArray class]] &&
         ![value isKindOfClass:[NSSet class]]) {
-        checkResult = [[ANSConsoleLog alloc] init];
+        checkResult = [[ANSDataCheckLog alloc] init];
         checkResult.resultType = AnalysysResultTypeError;
         checkResult.keyWords = @"NSArray/NSSet";
         checkResult.value = value;

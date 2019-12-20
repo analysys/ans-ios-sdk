@@ -7,26 +7,28 @@
 //
 
 #import "NextViewController.h"
-#import <AnalysysSDK/AnalysysAgent.h>
-#import "ANSDemoViewController.h"
+#import "AnalysysAgent.h"
+#import "ANSCaseViewController.h"
 #import <AVFoundation/AVPlayer.h>
 #import <AVFoundation/AVPlayerItem.h>
 #import <AVFoundation/AVPlayerLayer.h>
 #import <StoreKit/StoreKit.h>
 #import "PageDetailViewController.h"
+#import "ANSButton.h"
 
 @interface NextViewController () <ANSAutoPageTracker, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIDocumentInteractionControllerDelegate>
 
-
 @property (nonatomic,strong) UIImagePickerController *imagePickerController;
 @property (nonatomic, strong) AVPlayer *player;
+@property (weak, nonatomic) IBOutlet UIView *scrollContentView;
 
 @property (weak, nonatomic) IBOutlet UILabel *tapGestureLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *longGestureImage;
 
 @property (nonatomic, strong) NSTimer *timer;
-@property (weak, nonatomic) IBOutlet UITextView *textView;
+@property (weak, nonatomic) UITextView *textView;
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
+@property (weak, nonatomic) IBOutlet ANSButton *playBtn;
 
 @end
 
@@ -36,16 +38,18 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    
-    UIBarButtonItem *btn0 = [[UIBarButtonItem alloc] initWithTitle:@"相册"
-                                                             style:UIBarButtonItemStylePlain
-                                                            target:self
-                                                            action:@selector(scanAction)];
-    UIBarButtonItem *btn1 = [[UIBarButtonItem alloc] initWithTitle:@"打开pdf"
-                                                            style:UIBarButtonItemStylePlain
-                                                           target:self
-                                                           action:@selector(loginAction)];
-    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:btn0, btn1, nil];
+    UIButton *btn0 = [UIButton buttonWithType:UIButtonTypeCustom];
+    [btn0 setTitle:@"相册" forState:UIControlStateNormal];
+    [btn0 setImage:[UIImage imageNamed:@"photo"] forState:UIControlStateNormal];
+    [btn0 addTarget:self action:@selector(scanAction) forControlEvents:UIControlEventTouchUpInside];
+    btn0.frame = CGRectMake(0, 0, 50, 50);
+    [btn0 setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
+    UIBarButtonItem *item0 = [[UIBarButtonItem alloc]initWithCustomView:btn0];
+    UIBarButtonItem *item1 = [[UIBarButtonItem alloc] initWithTitle:@"打开pdf"
+                                                              style:UIBarButtonItemStylePlain
+                                                             target:self
+                                                             action:@selector(loginAction)];
+    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:item0, item1, nil];
     
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGestureAction:)];
     self.tapGestureLabel.userInteractionEnabled = YES;
@@ -55,12 +59,16 @@
     self.longGestureImage.userInteractionEnabled = YES;
     [self.longGestureImage addGestureRecognizer:longTapGesture];
     
-    self.textView.inputAccessoryView = [self keyboardToolbar];;
+    UITextView *textView = [[UITextView alloc] initWithFrame:CGRectMake(30, 100, 200, 60)];
+    textView.layer.borderWidth = 1;
+    textView.layer.borderColor = [UIColor blackColor].CGColor;
+    textView.inputAccessoryView = [self keyboardToolbar];
+    [self.scrollContentView addSubview:textView];
+    self.textView = textView;
 }
 
 
 - (void)dealloc {
-    
     [self.timer invalidate];
     self.timer = nil;
 }
@@ -73,7 +81,7 @@
 
 - (void)loginAction {
     NSLog(@"loginAction");
-    UIDocumentInteractionController *documentController = [UIDocumentInteractionController interactionControllerWithURL:[[NSBundle mainBundle] URLForResource:@"PAAS iOS SDK v4.3.4使用说明" withExtension:@"pdf"]];
+    UIDocumentInteractionController *documentController = [UIDocumentInteractionController interactionControllerWithURL:[[NSBundle mainBundle] URLForResource:@"readme" withExtension:@"pdf"]];
     documentController.delegate = self;
     [documentController presentOptionsMenuFromRect:self.view.bounds inView:self.view animated:YES];
 }
@@ -107,6 +115,9 @@
 - (IBAction)sliderAction:(id)sender {
     NSLog(@"slider");
 }
+- (IBAction)switch0Action:(id)sender {
+    NSLog(@"switch 0");
+}
 - (IBAction)switch1Action:(id)sender {
     NSLog(@"switch 1");
 }
@@ -129,6 +140,14 @@
     NSLog(@"pagecontrol");
 }
 
+- (IBAction)tagAction:(id)sender {
+    NSLog(@"tag");
+}
+
+- (IBAction)tmpAction:(id)sender {
+    NSLog(@"tmp");
+}
+
 - (void)nextTextField {
     NSLog(@"nextAction");
 }
@@ -139,6 +158,14 @@
 
 - (void)textFieldDone {
     NSLog(@"textFieldDone");
+}
+
+- (IBAction)playAction:(ANSButton *)sender {
+    if ([[sender titleForState:UIControlStateNormal] isEqualToString:@"播放"]) {
+        [sender setTitle:@"暂停" forState:UIControlStateNormal];
+    } else {
+        [sender setTitle:@"播放" forState:UIControlStateNormal];
+    }
 }
 
 - (UIToolbar *)keyboardToolbar {
@@ -210,7 +237,7 @@
 #pragma mark - other
 
 - (IBAction)backRootVC:(id)sender {
-    ANSDemoViewController *vc = [[ANSDemoViewController alloc] init];
+    ANSCaseViewController *vc = [[ANSCaseViewController alloc] init];
     [self.navigationController pushViewController:vc animated:YES];
 }
 
