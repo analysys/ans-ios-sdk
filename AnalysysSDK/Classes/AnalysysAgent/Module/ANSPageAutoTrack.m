@@ -50,7 +50,7 @@
         };
 
         [ANSSwizzler swizzleSelector:@selector(viewDidAppear:) onClass:[UIViewController class] withBlock:viewDidAppearBlock named:@"ANSViewDidAppear"];
-        [ANSSwizzler swizzleSelector:@selector(trackViewDisappear:) onClass:[UIViewController class] withBlock:viewWillDisappearBlock named:@"ANSViewDidDisappear"];
+        [ANSSwizzler swizzleSelector:@selector(viewWillDisappear:) onClass:[UIViewController class] withBlock:viewWillDisappearBlock named:@"ANSViewDidDisappear"];
     }];
 }
 
