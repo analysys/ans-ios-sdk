@@ -1091,9 +1091,6 @@ typedef NS_ENUM(NSInteger, ANSResetType) {
 - (NSString *)appFirstLauchDate {
     NSString *launchDate = [ANSFileManager userDefaultValueWithKey:ANSAppLaunchDate];
     if (!launchDate) {
-        launchDate = [[ANSDateUtil dateFormat] stringFromDate:[NSDate date]];
-        [ANSFileManager saveUserDefaultWithKey:ANSAppLaunchDate value:launchDate];
-        
         _canSendProfileSetOnce = YES;
         _canSendAutoInstallation = YES;
         ANSPropertyLock();
