@@ -10,43 +10,20 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#define AgentLock() dispatch_semaphore_wait(ans_semaphore_lock(), DISPATCH_TIME_FOREVER);
-#define AgentUnlock() dispatch_semaphore_signal(ans_semaphore_lock());
+#define AgentLock() dispatch_semaphore_wait([ANSLock ans_semaphore_lock], DISPATCH_TIME_FOREVER);
+#define AgentUnlock() dispatch_semaphore_signal([ANSLock ans_semaphore_lock]);
 
-#define ANSPropertyLock() [ans_property_lock() lock];
-#define ANSPropertyUnlock() [ans_property_lock() unlock];
+#define ANSPropertyLock() [[ANSLock ans_property_lock] lock];
+#define ANSPropertyUnlock() [[ANSLock ans_property_lock] unlock];
 
-#define ANSUserDefaultsLock() [ans_userDefaults_lock() lock];
-#define ANSUserDefaultsUnlock() [ans_userDefaults_lock() unlock];
-
-static dispatch_semaphore_t ans_semaphore_lock() {
-    static dispatch_semaphore_t _ans_semaphore_lock;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        _ans_semaphore_lock = dispatch_semaphore_create(0);
-    });
-    return _ans_semaphore_lock;
-}
-
-static NSLock *ans_property_lock() {
-    static NSLock *_ans_property_lock;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        _ans_property_lock = [[NSLock alloc] init];
-    });
-    return _ans_property_lock;
-}
-
-static NSLock *ans_userDefaults_lock() {
-    static NSLock *_ans_userDefaults_lock;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        _ans_userDefaults_lock = [[NSLock alloc] init];
-    });
-    return _ans_userDefaults_lock;
-}
+#define ANSUserDefaultsLock() [[ANSLock ans_userDefaults_lock] lock];
+#define ANSUserDefaultsUnlock() [[ANSLock ans_userDefaults_lock] unlock];
 
 @interface ANSLock : NSObject
+
++ (dispatch_semaphore_t)ans_semaphore_lock;
++ (NSLock *)ans_property_lock;
++ (NSLock *)ans_userDefaults_lock;
 
 @end
 

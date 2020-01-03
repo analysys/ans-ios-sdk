@@ -122,7 +122,7 @@
 /** 自定义参数 */
 - (void)autoTrackViewController:(UIViewController *)controller {    
     NSMutableDictionary *pageProperties = [NSMutableDictionary dictionary];
-    [pageProperties addEntriesFromDictionary:[self lastControllerInfo]];
+    [pageProperties addEntriesFromDictionary:[self pageInfoWithViewController:controller]];
     
     if (_referrerPageUrl) {
         [pageProperties setValue:_referrerPageUrl forKey:ANSPageReferrerUrl];
@@ -158,9 +158,9 @@
 }
 
 /// controller页面信息
-- (NSDictionary *)lastControllerInfo {
-    NSString *className = NSStringFromClass([self.lastViewController class]);
-    NSString *controllerTitle = [ANSControllerUtils titleFromViewController:self.lastViewController];
+- (NSDictionary *)pageInfoWithViewController:(UIViewController *)viewController {
+    NSString *className = NSStringFromClass([viewController class]);
+    NSString *controllerTitle = [ANSControllerUtils titleFromViewController:viewController];
     NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:
                           className, ANSPageUrl,
                           controllerTitle, ANSPageTitle,
