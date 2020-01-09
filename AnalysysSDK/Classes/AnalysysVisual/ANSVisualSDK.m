@@ -242,22 +242,22 @@ static NSString *const ANSVisualConfigDefaultPort = @"4089";
     if (!self.designerConnection.connected) {
         return;
     }
-    NSDictionary *responseInfo = @{
-        @"$event_id": eventName,
-        @"$app_version": [ANSDeviceInfo getAppVersion],
-        @"$manufacturer": @"Apple",
-        @"$model": [ANSDeviceInfo getDeviceModel],
-        @"$os_version": [ANSDeviceInfo getOSVersion],
-        @"$lib_version": ANSSDKVersion,
-        @"$network": [[ANSTelephonyNetwork shareInstance] telephonyNetworkDescrition],
-        @"$screen_width": [NSString stringWithFormat:@"%.0f",[ANSDeviceInfo getScreenWidth]],
-        @"$screen_height": [NSString stringWithFormat:@"%.0f",[ANSDeviceInfo getScreenHeight]],
-        @"$pos_left": [NSString stringWithFormat:@"%.1f",position.origin.x],
-        @"$pos_top": [NSString stringWithFormat:@"%.1f",position.origin.y],
-        @"$pos_width": [NSString stringWithFormat:@"%.1f",position.size.width],
-        @"$pos_height": [NSString stringWithFormat:@"%.1f",position.size.height]
-    };
-    NSLog(@"currentPage:%@", self.currentPage);
+    NSMutableDictionary *responseInfo = [NSMutableDictionary dictionary];
+    responseInfo[@"$event_id"] = eventName;
+    responseInfo[@"$app_version"] = [ANSDeviceInfo getAppVersion];
+    responseInfo[@"$manufacturer"] = @"Apple";
+    responseInfo[@"$model"] = [ANSDeviceInfo getDeviceModel];
+    responseInfo[@"$os_version"] = [ANSDeviceInfo getOSVersion];
+    responseInfo[@"$lib_version"] = ANSSDKVersion;
+    responseInfo[@"$network"] = [[ANSTelephonyNetwork shareInstance] telephonyNetworkDescrition];
+    responseInfo[@"$screen_width"] = [NSString stringWithFormat:@"%.0f",[ANSDeviceInfo getScreenWidth]];
+    responseInfo[@"$screen_height"] = [NSString stringWithFormat:@"%.0f",[ANSDeviceInfo getScreenHeight]];
+    responseInfo[@"$pos_left"] = [NSString stringWithFormat:@"%.1f",position.origin.x];
+    responseInfo[@"$pos_top"] = [NSString stringWithFormat:@"%.1f",position.origin.y];
+    responseInfo[@"$pos_width"] = [NSString stringWithFormat:@"%.1f",position.size.width];
+    responseInfo[@"$pos_height"] = [NSString stringWithFormat:@"%.1f",position.size.height];
+
+//    NSLog(@"currentPage:%@", self.currentPage);
     [self.designerConnection sendJsonMessage:@{@"event_info": responseInfo,
                                                @"type":@"eventinfo_request",
                                                @"target_page": self.currentPage ?: @""
