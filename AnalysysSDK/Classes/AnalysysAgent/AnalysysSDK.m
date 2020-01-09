@@ -549,7 +549,13 @@ typedef NS_ENUM(NSInteger, ANSResetType) {
     
     NSString *netWork = [[ANSTelephonyNetwork shareInstance] telephonyNetworkDescrition];
     [presetProperties setValue:netWork forKey:ANSPresetNetwork];
-    [presetProperties setValue:[self appFirstLauchDate] forKey:ANSPresetFirstVisitTime];
+    
+    NSString *firstLaunchDate = [self appFirstLauchDate];
+    if (!firstLaunchDate) {
+        firstLaunchDate = [self resetFirstLaunchDate];
+    }
+    [presetProperties setValue:firstLaunchDate forKey:ANSPresetFirstVisitTime];
+
     
     NSString *session = [[ANSSession shareInstance] localSession];
     [presetProperties setValue:session forKey:ANSPresetSessionId];
@@ -1018,8 +1024,14 @@ typedef NS_ENUM(NSInteger, ANSResetType) {
 - (void)upProfileSetOnce {
     [ANSQueue dispatchAsyncLogSerialQueueWithBlock:^{
         if (AnalysysConfig.autoProfile) {
-            NSDictionary *properties = @{ANSPresetFirstVisitTime: [self appFirstLauchDate],
-                                         ANSPresetFirstVisitLanguage: [ANSDeviceInfo getDeviceLanguage]};
+            NSMutableDictionary *properties = [NSMutableDictionary dictionary];
+            NSString *firstLaunchDate = [self appFirstLauchDate];
+            if (!firstLaunchDate) {
+                firstLaunchDate = [self resetFirstLaunchDate];
+            }
+            properties[ANSPresetFirstVisitTime] = firstLaunchDate;
+            properties[ANSPresetFirstVisitLanguage] = [ANSDeviceInfo getDeviceLanguage];
+
             NSDictionary *setOnce = [ANSDataProcessing processProfileSetOnceProperties:nil SDKProperties:properties];
             [self saveUploadInfo:setOnce event:ANSEventProfileSetOnce handler:^{}];
         }
@@ -1086,6 +1098,16 @@ typedef NS_ENUM(NSInteger, ANSResetType) {
 }
 
 #pragma mark - 数据存储及上传
+
+/** 重新获取首次启动时间 */
+- (NSString *)resetFirstLaunchDate {
+    NSString *firstStartDate = [ANSFileManager userDefaultValueWithKey:ANSAppLaunchDate];
+    if (!firstStartDate) {
+        firstStartDate = [[ANSDateUtil dateFormat] stringFromDate:[NSDate date]];
+        [ANSFileManager saveUserDefaultWithKey:ANSAppLaunchDate value:firstStartDate];
+    }
+    return firstStartDate;
+}
 
 /** 首次启动 */
 - (NSString *)appFirstLauchDate {

@@ -127,7 +127,7 @@ const NSInteger ANSUncaughtExceptionHandlerReportAddressCount = 10;
     [crash_data setObject:[ANSUncaughtExceptionHandler ans_binary_images] forKey:@"crash_binary"];
     NSString *crashDataString = [ANSJsonUtil convertToStringWithObject:crash_data];
     
-    NSDictionary *crashEvent = [ANSDataProcessing processAppCrashProperties:@{@"$crash_data":crashDataString, @"$crash_type":@(0)}];
+    NSDictionary *crashEvent = [ANSDataProcessing processAppCrashProperties:@{@"$crash_data":crashDataString ?: @"", @"$crash_type":@(0)}];
     
     [[[AnalysysSDK sharedManager] getDBHelper] insertRecordObject:crashEvent event:ANSEventCrash maxCacheSize:MAXFLOAT result:^(BOOL success) {
         if (success) {
@@ -161,7 +161,7 @@ const NSInteger ANSUncaughtExceptionHandlerReportAddressCount = 10;
     [crash_data setObject:[exception callStackSymbols]?:@"" forKey:@"crash_stack"];
     [crash_data setObject:[ANSUncaughtExceptionHandler ans_binary_images] forKey:@"crash_binary"];
     NSString *crashDataString = [ANSJsonUtil convertToStringWithObject:crash_data];
-    NSDictionary *crashEvent = [ANSDataProcessing processAppCrashProperties:@{@"$crash_data":crashDataString, @"$crash_type":@(1)}];
+    NSDictionary *crashEvent = [ANSDataProcessing processAppCrashProperties:@{@"$crash_data":crashDataString ?: @"", @"$crash_type":@(1)}];
     
     [[[AnalysysSDK sharedManager] getDBHelper] insertRecordObject:crashEvent event:ANSEventCrash maxCacheSize:MAXFLOAT result:^(BOOL success) {
         if (success) {

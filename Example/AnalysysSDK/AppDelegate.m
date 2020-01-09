@@ -53,10 +53,10 @@
     [AnalysysAgent setDebugMode:AnalysysDebugOff];
 #endif
     
-    [AnalysysAgent setUploadURL:@"https://arksdk.analysys.cn:4089"];
+    [AnalysysAgent setUploadURL:@"https://arkpaastest.analysys.cn:4089"];
     
     //  AnalysysAgent SDK配置信息
-    AnalysysConfig.appKey = @"04bf9dd9ec538df7";
+    AnalysysConfig.appKey = @"589fc0bb8cd583c9";
     AnalysysConfig.channel = @"App Store";
     AnalysysConfig.autoProfile = YES;
     AnalysysConfig.autoInstallation = YES;
@@ -68,9 +68,9 @@
     
     
 #if DEBUG
-    [AnalysysAgent setVisitorDebugURL:@"wss://arksdk.analysys.cn:4091"];
+    [AnalysysAgent setVisitorDebugURL:@"wss://arkpaastest.analysys.cn:4091"];
 #endif
-    [AnalysysAgent setVisitorConfigURL:@"https://arksdk.analysys.cn:4089"];
+    [AnalysysAgent setVisitorConfigURL:@"https://arkpaastest.analysys.cn:4089"];
     
     
     CFAbsoluteTime linkTime = (CFAbsoluteTimeGetCurrent() - startTime);
