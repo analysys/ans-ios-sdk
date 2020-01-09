@@ -18,6 +18,7 @@
 #import "NSThread+ANSHelper.h"
 #import "ANSConst+private.h"
 #import "ANSControllerUtils.h"
+#import "ANSDataProcessing.h"
 
 @interface ANSPageAutoTrack () {
     NSString *_referrerPageUrl; // 来源页标识
@@ -108,7 +109,9 @@
             }
             [self autoTrackViewController:controller];
         }
-        self.lastViewController = controller;
+        if (![[ANSControllerUtils systemBuildInClasses] containsObject:NSStringFromClass(controller.class)]) {
+            self.lastViewController = controller;
+        }
     }];
 }
 
@@ -154,7 +157,9 @@
         _referrerPageUrl = NSStringFromClass([controller class]);
     }
     
-    [[AnalysysSDK sharedManager] autoPageView:nil properties:pageProperties];
+    NSDictionary *pageInfo = [ANSDataProcessing processPageProperties:pageProperties SDKProperties:nil];
+    [[AnalysysSDK sharedManager] saveUploadInfo:pageInfo event:ANSEventPageView handler:^{}];
+
 }
 
 /// controller页面信息
