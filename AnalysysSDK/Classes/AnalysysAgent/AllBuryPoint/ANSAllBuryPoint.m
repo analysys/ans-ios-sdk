@@ -46,13 +46,21 @@
 
 - (instancetype)ans_initWithTarget:(id)target action:(SEL)action {
     [self ans_initWithTarget:target action:action];
-    [self removeTarget:target action:action];
-    [self addTarget:target action:action];
+    //  仅处理tap及longtap手势
+    if ([self isKindOfClass:UITapGestureRecognizer.class] ||
+        [self isKindOfClass:UILongPressGestureRecognizer.class]) {
+        [self removeTarget:target action:action];
+        [self addTarget:target action:action];
+    }
     return self;
 }
 
 - (void)ans_addTarget:(id)target action:(SEL)action {
-    [self ans_addTarget:self action:@selector(allBuryPointClick:)];
+    //  仅处理tap及longtap手势
+    if ([self isKindOfClass:UITapGestureRecognizer.class] ||
+        [self isKindOfClass:UILongPressGestureRecognizer.class]) {
+        [self ans_addTarget:self action:@selector(allBuryPointClick:)];
+    }
     [self ans_addTarget:target action:action];
 }
 
