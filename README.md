@@ -42,5 +42,5 @@ iOS SDK 用于使用Objective C和Swift开发的App，集成前请先下载SDK
 
 # 讨论
 * 微信号：nlfxwz
-* 钉钉群：30099454
+* 钉钉群：30099866
 * 邮箱：nielifeng@analysys.com.cn
