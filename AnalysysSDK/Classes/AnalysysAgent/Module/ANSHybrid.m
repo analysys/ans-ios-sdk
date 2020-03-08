@@ -16,7 +16,6 @@
 #import "ANSLock.h"
 
 #import "AnalysysSDK.h"
-#import "ANSQueue.h"
 #import "ANSDataCheckLog.h"
 #import "ANSDataCheckRouter.h"
 
@@ -322,13 +321,17 @@ static NSString *ANSUserAgentId = @"UserAgent";
 
 /** 身份关联 */
 - (void)alias:(NSArray *)param {
-    if (param.count == 2) {
+    if (param.count == 1) {
+        id aliasId = param[0];
+        if ([aliasId isKindOfClass:[NSString class]]) {
+            [AnalysysAgent alias:aliasId];
+        }
+    } else if (param.count == 2) {
         id aliasId = param[0];
         if ([aliasId isKindOfClass:[NSString class]]) {
             id originalId = param[1];
             if ([originalId isKindOfClass:[NSString class]] || originalId == nil) {
                 [AnalysysAgent alias:aliasId originalId:originalId];
-                return;
             }
         }
     }
@@ -357,12 +360,10 @@ static NSString *ANSUserAgentId = @"UserAgent";
     if ([property isKindOfClass:[NSDictionary class]]) {
         //  携带多个属性
         [AnalysysAgent profileSet:property];
-        return;
     } else if ([property isKindOfClass:[NSString class]]) {
         if (param.count == 2) {
             id propertyValue = param[1];
             [AnalysysAgent profileSet:property propertyValue:propertyValue];
-            return;
         }
     }
     ANSBriefWarning(@"Hybrid: profileSet parameter must be {key:value}.");
@@ -377,12 +378,10 @@ static NSString *ANSUserAgentId = @"UserAgent";
     if ([property isKindOfClass:[NSDictionary class]]) {
         //  携带多个属性
         [AnalysysAgent profileSetOnce:property];
-        return;
     } else if ([property isKindOfClass:[NSString class]]) {
         if (param.count == 2) {
             id propertyValue = param[1];
             [AnalysysAgent profileSetOnce:property propertyValue:propertyValue];
-            return;
         }
     }
     ANSBriefWarning(@"Hybrid: profileSetOnce parameter must be {key:value}.");
@@ -397,13 +396,11 @@ static NSString *ANSUserAgentId = @"UserAgent";
     if ([property isKindOfClass:[NSDictionary class]]) {
         //  携带多个属性
         [AnalysysAgent profileIncrement:property];
-        return;
     } else if ([property isKindOfClass:[NSString class]]) {
         if (param.count == 2) {
             id propertyValue = param[1];
             if ([propertyValue isKindOfClass:[NSNumber class]]) {
                 [AnalysysAgent profileIncrement:property propertyValue:propertyValue];
-                return;
             }
         }
     }
@@ -419,7 +416,6 @@ static NSString *ANSUserAgentId = @"UserAgent";
     if ([property isKindOfClass:[NSDictionary class]]) {
         //  携带多个属性
         [AnalysysAgent profileAppend:property];
-        return;
     } else if ([property isKindOfClass:[NSString class]]) {
         if (param.count == 2) {
             id propertyValue = param[1];
@@ -428,7 +424,6 @@ static NSString *ANSUserAgentId = @"UserAgent";
             } else {
                 [AnalysysAgent profileAppend:property value:propertyValue];
             }
-            return;
         }
     }
     ANSBriefWarning(@"Hybrid: check profileAppend.");
@@ -460,67 +455,56 @@ static NSString *ANSUserAgentId = @"UserAgent";
 
 /** 注册hybird通用属性 */
 - (void)registerHybirdSuperProperties:(NSDictionary *)superProperties {
-    {
-        __block NSDictionary *blockSuperProperties = [superProperties mutableCopy];
-        dispatch_block_t block = ^(){
-            ANSDataCheckLog *checkResult = [ANSDataCheckRouter checkSuperProperties:&blockSuperProperties];
-            if (checkResult && checkResult.resultType <= AnalysysResultSuccess) {
-                ANSBriefWarning(@"%@",[checkResult messageDisplay]);
-                if (blockSuperProperties == nil) {
-                    return;
-                }
-            }
-            ANSPropertyLock();
-            NSDictionary *tmp = [ANSFileManager unarchiveHybridSuperProperties];
-            NSMutableDictionary *hybirdSuperProperty = [NSMutableDictionary dictionaryWithDictionary:tmp];
-            [hybirdSuperProperty addEntriesFromDictionary:blockSuperProperties];
-            BOOL result = [ANSFileManager archiveHybridSuperProperties:hybirdSuperProperty];
-            ANSPropertyUnlock();
-            if (result) {
-                ANSDataCheckLog *checkResult = [[ANSDataCheckLog alloc] init];
-                checkResult.resultType = AnalysysResultSetSuccess;
-                ANSLog(@"%@",[checkResult messageDisplay]);
-            } else {
-                ANSDataCheckLog *checkResult = [[ANSDataCheckLog alloc] init];
-                checkResult.resultType = AnalysysResultSetFailed;
-                ANSBriefWarning(@"%@",[checkResult messageDisplay]);
-            }
-        };
-        [ANSQueue dispatchAsyncLogSerialQueueWithBlock:block];
+    ANSDataCheckLog *checkResult = [ANSDataCheckRouter checkSuperProperties:&superProperties];
+    if (checkResult && checkResult.resultType <= AnalysysResultSuccess) {
+        ANSBriefWarning(@"%@",[checkResult messageDisplay]);
+        if (superProperties == nil) {
+            return;
+        }
+    }
+    ANSPropertyLock();
+    NSDictionary *tmp = [ANSFileManager unarchiveHybridSuperProperties];
+    NSMutableDictionary *hybirdSuperProperty = [NSMutableDictionary dictionaryWithDictionary:tmp];
+    [hybirdSuperProperty addEntriesFromDictionary:superProperties];
+    BOOL result = [ANSFileManager archiveHybridSuperProperties:hybirdSuperProperty];
+    ANSPropertyUnlock();
+    if (result) {
+        ANSDataCheckLog *checkResult = [[ANSDataCheckLog alloc] init];
+        checkResult.resultType = AnalysysResultSetSuccess;
+        ANSLog(@"%@",[checkResult messageDisplay]);
+    } else {
+        ANSDataCheckLog *checkResult = [[ANSDataCheckLog alloc] init];
+        checkResult.resultType = AnalysysResultSetFailed;
+        ANSBriefWarning(@"%@",[checkResult messageDisplay]);
     }
 }
 
 /** 删除hybird单个通用属性 */
 - (void)unRegisterHybirdSuperProperty:(NSString *)superPropertyName {
-    dispatch_block_t block = ^(){
-        ANSPropertyLock();
-        NSDictionary *tmp = [ANSFileManager unarchiveHybridSuperProperties];
-        NSMutableDictionary *hybirdSuperProperty = [NSMutableDictionary dictionaryWithDictionary:tmp];
-        [hybirdSuperProperty removeObjectForKey:superPropertyName];
-        BOOL result = [ANSFileManager archiveHybridSuperProperties:hybirdSuperProperty];
-        ANSPropertyUnlock();
-        if (result) {
-            ANSDataCheckLog *checkResult = [[ANSDataCheckLog alloc] init];
-            checkResult.value = superPropertyName;
-            checkResult.resultType = AnalysysResultSetSuccess;
-            ANSLog(@"%@",[checkResult messageDisplay]);
-        }
-    };
-    [ANSQueue dispatchAsyncLogSerialQueueWithBlock:block];
+    ANSPropertyLock();
+    NSDictionary *tmp = [ANSFileManager unarchiveHybridSuperProperties];
+    NSMutableDictionary *hybirdSuperProperty = [NSMutableDictionary dictionaryWithDictionary:tmp];
+    [hybirdSuperProperty removeObjectForKey:superPropertyName];
+    BOOL result = [ANSFileManager archiveHybridSuperProperties:hybirdSuperProperty];
+    ANSPropertyUnlock();
+    if (result) {
+        ANSDataCheckLog *checkResult = [[ANSDataCheckLog alloc] init];
+        checkResult.value = superPropertyName;
+        checkResult.resultType = AnalysysResultSetSuccess;
+        ANSLog(@"%@",[checkResult messageDisplay]);
+    }
 }
 
 /** 清除hybird所有通用属性 */
 - (void)clearHybirdSuperProperties {
-    [ANSQueue dispatchAsyncLogSerialQueueWithBlock:^{
-        ANSPropertyLock();
-        BOOL result = [ANSFileManager archiveHybridSuperProperties:[NSDictionary dictionary]];
-        ANSPropertyUnlock();
-        if (result) {
-            ANSDataCheckLog *checkResult = [[ANSDataCheckLog alloc] init];
-            checkResult.resultType = AnalysysResultSetSuccess;
-            ANSLog(@"%@",[checkResult messageDisplay]);
-        }
-    }];
+    ANSPropertyLock();
+    BOOL result = [ANSFileManager archiveHybridSuperProperties:[NSDictionary dictionary]];
+    ANSPropertyUnlock();
+    if (result) {
+        ANSDataCheckLog *checkResult = [[ANSDataCheckLog alloc] init];
+        checkResult.resultType = AnalysysResultSetSuccess;
+        ANSLog(@"%@",[checkResult messageDisplay]);
+    }
 }
 
 

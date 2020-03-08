@@ -288,7 +288,7 @@ static NSString * const ANSFinishLoadingAnimationKey = @"ANSConnectivityBarFinis
  */
 - (void)showConnectedViewWithLoading:(BOOL)isLoading {
     if (!self.connectivityIndicatorWindow) {
-        UIWindow *mainWindow = [ANSUtil currentWindow];
+        UIWindow *mainWindow = [ANSUtil currentKeyWindow];
         self.connectivityIndicatorWindow = [[UIWindow alloc] initWithFrame:CGRectMake(0, 0, mainWindow.frame.size.width, 4.f)];
         self.connectivityIndicatorWindow.backgroundColor = [UIColor clearColor];
         self.connectivityIndicatorWindow.windowLevel = UIWindowLevelAlert;

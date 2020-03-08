@@ -10,7 +10,7 @@
 
 @implementation ANSConst
 
-NSString *const ANSSDKVersion = @"4.4.4";
+NSString *const ANSSDKVersion = @"4.4.5";
 
 #pragma mark - 基础字段
 

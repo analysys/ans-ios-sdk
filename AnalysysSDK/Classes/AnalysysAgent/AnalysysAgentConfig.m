@@ -18,6 +18,7 @@
         _autoInstallation = NO;
         _allowTimeCheck = NO;
         _maxDiffTimeInterval = 30;
+        _autoTrackDeviceId = NO;
     }
     return self;
 }

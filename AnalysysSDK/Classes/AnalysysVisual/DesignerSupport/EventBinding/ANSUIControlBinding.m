@@ -265,7 +265,7 @@
 /** 获取根视图 */
 - (NSArray *)getRootObject {
     NSMutableArray *rootArray = [NSMutableArray array];
-    UIWindow *window = [ANSUtil currentWindow];
+    UIWindow *window = [ANSUtil currentKeyWindow];
     if (!window) {
         return @[];
     }

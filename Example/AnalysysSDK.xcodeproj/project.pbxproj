@@ -37,6 +37,7 @@
 		6003F5BC195388D20070C39A /* Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6003F5BB195388D20070C39A /* Tests.m */; };
 		71719F9F1E33DC2100824A3D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 71719F9D1E33DC2100824A3D /* LaunchScreen.storyboard */; };
 		873B8AEB1B1F5CCA007FD442 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 873B8AEA1B1F5CCA007FD442 /* Main.storyboard */; };
+		E854FFF42414CF3900CA2FBA /* ANSListTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E854FFF32414CF3900CA2FBA /* ANSListTableViewController.m */; };
 		E8AAE86A23AC6E540034A5E7 /* ANSCaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E8AAE86923AC6E540034A5E7 /* ANSCaseViewController.m */; };
 		E8AAE86E23AC6E8A0034A5E7 /* ANSTableHeaderFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = E8AAE86C23AC6E890034A5E7 /* ANSTableHeaderFooterView.m */; };
 		E8AAE86F23AC6E8A0034A5E7 /* ANSTableHeaderFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E8AAE86D23AC6E8A0034A5E7 /* ANSTableHeaderFooterView.xib */; };
@@ -119,6 +120,8 @@
 		873B8AEA1B1F5CCA007FD442 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		9B3A7E7A96F966ABD2947612 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		CEE25F8F7FEB44F40A453358 /* Pods-AnalysysSDK_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AnalysysSDK_Example.release.xcconfig"; path = "Target Support Files/Pods-AnalysysSDK_Example/Pods-AnalysysSDK_Example.release.xcconfig"; sourceTree = "<group>"; };
+		E854FFF22414CF3900CA2FBA /* ANSListTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ANSListTableViewController.h; sourceTree = "<group>"; };
+		E854FFF32414CF3900CA2FBA /* ANSListTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ANSListTableViewController.m; sourceTree = "<group>"; };
 		E8AAE86823AC6E540034A5E7 /* ANSCaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ANSCaseViewController.h; sourceTree = "<group>"; };
 		E8AAE86923AC6E540034A5E7 /* ANSCaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ANSCaseViewController.m; sourceTree = "<group>"; };
 		E8AAE86B23AC6E890034A5E7 /* ANSTableHeaderFooterView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ANSTableHeaderFooterView.h; sourceTree = "<group>"; };
@@ -330,16 +333,18 @@
 		E8DC83F4236054FC00DC0FC6 /* Demo */ = {
 			isa = PBXGroup;
 			children = (
+				E8DC840A236054FC00DC0FC6 /* ANSDemoController.h */,
+				E8DC83FB236054FC00DC0FC6 /* ANSDemoController.m */,
+				E8DC840B236054FC00DC0FC6 /* ANSHomeViewController.h */,
+				E8DC83FA236054FC00DC0FC6 /* ANSHomeViewController.m */,
+				E854FFF22414CF3900CA2FBA /* ANSListTableViewController.h */,
+				E854FFF32414CF3900CA2FBA /* ANSListTableViewController.m */,
 				E8DC83F9236054FC00DC0FC6 /* ANSDemoCollectionHeaderView.h */,
 				E8DC840C236054FC00DC0FC6 /* ANSDemoCollectionHeaderView.m */,
 				E8DC8407236054FC00DC0FC6 /* ANSDemoCollectionHeaderView.xib */,
 				E8DC8402236054FC00DC0FC6 /* ANSDemoCollectionViewCell.h */,
 				E8DC840F236054FC00DC0FC6 /* ANSDemoCollectionViewCell.m */,
 				E8DC83FF236054FC00DC0FC6 /* ANSDemoCollectionViewCell.xib */,
-				E8DC840A236054FC00DC0FC6 /* ANSDemoController.h */,
-				E8DC83FB236054FC00DC0FC6 /* ANSDemoController.m */,
-				E8DC840B236054FC00DC0FC6 /* ANSHomeViewController.h */,
-				E8DC83FA236054FC00DC0FC6 /* ANSHomeViewController.m */,
 				E8DC83F6236054FC00DC0FC6 /* ANSMutiThreadTestViewController.h */,
 				E8DC8405236054FC00DC0FC6 /* ANSMutiThreadTestViewController.m */,
 				E8DC840E236054FC00DC0FC6 /* ANSPresentViewController.h */,
@@ -375,7 +380,7 @@
 				6003F586195388D20070C39A /* Sources */,
 				6003F587195388D20070C39A /* Frameworks */,
 				6003F588195388D20070C39A /* Resources */,
-				624421675A3E6ADDD5FFC06A /* [CP] Embed Pods Frameworks */,
+				F2E95C0E1BC64D865657ACE5 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -494,7 +499,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		624421675A3E6ADDD5FFC06A /* [CP] Embed Pods Frameworks */ = {
+		F2E95C0E1BC64D865657ACE5 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -523,6 +528,7 @@
 				48DA23C5233B6C3000FCD7D9 /* ANSTouchId.m in Sources */,
 				E8AAE86E23AC6E8A0034A5E7 /* ANSTableHeaderFooterView.m in Sources */,
 				E8DC8421236054FC00DC0FC6 /* AppDelegate.m in Sources */,
+				E854FFF42414CF3900CA2FBA /* ANSListTableViewController.m in Sources */,
 				48DA23C6233B6C3000FCD7D9 /* UIColor+Transform.m in Sources */,
 				E8DC8416236054FC00DC0FC6 /* ANSDemoController.m in Sources */,
 				48DA239F233B6C0300FCD7D9 /* ANSBaseViewController.m in Sources */,
@@ -678,6 +684,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "";
 				INFOPLIST_FILE = "AnalysysSDK/AnalysysSDK-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = com.analysys.AnalysysSDK;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -695,6 +702,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "";
 				INFOPLIST_FILE = "AnalysysSDK/AnalysysSDK-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = com.analysys.AnalysysSDK;
 				PRODUCT_NAME = "$(TARGET_NAME)";

@@ -66,14 +66,14 @@ static NSPredicate *charPredicate = nil;
 }
 
 
-/** xwho字符串长度校验 */
-+ (ANSDataCheckLog *)checkLengthOfXwho:(NSString *)xwho {
+/** xwhat字符串长度校验 */
++ (ANSDataCheckLog *)checkLengthOfXwhat:(NSString *)xwhat {
     ANSDataCheckLog *checkResult = nil;
-    if (xwho.length == 0 || xwho.length > 99) {
+    if (xwhat.length == 0 || xwhat.length > 99) {
         checkResult = [[ANSDataCheckLog alloc] init];
         checkResult.resultType = AnalysysResultOutOfString;
         checkResult.keyWords = @"1-99";
-        checkResult.value = xwho;
+        checkResult.value = xwhat;
     }
     return checkResult;
 }

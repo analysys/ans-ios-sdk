@@ -66,10 +66,11 @@
     return txt;
 }
 
-+ (UIWindow *)currentWindow {
-    UIWindow* window = nil;
++ (UIWindow *)currentKeyWindow {
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
+    UIWindow *window = nil;
     if ([UIDevice currentDevice].systemVersion.floatValue >= 13.0) {
-        for (UIWindowScene* windowScene in [UIApplication sharedApplication].connectedScenes) {
+        for (UIWindowScene *windowScene in [UIApplication sharedApplication].connectedScenes) {
             if (windowScene.activationState == UISceneActivationStateForegroundActive) {
                 window = windowScene.windows.firstObject;
                 break;
@@ -77,6 +78,10 @@
         }
     }
     return window ?: [UIApplication sharedApplication].keyWindow;
+#else
+    
+    return [UIApplication sharedApplication].keyWindow;
+#endif
 }
 
 

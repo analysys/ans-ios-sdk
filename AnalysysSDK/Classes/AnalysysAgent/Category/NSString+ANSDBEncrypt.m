@@ -19,7 +19,7 @@
     NSString *oneToTenStr = [reversedStr substringToIndex:length];
     NSString *nineToTenStr = [reversedStr substringFromIndex:length];
     NSString *encodeString = [NSString stringWithFormat:@"%@%@", nineToTenStr, oneToTenStr];
-    return encodeString;
+    return [encodeString copy];
 }
 
 - (NSString *)ansBase64Decode {

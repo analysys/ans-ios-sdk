@@ -37,7 +37,7 @@
  */
 + (NSString *)getResourcePathWithFileName:(NSString *)fileName fileType:(NSString *)type {
     NSBundle *bundle = [NSBundle bundleForClass:[self class]];
-    NSString *bundlePath = [bundle pathForResource:@"AnalysysSDK" ofType:@"bundle"];
+    NSString *bundlePath = [bundle pathForResource:@"AnalysysAgent" ofType:@"bundle"];
     NSBundle *sourceBundle = [NSBundle bundleWithPath:bundlePath];
     return [sourceBundle pathForResource:fileName ofType:type];
 }

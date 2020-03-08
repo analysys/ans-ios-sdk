@@ -296,7 +296,7 @@
         if ([selectorDescription.selectorName isEqualToString:@"frame"]) {
             //  将当前相对坐标转换为相对window的坐标
             if ([value isKindOfClass:[NSDictionary class]]) {
-                UIWindow * window = [ANSUtil currentWindow];
+                UIWindow * window = [ANSUtil currentKeyWindow];
                 UIView *view = (UIView *)object;
                 CGRect absoluteRect = [view convertRect:view.bounds toView:window];
                 value[@"AX"] = [NSNumber numberWithFloat:absoluteRect.origin.x];

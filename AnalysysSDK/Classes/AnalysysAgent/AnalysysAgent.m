@@ -111,6 +111,14 @@
     [[AnalysysSDK sharedManager] flush];
 }
 
++ (void)setUploadNetworkType:(AnalysysNetworkType)networkType {
+    [[AnalysysSDK sharedManager] setUploadNetworkType:networkType];
+}
+    
++ (void)cleanDBCache {
+    [[AnalysysSDK sharedManager] cleanDBCache];
+}
+    
 #pragma mark - 事件
 
 + (void)track:(NSString *)event {
@@ -309,11 +317,11 @@
 
 /** 追踪活动推广，可回调用户自定义信息 */
 + (void)trackCampaign:(id)userInfo isClick:(BOOL)isClick userCallback:(void(^)(id campaignInfo))userCallback {
-    [[AnalysysSDK sharedManager] trackCampaign:userInfo isClick:isClick userCallback:^(id  _Nonnull campaignInfo) {
-        if (userCallback) {
-            userCallback(campaignInfo);
-        }
-    }];
+        [[AnalysysSDK sharedManager] trackCampaign:userInfo isClick:isClick userCallback:^(id  _Nonnull campaignInfo) {
+            if (userCallback) {
+                userCallback(campaignInfo);
+            }
+        }];
 }
 
 

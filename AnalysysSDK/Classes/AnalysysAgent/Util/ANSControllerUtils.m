@@ -111,7 +111,7 @@
 + (UIViewController *)currentViewController {
     __block UIViewController *currentViewController = nil;
     void (^block)(void) = ^{
-        UIWindow *window = [ANSUtil currentWindow];
+        UIWindow *window = [ANSUtil currentKeyWindow];
         UIViewController *rootViewController = window.rootViewController;
         currentViewController = [ANSControllerUtils findCurrentVCFromRootVC:rootViewController isRoot:YES];
     };
@@ -252,7 +252,7 @@
 + (UIWindow *)topWindow {
     __block UIWindow *window;
     [NSThread ansRunOnMainThread:^{
-        window = [ANSUtil currentWindow];
+        window = [ANSUtil currentKeyWindow];
         if (window.windowLevel != UIWindowLevelNormal) {
             NSArray *windows = [[UIApplication sharedApplication] windows];
             for(UIWindow * tmpWin in windows){

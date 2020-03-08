@@ -47,7 +47,7 @@
         "value":"",
         "checkFuncList":[
             "ANSDataCheck.checkTypeOfPropertyKey:",
-            "ANSDataCheck.checkLengthOfXwho:",
+            "ANSDataCheck.checkLengthOfXwhat:",
             "ANSDataCheck.checkCharsOfXwho:",
             "ANSDataCheck.checkReservedKey:"
         ]
@@ -226,5 +226,10 @@
             "value":"ANSAppStartSource.getStartSource",
             "required":true
         },
+        "$device_id":{
+            "valueType":0,
+            "value":"ANSDataFunc.getDeviceId",
+            "required":true
+        }
     }
 }

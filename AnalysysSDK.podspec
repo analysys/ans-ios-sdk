@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'AnalysysSDK'
-  s.version          = '4.4.0'
+  s.version          = '4.4.5'
   s.summary          = 'This is the official iOS SDK for Analysys.'
   s.homepage         = 'https://github.com/analysys/ana-ios-sdk'
   s.license          = { :type => 'GPL', :file => 'LICENSE' }
@@ -22,7 +22,7 @@ Pod::Spec.new do |s|
   s.source_files = 'AnalysysSDK/Classes/**/*'
   
   s.resource_bundles = {
-    'AnalysysSDK' => ['AnalysysSDK/Assets/**/*']
+    'AnalysysAgent' => ['AnalysysSDK/Assets/**/*']
   }
       
    s.public_header_files = 'AnalysysSDK/Classes/AnalysysAgent/{AnalysysAgent.h,ANSConst.h,AnalysysAgentConfig.h}'

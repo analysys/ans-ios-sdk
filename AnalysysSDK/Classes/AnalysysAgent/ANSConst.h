@@ -42,6 +42,7 @@ typedef NS_ENUM(NSInteger, AnalysysEncryptType) {
  - AnalysysPushXiaoMi: 小米推送
  - AnalysysPushXinGe: 信鸽推送
  - AnalysysPushAPNS: APNS推送
+ - AnalysysPushALi: 阿里推送
  */
 typedef NS_ENUM(NSInteger, AnalysysPushProvider) {
     AnalysysPushJiGuang = 0,
@@ -49,10 +50,24 @@ typedef NS_ENUM(NSInteger, AnalysysPushProvider) {
     AnalysysPushBaiDu,
     AnalysysPushXiaoMi,
     AnalysysPushXinGe,
-    AnalysysPushAPNS
+    AnalysysPushAPNS,
+    AnalysysPushALi
 };
 
-
+/**
+ 允许数据上传的网络类型
+ 
+ - AnalysysNetworkNONE: 不允许上传
+ - AnalysysNetworkWWAN: 移动网络
+ - AnalysysNetworkWIFI: WIFI网络
+ - AnalysysNetworkALL: 有网络即可
+ */
+typedef NS_ENUM(NSInteger, AnalysysNetworkType) {
+    AnalysysNetworkNONE = 1<<0,
+    AnalysysNetworkWWAN = 1<<1,
+    AnalysysNetworkWIFI = 1<<2,
+    AnalysysNetworkALL = 0xFF
+};
 
 
 #endif /* ANSConst_h */

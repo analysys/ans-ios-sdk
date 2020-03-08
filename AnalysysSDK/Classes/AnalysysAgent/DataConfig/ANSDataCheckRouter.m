@@ -85,7 +85,8 @@
         }
     }
     
-    for (NSString *func in funcList) {
+    NSArray *list = [funcList copy];
+    for (NSString *func in list) {
         NSArray *array = [func componentsSeparatedByString:@"."];
         if (array.count == 2) {
             Class cls = NSClassFromString(array[0]);
