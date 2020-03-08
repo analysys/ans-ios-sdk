@@ -1,0 +1,6 @@
+framework module AnalysysPush {
+  umbrella header "AnalysysPush.h"
+
+  export *
+  module * { export * }
+}

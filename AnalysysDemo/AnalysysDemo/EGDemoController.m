@@ -16,6 +16,7 @@
 
 #import "ANSWebViewController.h"
 #import "ANSWKWebViewController.h"
+#import "ANSListTableViewController.h"
 
 static NSString *const kCategory = @"category";
 static NSString *const kInterface = @"interface";
@@ -28,6 +29,8 @@ static NSString *const kBackgroundColor = @"backgroundColor";
 
 @property (nonatomic, strong) NSArray *headerArray;
 @property (nonatomic, strong) NSArray *dataSourceArray;
+
+@property (nonatomic, copy) NSString *currentAllowNetwork;
 
 @end
 
@@ -51,6 +54,8 @@ static NSString *const kBackgroundColor = @"backgroundColor";
     [self.collectionView registerNib:[UINib nibWithNibName:@"DemoCollectionViewCell" bundle:nil] forCellWithReuseIdentifier:@"DemoCollectionViewCell"];
     
     [self.collectionView registerNib:[UINib nibWithNibName:@"DemoCollectionHeaderView" bundle:nil] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"headerView"];
+    
+    self.currentAllowNetwork = @"ALL";
 }
 
 - (void)didReceiveMemoryWarning {
@@ -107,7 +112,11 @@ static NSString *const kBackgroundColor = @"backgroundColor";
     if (kind == UICollectionElementKindSectionHeader) {
         DemoCollectionHeaderView *collectionHeader = [self.collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"headerView" forIndexPath:indexPath];
         NSDictionary *dic = self.dataSourceArray[indexPath.section];
-        collectionHeader.categoryLabel.text = dic[kCategory];
+        if (indexPath.section == 7) {
+            collectionHeader.categoryLabel.text = [NSString stringWithFormat:@"当前允许数据上传的网络为:%@", self.currentAllowNetwork];
+        } else {
+            collectionHeader.categoryLabel.text = dic[kCategory];
+        }
         
         reusableView = collectionHeader;
     }
@@ -188,6 +197,12 @@ static NSString *const kBackgroundColor = @"backgroundColor";
                 [self showAlertView:[NSString stringWithFormat:@"当前通用属性:\n%@",presetProperties]];
                 break;
             }
+                case 6: {
+                    //  清理数据库
+                    [AnalysysAgent cleanDBCache];
+                    [self showAlertView:@"数据库清理完成"];
+                    break;
+                }
             default:
                 break;
         }
@@ -432,7 +447,33 @@ static NSString *const kBackgroundColor = @"backgroundColor";
             default:
                 break;
         }
-    }
+    } else if (indexPath.section == 7) {
+              switch (indexPath.row) {
+                  case 0: {
+                      ANSListTableViewController *listVC = [[ANSListTableViewController alloc] init];
+                      listVC.hidesBottomBarWhenPushed = YES;
+                      listVC.listArray = @[@"NONE", @"WWAN", @"WIFI", @"ALL"];
+                      listVC.block = ^(NSArray *listArray, NSIndexPath *indexPath) {
+                          if (indexPath.row == 0) {
+                              [AnalysysAgent setUploadNetworkType:AnalysysNetworkNONE];
+                          } else if (indexPath.row == 1) {
+                              [AnalysysAgent setUploadNetworkType:AnalysysNetworkWWAN];
+                          } else if (indexPath.row == 2) {
+                              [AnalysysAgent setUploadNetworkType:AnalysysNetworkWIFI];
+                          } else {
+                              [AnalysysAgent setUploadNetworkType:AnalysysNetworkALL];
+                          }
+                          self.currentAllowNetwork = listArray[indexPath.row];
+                          [self.collectionView reloadData];
+                      };
+                      [self.navigationController pushViewController:listVC animated:YES];
+                      
+                      break;
+                  }
+                  default:
+                      break;
+              }
+          }
 }
 
 

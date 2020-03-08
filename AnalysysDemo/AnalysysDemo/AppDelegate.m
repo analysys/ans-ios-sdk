@@ -36,16 +36,8 @@
 //    [AnalysysAgent setAutomaticHeatmap:YES];
 //    [AnalysysAgent setAutoTrackClick:YES];
     
-#if DEBUG
-    [AnalysysAgent setDebugMode:AnalysysDebugButTrack];
-#else
-    [AnalysysAgent setDebugMode:AnalysysDebugOff];
-#endif
-    
-    [AnalysysAgent setUploadURL:<#url#>];
-    
     //  AnalysysAgent SDK配置信息
-    AnalysysConfig.appKey = <#appkey#>;
+    AnalysysConfig.appKey = @"heatmaptest0916";
     AnalysysConfig.channel = @"App Store";
     AnalysysConfig.autoProfile = YES;
     AnalysysConfig.autoInstallation =  YES;
@@ -54,6 +46,16 @@
     AnalysysConfig.maxDiffTimeInterval = 5 * 60;
     //  使用配置信息初始化SDK
     [AnalysysAgent startWithConfig:AnalysysConfig];
+    
+    
+    // *** 放置到startWithConfig: 后 *** //
+    #if DEBUG
+        [AnalysysAgent setDebugMode:AnalysysDebugButTrack];
+    #else
+        [AnalysysAgent setDebugMode:AnalysysDebugOff];
+    #endif
+
+    [AnalysysAgent setUploadURL:@"https://arkpaastest.analysys.cn:4089"];
     
 //#if DEBUG
 //    [AnalysysAgent setVisitorDebugURL:<#wsurl#>];

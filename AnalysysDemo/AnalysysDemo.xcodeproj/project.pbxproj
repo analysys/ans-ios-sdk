@@ -37,6 +37,7 @@
 		E8313DC3237CFD510028E24C /* ANSWebViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E8313DBD237CFD510028E24C /* ANSWebViewController.xib */; };
 		E8313DC4237CFD510028E24C /* ANSWKWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E8313DBF237CFD510028E24C /* ANSWKWebViewController.m */; };
 		E8313DC5237CFD510028E24C /* ANSWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E8313DC0237CFD510028E24C /* ANSWebViewController.m */; };
+		E854FFF72414DAE300CA2FBA /* ANSListTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E854FFF62414DAE200CA2FBA /* ANSListTableViewController.m */; };
 		E8851BE821D0CA31007C5BF2 /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8851BE721D0CA31007C5BF2 /* SecondViewController.swift */; };
 		E8B2C01621070F2A00CAC239 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = E8B2C01521070F2A00CAC239 /* libz.tbd */; };
 		E8B2C01821070F3600CAC239 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E8B2C01721070F3600CAC239 /* AdSupport.framework */; };
@@ -123,6 +124,8 @@
 		E8313DBF237CFD510028E24C /* ANSWKWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ANSWKWebViewController.m; sourceTree = "<group>"; };
 		E8313DC0237CFD510028E24C /* ANSWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ANSWebViewController.m; sourceTree = "<group>"; };
 		E8313DC1237CFD510028E24C /* ANSWKWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ANSWKWebViewController.h; sourceTree = "<group>"; };
+		E854FFF52414DAE200CA2FBA /* ANSListTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ANSListTableViewController.h; sourceTree = "<group>"; };
+		E854FFF62414DAE200CA2FBA /* ANSListTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ANSListTableViewController.m; sourceTree = "<group>"; };
 		E8851BE721D0CA31007C5BF2 /* SecondViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondViewController.swift; sourceTree = "<group>"; };
 		E8996E7D222977E600FEA30A /* UINavigationController+SafeTransition.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UINavigationController+SafeTransition.h"; sourceTree = "<group>"; };
 		E8B2C01521070F2A00CAC239 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
@@ -247,6 +250,8 @@
 				178B22882085BF7A00425E4D /* EGDemoController.m */,
 				178B227F2085BF7A00425E4D /* EGHomeViewController.h */,
 				178B227E2085BF7A00425E4D /* EGHomeViewController.m */,
+				E854FFF52414DAE200CA2FBA /* ANSListTableViewController.h */,
+				E854FFF62414DAE200CA2FBA /* ANSListTableViewController.m */,
 				178B22722085BF3F00425E4D /* DataSource.plist */,
 				178B22762085BF6C00425E4D /* DemoCollectionHeaderView.h */,
 				178B22742085BF6C00425E4D /* DemoCollectionHeaderView.m */,
@@ -480,6 +485,7 @@
 				E8F7E0942219109F00095CCD /* BaseNavViewController.m in Sources */,
 				178B227A2085BF6D00425E4D /* DemoCollectionHeaderView.m in Sources */,
 				E8BE05E9212D52AC00DFFFC3 /* UIColor+Transform.m in Sources */,
+				E854FFF72414DAE300CA2FBA /* ANSListTableViewController.m in Sources */,
 				E8F43ECB224379A6000A16EF /* ANSLocationManager.m in Sources */,
 				178B228E2085BF7B00425E4D /* EGBaseViewController.m in Sources */,
 				178B227B2085BF6D00425E4D /* DemoCollectionViewCell.m in Sources */,

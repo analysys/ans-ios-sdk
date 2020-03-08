@@ -1,9 +1,9 @@
 Pod::Spec.new do |s|
   s.name         = "AnalysysAgent"
-  s.version      = "4.4.4"
+  s.version      = "4.4.5"
   s.summary      = "易观 iOS PaaS 版本SDK，集成方法参考相关版本SDK集成文档。"
   s.homepage     = "https://github.com/AnalysysSDK/Analysys_SDK_iOS/tree/dev"
-  s.social_media_url = "https://www.analysys.cn/"
+  s.social_media_url = "https://ark.analysys.cn/"
   s.source       = { :git => 'https://github.com/AnalysysSDK/Analysys_SDK_iOS.git', :tag => s.version }
   s.license      = "MIT"
   s.author       = { "analysys" => "analysys@analysys.com.cn" }
