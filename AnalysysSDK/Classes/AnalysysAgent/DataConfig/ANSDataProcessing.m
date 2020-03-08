@@ -126,15 +126,6 @@
         return nil;
     }
     
-    if (!action || [action length] == 0 || ![action isKindOfClass:NSString.class]) {
-        *checkResult = [[ANSDataCheckLog alloc] init];
-        (*checkResult).resultType = AnalysysResultTypeError;
-        (*checkResult).keyWords = @"NSString/not empty ";
-        (*checkResult).value = userProperties;
-        ANSBriefWarning(@"%@",[*checkResult messageDisplay]);
-        return nil;
-    }
-    
     if (userProperties && ![userProperties isKindOfClass:NSDictionary.class]) {
         *checkResult = [[ANSDataCheckLog alloc] init];
         (*checkResult).resultType = AnalysysResultTypeError;

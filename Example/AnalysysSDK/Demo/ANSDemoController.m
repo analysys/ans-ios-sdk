@@ -15,7 +15,7 @@
 
 #import "ANSWebViewController.h"
 #import "ANSWKWebViewController.h"
-
+#import "ANSListTableViewController.h"
 
 #define kSelectedCorlor [UIColor colorWithRed:104/255.0 green:107/255.0 blue:240/255.0 alpha:1.0]
 
@@ -32,6 +32,8 @@ static NSString *const kBackgroundColor = @"backgroundColor";
 
 @property (nonatomic, strong) NSArray *headerArray;
 @property (nonatomic, strong) NSArray *dataSourceArray;
+
+@property (nonatomic, copy) NSString *currentAllowNetwork;
 
 @end
 
@@ -55,6 +57,8 @@ static NSString *const kBackgroundColor = @"backgroundColor";
     [self.collectionView registerNib:[UINib nibWithNibName:@"ANSDemoCollectionViewCell" bundle:nil] forCellWithReuseIdentifier:@"ANSDemoCollectionViewCell"];
     
     [self.collectionView registerNib:[UINib nibWithNibName:@"ANSDemoCollectionHeaderView" bundle:nil] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"headerView"];
+    
+    self.currentAllowNetwork = @"ALL";
 }
 
 - (void)didReceiveMemoryWarning {
@@ -128,7 +132,11 @@ static NSString *const kBackgroundColor = @"backgroundColor";
     if (kind == UICollectionElementKindSectionHeader) {
         ANSDemoCollectionHeaderView *collectionHeader = [self.collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"headerView" forIndexPath:indexPath];
         NSDictionary *dic = self.dataSourceArray[indexPath.section];
-        collectionHeader.categoryLabel.text = dic[kCategory];
+        if (indexPath.section == 10) {
+            collectionHeader.categoryLabel.text = [NSString stringWithFormat:@"当前允许数据上传的网络为:%@", self.currentAllowNetwork];
+        } else {
+            collectionHeader.categoryLabel.text = dic[kCategory];
+        }
         
         reusableView = collectionHeader;
     }
@@ -209,6 +217,12 @@ static NSString *const kBackgroundColor = @"backgroundColor";
                 [self showAlertView:[NSString stringWithFormat:@"当前通用属性:\n%@",presetProperties]];
                 break;
             }
+            case 6: {
+                //  清理数据库
+                [AnalysysAgent cleanDBCache];
+                [self showAlertView:@"数据库清理完成"];
+                break;
+            }
             default:
                 break;
         }
@@ -217,8 +231,8 @@ static NSString *const kBackgroundColor = @"backgroundColor";
             case 0: {
                 //  设置多个通用属性。VIP用户、hobby作为当前所有事件的通用属性
                 [AnalysysAgent registerSuperProperties:@{@"VIPLevel":@"Silver",
-                                                          @"Hobby":@[@"Singing",@"Reading",@"Dacing"]
-                                                          }];
+                                                         @"Hobby":@[@"Singing",@"Reading",@"Dacing"]
+                }];
                 [self showAlertView:[NSString stringWithFormat:@"当前通用属性:\n%@",[AnalysysAgent getSuperProperties]]];
                 break;
             }
@@ -279,7 +293,7 @@ static NSString *const kBackgroundColor = @"backgroundColor";
                 NextViewController *nextVC = [sb instantiateViewControllerWithIdentifier:@"NextViewController"];
                 nextVC.hidesBottomBarWhenPushed = YES;
                 if (![AnalysysAgent isViewAutoTrack]) {
-//                    nextVC.ignoredAutoCollection = YES;
+                    //                    nextVC.ignoredAutoCollection = YES;
                 }
                 [self.navigationController pushViewController:nextVC animated:YES];
                 break;
@@ -307,10 +321,10 @@ static NSString *const kBackgroundColor = @"backgroundColor";
                                              @"productCategory": productCategory,
                                              @"hasStocks": [NSNumber numberWithBool:hasStocks],
                                              @"price": [NSNumber numberWithFloat:price]
-                                             };
+                };
                 [AnalysysAgent track:event properties:properties];
                 [self showAlertView:[NSString stringWithFormat:@"当前事件:%@ 属性:%@",event,properties]];
- 
+                
                 break;
             }
             case 2: {
@@ -327,7 +341,7 @@ static NSString *const kBackgroundColor = @"backgroundColor";
                 NSDictionary *properties = @{@"newsId": [NSNumber numberWithUnsignedInteger:newsId],
                                              @"tags": tags,
                                              @"pageDur": [NSNumber numberWithFloat:pageDur]
-                                             };
+                };
                 //  记录当前打开页面的基本信息，如新闻标签、新闻标识、页面浏览时长等属性
                 [AnalysysAgent pageView:@"NewsDetailViewController" properties:properties];
                 [self showAlertView:[NSString stringWithFormat:@"当前页面:pageOne 属性:%@",properties]];
@@ -416,7 +430,7 @@ static NSString *const kBackgroundColor = @"backgroundColor";
             }
             case 7: {
                 //  再次设定该属性，属性 "Books" 为: ["西游记", "三国演义", "红楼梦", "水浒传"]
-//                [AnalysysAgent profileAppend:@"Books" value:@"西游记"];
+                //                [AnalysysAgent profileAppend:@"Books" value:@"西游记"];
                 [AnalysysAgent profileAppend:@"Books" propertyValue:[NSSet setWithObjects:@"红楼梦", @"水浒传", nil]];
                 [self showAlertView:@"Books: 红楼梦,水浒传"];
                 break;
@@ -446,7 +460,7 @@ static NSString *const kBackgroundColor = @"backgroundColor";
                     nextVC.ignoredAutoCollection = YES;
                 }
                 [self.navigationController pushViewController:nextVC animated:YES];
-//                [self.navigationController presentViewController:nextVC animated:YES completion:nil];
+                //                [self.navigationController presentViewController:nextVC animated:YES completion:nil];
                 break;
             }
             default:
@@ -491,6 +505,32 @@ static NSString *const kBackgroundColor = @"backgroundColor";
                 UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
                 pasteboard.string = @"https://uc.analysys.cn/huaxiang/fangzhouBVisual/web/upApp.html?from=singlemessage&isappinstalled=0";
                 [self showAlertView:@"请粘贴至Safari浏览器，使用相关测试"];
+                
+                break;
+            }
+            default:
+                break;
+        }
+    } else if (indexPath.section == 10) {
+        switch (indexPath.row) {
+            case 0: {
+                ANSListTableViewController *listVC = [[ANSListTableViewController alloc] init];
+                listVC.hidesBottomBarWhenPushed = YES;
+                listVC.listArray = @[@"NONE", @"WWAN", @"WIFI", @"ALL"];
+                listVC.block = ^(NSArray *listArray, NSIndexPath *indexPath) {
+                    if (indexPath.row == 0) {
+                        [AnalysysAgent setUploadNetworkType:AnalysysNetworkNONE];
+                    } else if (indexPath.row == 1) {
+                        [AnalysysAgent setUploadNetworkType:AnalysysNetworkWWAN];
+                    } else if (indexPath.row == 2) {
+                        [AnalysysAgent setUploadNetworkType:AnalysysNetworkWIFI];
+                    } else {
+                        [AnalysysAgent setUploadNetworkType:AnalysysNetworkALL];
+                    }
+                    self.currentAllowNetwork = listArray[indexPath.row];
+                    [self.collectionView reloadData];
+                };
+                [self.navigationController pushViewController:listVC animated:YES];
                 
                 break;
             }

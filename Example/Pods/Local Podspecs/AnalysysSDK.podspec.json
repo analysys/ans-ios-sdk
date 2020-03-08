@@ -1,6 +1,6 @@
 {
   "name": "AnalysysSDK",
-  "version": "4.4.0",
+  "version": "4.4.5",
   "summary": "This is the official iOS SDK for Analysys.",
   "homepage": "https://github.com/analysys/ana-ios-sdk",
   "license": {
@@ -12,7 +12,7 @@
   },
   "source": {
     "git": "https://github.com/analysys/ana-ios-sdk.git",
-    "tag": "4.4.0"
+    "tag": "4.4.5"
   },
   "platforms": {
     "ios": "8.0"
@@ -31,7 +31,7 @@
   ],
   "source_files": "AnalysysSDK/Classes/**/*",
   "resource_bundles": {
-    "AnalysysSDK": [
+    "AnalysysAgent": [
       "AnalysysSDK/Assets/**/*"
     ]
   },

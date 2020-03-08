@@ -18,6 +18,7 @@
 #import "ANSUtil.h"
 #import "ANSConst+private.h"
 #import "ANSDateUtil.h"
+#import "ANSDeviceInfo.h"
 
 @implementation ANSDataFunc
 
@@ -78,7 +79,11 @@
 }
 
 + (NSNumber *)getAppDuration {
-    return [[AnalysysSDK sharedManager] appDuration];
+    long long appDur = [AnalysysSDK sharedManager].appDuration;
+    if (appDur < 0) {
+        appDur = 0;
+    }
+    return [NSNumber numberWithLongLong:appDur];
 }
 
 /** 首次运行 */
@@ -103,6 +108,19 @@
     return [NSNumber numberWithBool:NO];
 }
 
+/// 设备标识 idfa > idfv > uuid
++ (NSString *)getDeviceId {
+    if (!AnalysysConfig.autoTrackDeviceId) {
+        return nil;
+    }
+    NSString *idfa = [ANSDeviceInfo getIDFA];
+    if (idfa) {
+        return idfa;
+    } else {
+        NSString *idfv = [ANSDeviceInfo getIdfv];
+        return idfv ?: [[NSUUID UUID] UUIDString];
+    }
+}
 
 
 @end

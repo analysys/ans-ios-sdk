@@ -159,7 +159,6 @@
     
     NSDictionary *pageInfo = [ANSDataProcessing processPageProperties:pageProperties SDKProperties:nil];
     [[AnalysysSDK sharedManager] saveUploadInfo:pageInfo event:ANSEventPageView handler:^{}];
-
 }
 
 /// controller页面信息

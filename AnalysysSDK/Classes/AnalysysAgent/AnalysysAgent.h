@@ -8,7 +8,7 @@
 
 
 // ********************************
-// ***** 当前 SDK 版本号：4.4.4 *****
+// ***** 当前 SDK 版本号：4.4.5 *****
 // ********************************
 
 #import <Foundation/Foundation.h>
@@ -207,6 +207,14 @@
  */
 + (void)flush;
 
+    
+/// 设置数据网络上传策略
+/// 默认只要存在网络即会上传，不区分移动网络即WIFI网络
+/// @param networkType 网络类型
++ (void)setUploadNetworkType:(AnalysysNetworkType)networkType;
+    
+/// 清除本地所有已缓存数据
++ (void)cleanDBCache;
 
 #pragma mark - 点击事件
 

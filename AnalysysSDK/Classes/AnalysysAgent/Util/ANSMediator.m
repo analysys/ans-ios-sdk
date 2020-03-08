@@ -28,7 +28,8 @@
     invocation.selector = selector;
     
     if (parameters.count) {
-        [invocation ansSetArgumentsFromArray:parameters];
+        NSArray *param = [parameters copy];
+        [invocation ansSetArgumentsFromArray:param];
     }
     [invocation invoke];
     id returnValue = nil;

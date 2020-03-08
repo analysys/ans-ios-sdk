@@ -44,16 +44,7 @@
     [AnalysysAgent setAutoTrackClick:YES];
     
     //  默认的 debugmode = debugoff 不打印log。 应该先设置debugmode，然后设置 superproperty 避免 log 丢失。
-//    [AnalysysAgent registerSuperProperties:@{@"Sex": @"male", @"bobby": @[@"football",@"pingpang"]}];
-    
-    
-#if DEBUG
-    [AnalysysAgent setDebugMode:AnalysysDebugButTrack];
-#else
-    [AnalysysAgent setDebugMode:AnalysysDebugOff];
-#endif
-    
-    [AnalysysAgent setUploadURL:@"https://arkpaastest.analysys.cn:4089"];
+    //    [AnalysysAgent registerSuperProperties:@{@"Sex": @"male", @"bobby": @[@"football",@"pingpang"]}];
     
     //  AnalysysAgent SDK配置信息
     AnalysysConfig.appKey = @"589fc0bb8cd583c9";
@@ -66,6 +57,15 @@
     //  使用配置信息初始化SDK
     [AnalysysAgent startWithConfig:AnalysysConfig];
     
+    
+    //**********  务必将debug及上传地址放置到 startWithConfig: 之后，否则无法正常上报数据  ********//
+#if DEBUG
+    [AnalysysAgent setDebugMode:AnalysysDebugButTrack];
+#else
+    [AnalysysAgent setDebugMode:AnalysysDebugOff];
+#endif
+    
+    [AnalysysAgent setUploadURL:@"https://arkpaastest.analysys.cn:4089"];
     
 #if DEBUG
     [AnalysysAgent setVisitorDebugURL:@"wss://arkpaastest.analysys.cn:4091"];

@@ -32,7 +32,7 @@ static inline NSString * AnsLogSring(NSString *format, ...) {
 }
 
 - (NSString *)messageDisplay {
-    NSString * message = nil;
+    NSString *message = @"";
     if (self.resultType == AnalysysResultDefault) {
         message = AnsLogSring(@"%@",self.remarks);
     } else if (self.resultType == AnalysysResultSetSuccess) {
@@ -58,7 +58,7 @@ static inline NSString * AnsLogSring(NSString *format, ...) {
     } else if (self.resultType == AnalysysResultPropertyValueFixed) {
         message = AnsLogSring(@"(%@) is invalid.", [self substringText:[self.value description]]);
     }
-    return message;
+    return [message copy];
 }
 
 - (NSString *)substringText:(NSString *)text {

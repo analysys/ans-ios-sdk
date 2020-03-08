@@ -44,17 +44,6 @@ static NSString * const ANSCampaignKey = @"EGPUSH_CINFO";//  易观推送标识
 
 /** 拼接context */
 + (NSDictionary *)spliceContextWithPushInfo:(NSDictionary *)pushInfo {
-    NSString *cpdStr = @"";
-    @try {
-        cpdStr = [ANSJsonUtil convertToStringWithObject:pushInfo[@"CPD"]];
-        if (cpdStr.length > 0) {
-            cpdStr = [[cpdStr stringByReplacingOccurrencesOfString:@"\n" withString:@""] stringByReplacingOccurrencesOfString:@" " withString:@""];
-        }
-    } @catch (NSException *exception) {
-        ANSDebug(@"xcontextInfo: CPD 非json格式");
-        return nil;
-    }
-    
     NSMutableDictionary *context = [NSMutableDictionary dictionary];
     [context setValue:[NSString stringWithFormat:@"%@",pushInfo[@"campaign_id"]] forKey:ANSUtmCampaignId];
     [context setValue:pushInfo[@"utm_campaign"] forKey:ANSUtmCampaign];
@@ -64,7 +53,7 @@ static NSString * const ANSCampaignKey = @"EGPUSH_CINFO";//  易观推送标识
     [context setValue:pushInfo[@"utm_term"] forKey:ANSUtmTerm];
     [context setValue:pushInfo[@"ACTIONTYPE"] forKey:ANSUtmActionType];
     [context setValue:pushInfo[@"ACTION"] forKey:ANSUtmAction];
-    [context setValue:cpdStr forKey:ANSUtmCpd];
+    [context setValue:pushInfo[@"CPD"] forKey:ANSUtmCpd];
     return context;
 }
 

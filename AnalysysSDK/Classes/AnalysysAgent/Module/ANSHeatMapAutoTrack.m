@@ -15,7 +15,6 @@
 #import "ANSConst+private.h"
 #import "UIView+ANSAutoTrack.h"
 #import "NSThread+ANSHelper.h"
-#import "ANSQueue.h"
 
 @interface ANSHeatMapAutoTrack()
 
@@ -99,7 +98,7 @@
 }
 
 - (void)trackHeatMap:(UITouch *)touch {
-//    _touchView = _touchView ?: touch.view;
+    //    _touchView = _touchView ?: touch.view;
     if (_touchView == nil) {
         return;
     }
@@ -127,10 +126,8 @@
     
     //获取当前响应事件的控制器
     if ([self checkIsReport:_touchView withTargat:self.currentViewController]) {
-        [ANSQueue dispatchAsyncLogSerialQueueWithBlock:^{
-            NSDictionary *sdkProperties = [NSDictionary dictionaryWithObjectsAndKeys:self.viewControllerName, ANSPageUrl, nil];
-            [[AnalysysSDK sharedManager] trackHeatMapWithSDKProperties:sdkProperties];
-        }];
+        NSDictionary *sdkProperties = [NSDictionary dictionaryWithObjectsAndKeys:self.viewControllerName, ANSPageUrl, nil];
+        [[AnalysysSDK sharedManager] trackHeatMapWithSDKProperties:sdkProperties];
     } else {
         
     }

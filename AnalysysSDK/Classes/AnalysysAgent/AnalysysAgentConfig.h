@@ -72,6 +72,10 @@
  */
 @property (nonatomic, assign) BOOL autoTrackCrash;
 
+/// 是否上报deviceId
+/// 默认：NO
+@property (nonatomic, assign) BOOL autoTrackDeviceId;
+
 /**
  数据上传加密类型
  */

@@ -113,7 +113,9 @@
 - (NSArray *)getLogsFromArray:(NSArray *)dataArray {
     NSMutableArray *logs = [NSMutableArray array];
     for (NSDictionary *dataInfo in dataArray) {
-        [logs addObject:dataInfo[ANSLogJson]];
+        if ([dataInfo.allKeys containsObject:ANSLogJson]) {
+            [logs addObject:dataInfo[ANSLogJson]];
+        }
     }
     return [NSArray arrayWithArray:logs];
 }

@@ -52,7 +52,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 获取当前使用的window对象
 /// 适配xcode11使用SceneDelegate对象创建window
-+ (UIWindow *)currentWindow;
++ (UIWindow *)currentKeyWindow;
 
 @end
 

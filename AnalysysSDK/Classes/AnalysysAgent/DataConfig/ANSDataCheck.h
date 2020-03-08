@@ -36,8 +36,8 @@ static NSUInteger const ANSPropertySetCapacity = 100;
 /** 保留字段校验 */
 + (ANSDataCheckLog *)checkReservedKey:(NSString *)word;
 
-/** xwho字符串长度校验 */
-+ (ANSDataCheckLog *)checkLengthOfXwho:(NSString *)xwho;
+/** xwhat字符串长度校验 */
++ (ANSDataCheckLog *)checkLengthOfXwhat:(NSString *)xwhat;
 
 /** property.key是否为字符串类型 */
 + (ANSDataCheckLog *)checkTypeOfPropertyKey:(id)key;

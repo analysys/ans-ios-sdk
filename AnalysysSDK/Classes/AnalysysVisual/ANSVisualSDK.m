@@ -222,7 +222,7 @@ static NSString *const ANSVisualConfigDefaultPort = @"4089";
 /** App端埋点后 点击回显 */
 - (void)echoVisualEvent:(NSString *)event view:(id)trackView {
     if ([trackView isKindOfClass:[UIView class]]) {
-        UIWindow *window = [ANSUtil currentWindow];
+        UIWindow *window = [ANSUtil currentKeyWindow];
         UIView *view = (UIView *)trackView;
         CGRect position = [view convertRect:view.bounds toView:window];
         if (position.origin.y > window.frame.size.height) {

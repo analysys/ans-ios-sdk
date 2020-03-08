@@ -25,7 +25,7 @@
     } @catch (NSException *exception) {
         ANSDebug(@"JSON serialized exception:%@", exception);
     }
-    return data;
+    return [data copy];
 }
 
 + (id)convertToJsonObjectWithObject:(id)obj {
@@ -76,7 +76,7 @@
 
     NSString *des = [obj description];
     ANSBriefError(@"Property values should be valid json types. got: %@. coercing to: %@", [obj class], des);
-    return des;
+    return [des copy];
 }
 
 + (NSDictionary *)convertToMapWithString:(NSString *)jsonStr {

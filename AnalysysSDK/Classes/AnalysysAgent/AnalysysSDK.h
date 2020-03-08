@@ -18,6 +18,7 @@
 + (instancetype)sharedManager;
 
 @property (nonatomic, assign) BOOL isBackgroundActive;  //  是否后台激活
+@property (nonatomic, assign) long long appDuration;    //  App本次运行时长
 
 /**
  通过配置初始化SDK
@@ -87,6 +88,12 @@
  */
 - (void)flush;
 
+/// 设置数据网络上传策略
+/// @param networkType 网络类型
+- (void)setUploadNetworkType:(AnalysysNetworkType)networkType;
+    
+/// 清理数据库缓存
+- (void)cleanDBCache;
 #pragma mark - 点击事件
 
 
@@ -319,13 +326,6 @@
  @return bool
 */
 - (BOOL)hasPageViewWhiteList;
-
-/**
- App运行时长
-
- @return 时长
- */
-- (NSNumber *)appDuration;
 
 /**
  当前用户标识
