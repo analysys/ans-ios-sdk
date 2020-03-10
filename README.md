@@ -1,5 +1,5 @@
 
-# Analysys iOS SDK
+# Analysys iOS SDK [![License](https://img.shields.io/github/license/analysys/ans-ios-sdk.svg)](https://github.com/analysys/ans-ios-sdk/blob/master/LICENSE) [![GitHub release](https://img.shields.io/github/release/analysys/ans-ios-sdk.svg)](https://github.com/analysys/ans-ios-sdk/releases)
 
 ========
 
