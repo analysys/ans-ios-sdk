@@ -8,7 +8,7 @@
 
 
 // ********************************
-// ***** 当前 SDK 版本号：4.4.5 *****
+// ***** 当前 SDK 版本号：4.4.5.1 *****
 // ********************************
 
 #import <Foundation/Foundation.h>
@@ -531,12 +531,12 @@
 #pragma mark - Hybrid 页面
 
 /**
- 监听webview
- 
- @param request 请求对象
- @param webView UIWebView/WKWebView对象
- @return 统计是否完成
- */
+监听WKWebView
+
+@param request 请求对象
+@param webView WKWebView对象
+@return 统计是否完成
+*/
 + (BOOL)setHybridModel:(id)webView request:(NSURLRequest *)request;
 
 
