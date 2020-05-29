@@ -49,7 +49,7 @@
 - (BOOL)deleteUploadRecordsWithType:(NSString *)type;
 
 /** 清理数据库 */
-- (void)clearDB;
+- (void)cleanDBCache;
 
 /** 上传失败后重置数据状态 */
 - (void)resetUploadRecordsWithType:(NSString *)type;

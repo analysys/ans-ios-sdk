@@ -24,7 +24,7 @@
 
 
 /**
- 统计 UIWebView 和 WKWebView
+ 统计WKWebView
 
  @param request NSURLRequest请求对象
  @param webView webView对象

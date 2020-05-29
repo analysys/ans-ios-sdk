@@ -35,6 +35,8 @@
 - (void)setMaxDiffTimeInterval:(NSUInteger)maxDiffTimeInterval {
     if (maxDiffTimeInterval < 0) {
         _maxDiffTimeInterval = 30;
+    } else {
+        _maxDiffTimeInterval = maxDiffTimeInterval;
     }
 }
 

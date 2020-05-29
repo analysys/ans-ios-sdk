@@ -23,7 +23,7 @@ static NSString * const ANSFinishLoadingAnimationKey = @"ANSConnectivityBarFinis
 
 @interface ANSABTestDesignerConnection () <ANSWebSocketDelegate>
 
-@property (strong, nonatomic) UIWindow *connectivityIndicatorWindow;
+@property (strong, nonatomic) UIView *connectivityIndicatorWindow;
 
 @end
 
@@ -55,7 +55,7 @@ static NSString * const ANSFinishLoadingAnimationKey = @"ANSConnectivityBarFinis
                                    ANSDesignerDeviceInfoRequestMessageType : [ANSABTestDesignerDeviceInfoRequestMessage class],
                                    ANSDesignerEventBindingRequestMessageType     : [ANSDesignerEventBindingRequestMessage class],
                                    };
-        _uploadStatus = ANSAppStatusOK;
+        _appStatus = ANSAppStatusOK;
         _open = NO;
         _connected = NO;
         _sessionEnded = NO;
@@ -288,10 +288,9 @@ static NSString * const ANSFinishLoadingAnimationKey = @"ANSConnectivityBarFinis
  */
 - (void)showConnectedViewWithLoading:(BOOL)isLoading {
     if (!self.connectivityIndicatorWindow) {
-        UIWindow *mainWindow = [ANSUtil currentKeyWindow];
-        self.connectivityIndicatorWindow = [[UIWindow alloc] initWithFrame:CGRectMake(0, 0, mainWindow.frame.size.width, 4.f)];
+        UIWindow *mainWindow = [[UIApplication sharedApplication] delegate].window;
+        self.connectivityIndicatorWindow = [[UIView alloc] initWithFrame:CGRectMake(0, 0, mainWindow.frame.size.width, 4.f)];
         self.connectivityIndicatorWindow.backgroundColor = [UIColor clearColor];
-        self.connectivityIndicatorWindow.windowLevel = UIWindowLevelAlert;
         self.connectivityIndicatorWindow.alpha = 0;
         self.connectivityIndicatorWindow.hidden = NO;
         
@@ -303,6 +302,7 @@ static NSString * const ANSFinishLoadingAnimationKey = @"ANSConnectivityBarFinis
         [_recordingView.layer addSublayer:_indeterminateLayer];
         [self.connectivityIndicatorWindow addSubview:_recordingView];
         [self.connectivityIndicatorWindow bringSubviewToFront:_recordingView];
+        [[UIApplication sharedApplication].keyWindow addSubview:self.connectivityIndicatorWindow];
         
         [UIView animateWithDuration:0.3 animations:^{
             self.connectivityIndicatorWindow.alpha = 1;
@@ -340,6 +340,7 @@ static NSString * const ANSFinishLoadingAnimationKey = @"ANSConnectivityBarFinis
         [_recordingView removeFromSuperview];
         self.connectivityIndicatorWindow.hidden = YES;
     }
+    [self.connectivityIndicatorWindow removeFromSuperview];
     self.connectivityIndicatorWindow = nil;
 }
 
@@ -380,32 +381,32 @@ static NSString * const ANSFinishLoadingAnimationKey = @"ANSConnectivityBarFinis
 #pragma mark - 通知回调
 /** App进入前台通知 */
 - (void)applicationWillEnterForegroundNotification:(NSNotification *)notification {
-    _uploadStatus = ANSAppStatusOK;
+    _appStatus = ANSAppStatusOK;
 }
 
 /** App进入后台通知 */
 - (void)applicationDidEnterBackgroundNotification:(NSNotification *)notification {
-    _uploadStatus = ANSAppInBackground;
+    _appStatus = ANSAppInBackground;
 }
 
 /** 页面将要出现或消失状态 */
 - (void)pageViewUnready:(NSNotification *)notification {
-    _uploadStatus = ANSViewUnload;
+    _appStatus = ANSViewUnload;
 }
 
 /** 页面出现或消失状态 */
 - (void)pageViewReady:(NSNotification *)notification {
-    _uploadStatus = ANSAppStatusOK;
+    _appStatus = ANSAppStatusOK;
 }
 
 /** 键盘弹出状态 */
 - (void)keyboardDidShow:(NSNotification *)notification {
-    _uploadStatus = ANSKeyboardShow;
+    _appStatus = ANSKeyboardShow;
 }
 
 /** 键盘收回状态 */
 - (void)keyboardDidHiden:(NSNotification *)notification {
-    _uploadStatus = ANSAppStatusOK;
+    _appStatus = ANSAppStatusOK;
 }
 
 /** 由可视化状态下断开websocket连接，当App进入前台时，去除原可视化连接中的数据绑定，防止重复绑定 */

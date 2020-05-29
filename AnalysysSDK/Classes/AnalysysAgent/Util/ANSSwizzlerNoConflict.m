@@ -50,14 +50,14 @@ static void ansSwizzledMethodUIViewControllerViewDidAppear(id self, SEL _cmd, BO
     }
 }
 
-static ANSSwizzle *UIViewControllerviewWillDisappearSwizzle = nil;
-static void ansSwizzledMethodUIViewControllerViewWillDisappear(id self, SEL _cmd, BOOL arg) {
+static ANSSwizzle *UIViewControllerviewDidDisappearSwizzle = nil;
+static void ansSwizzledMethodUIViewControllerViewDidDisappear(id self, SEL _cmd, BOOL arg) {
     Class klass = [self class];
     while (klass) {
-        if (UIViewControllerviewWillDisappearSwizzle) {
-            ((void(*)(id, SEL, BOOL))UIViewControllerviewWillDisappearSwizzle.originalMethod)(self, _cmd, arg);
+        if (UIViewControllerviewDidDisappearSwizzle) {
+            ((void(*)(id, SEL, BOOL))UIViewControllerviewDidDisappearSwizzle.originalMethod)(self, _cmd, arg);
             
-            NSEnumerator *blocks = [UIViewControllerviewWillDisappearSwizzle.blocks objectEnumerator];
+            NSEnumerator *blocks = [UIViewControllerviewDidDisappearSwizzle.blocks objectEnumerator];
             swizzleBlock block;
             while((block = [blocks nextObject])) {
                 block(self, _cmd, [NSNumber numberWithBool:arg]);
@@ -191,12 +191,20 @@ static void ansSwizzledMethodUIApplicationSendActionToFromForEvent(id self, SEL 
 static ANSSwizzle *ANSSendEventSwizzle = nil;
 static void ansSwizzledSendEvent(id self, SEL _cmd, id arg) {
     if (ANSSendEventSwizzle) {
-        ((void(*)(id, SEL, id))ANSSendEventSwizzle.originalMethod)(self, _cmd, arg);
-
-        NSEnumerator *blocks = [ANSSendEventSwizzle.blocks objectEnumerator];
-        swizzleBlock block;
-        while((block = [blocks nextObject])) {
-            block(self, _cmd, arg);
+        if (ANSSendEventSwizzle.order == AnalysysSwizzleOrderBefore) {
+            NSEnumerator *blocks = [ANSSendEventSwizzle.blocks objectEnumerator];
+            swizzleBlock block;
+            while((block = [blocks nextObject])) {
+                block(self, _cmd, arg);
+            }
+            ((void(*)(id, SEL, id))ANSSendEventSwizzle.originalMethod)(self, _cmd, arg);
+        } else {
+            ((void(*)(id, SEL, id))ANSSendEventSwizzle.originalMethod)(self, _cmd, arg);
+            NSEnumerator *blocks = [ANSSendEventSwizzle.blocks objectEnumerator];
+            swizzleBlock block;
+            while((block = [blocks nextObject])) {
+                block(self, _cmd, arg);
+            }
         }
     }
 }
@@ -311,7 +319,7 @@ static NSString *const ANSDidMoveToSuperview = @"didMoveToSuperview";
 static NSString *const ANSTableViewSelect = @"tableView:didSelectRowAtIndexPath:";
 static NSString *const ANSCollectionViewSelect = @"collectionView:didSelectItemAtIndexPath:";
 static NSString *const ANSVisualTrack = @"trackObject:withEvent:";
-static NSString *const ANSViewWillDisappear = @"viewWillDisappear:";
+static NSString *const ANSViewDidDisappear = @"viewDidDisappear:";
 static NSString *const ANSViewDidAppear = @"viewDidAppear:";
 static NSString *const ANSMontion = @"motionBegan:withEvent:";
 static NSString *const ANSUserActivity = @"application:continueUserActivity:restorationHandler:";
@@ -341,8 +349,8 @@ IMP getSwizzleIMPBySELName (NSString * name) {
         return (IMP)ansSwizzledMethodUICollectionViewDidSelectItemAtIndexPath;
     } else if ([name isEqualToString:ANSVisualTrack]) {
         return (IMP)ansSwizzledMethodVisualTrackObjectWithEvent;
-    } else if ([name isEqualToString:ANSViewWillDisappear]) {
-        return (IMP)ansSwizzledMethodUIViewControllerViewWillDisappear;
+    } else if ([name isEqualToString:ANSViewDidDisappear]) {
+        return (IMP)ansSwizzledMethodUIViewControllerViewDidDisappear;
     } else if ([name isEqualToString:ANSViewDidAppear]) {
         return (IMP)ansSwizzledMethodUIViewControllerViewDidAppear;
     } else if ([name isEqualToString:ANSMontion]) {
@@ -382,8 +390,8 @@ ANSSwizzle * __strong *getSwizzleByName (NSString * name) {
         return &UICollectionViewDidSelectItemAtIndexPathSwizzle;
     } else if ([name isEqualToString:ANSVisualTrack]) {
         return &ANSVisualSDKTrackObjectWithEventSwizzle;
-    } else if ([name isEqualToString:ANSViewWillDisappear]) {
-        return &UIViewControllerviewWillDisappearSwizzle;
+    } else if ([name isEqualToString:ANSViewDidDisappear]) {
+        return &UIViewControllerviewDidDisappearSwizzle;
     } else if ([name isEqualToString:ANSViewDidAppear]) {
         return &UIViewControllerViewDidAppearSwizzle;
     } else if ([name isEqualToString:ANSMontion]) {

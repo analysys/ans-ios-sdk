@@ -15,7 +15,6 @@
 #import "NSString+ANSDBEncrypt.h"
 #import "ANSDateUtil.h"
 #import "AnalysysAgentConfig.h"
-#import "AnalysysSDK.h"
 #import "ANSConst+private.h"
 
 /**
@@ -158,7 +157,7 @@ typedef NS_ENUM(NSInteger, AnalysysOrder) {
     }
 }
 
-- (void)clearDB {
+- (void)cleanDBCache {
     NSString *query = @"delete from record_data";
     sqlite3_stmt *pStmt = [self cachedStatementForQuery:query];
     if ([self execStatement:pStmt paramArray:nil]) {

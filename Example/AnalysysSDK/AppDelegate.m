@@ -34,27 +34,25 @@
     
     //  部分设置在SDK初始化前设置
     //    [AnalysysAgent identify:@"testIdentify"];
-    //    [AnalysysAgent alias:@"18600008888" originalId:@""];
     
-    //  页面自动采集
-    [AnalysysAgent setAutomaticCollection:YES];
-    //  热图采集
-    [AnalysysAgent setAutomaticHeatmap:YES];
-    //  全埋点事件
-    [AnalysysAgent setAutoTrackClick:YES];
+//    //  页面自动采集
+//    [AnalysysAgent setAutomaticCollection:YES];
+//    //  热图采集
+//    [AnalysysAgent setAutomaticHeatmap:YES];
+//    //  全埋点事件
+//    [AnalysysAgent setAutoTrackClick:YES];
     
-    //  默认的 debugmode = debugoff 不打印log。 应该先设置debugmode，然后设置 superproperty 避免 log 丢失。
+    //  默认的 debugmode = debugoff 不打印log，可在上传日志中查看是否成功
     //    [AnalysysAgent registerSuperProperties:@{@"Sex": @"male", @"bobby": @[@"football",@"pingpang"]}];
     
     //  AnalysysAgent SDK配置信息
-    AnalysysConfig.appKey = @"589fc0bb8cd583c9";
+    AnalysysConfig.appKey = @"datacollection";
     AnalysysConfig.channel = @"App Store";
-    AnalysysConfig.autoProfile = YES;
-    AnalysysConfig.autoInstallation = YES;
+//    AnalysysConfig.autoProfile = YES;
+//    AnalysysConfig.autoInstallation = YES;
     AnalysysConfig.encryptType = AnalysysEncryptAESCBC128;
-    AnalysysConfig.allowTimeCheck = YES;
-    AnalysysConfig.maxDiffTimeInterval = 5 * 60;
-    //  使用配置信息初始化SDK
+//    AnalysysConfig.allowTimeCheck = YES;
+//    AnalysysConfig.maxDiffTimeInterval = 5 * 60;
     [AnalysysAgent startWithConfig:AnalysysConfig];
     
     
@@ -65,12 +63,12 @@
     [AnalysysAgent setDebugMode:AnalysysDebugOff];
 #endif
     
-    [AnalysysAgent setUploadURL:@"https://arkpaastest.analysys.cn:4089"];
+    [AnalysysAgent setUploadURL:@"http://192.168.220.105:8089"];
     
-#if DEBUG
-    [AnalysysAgent setVisitorDebugURL:@"wss://arkpaastest.analysys.cn:4091"];
-#endif
-    [AnalysysAgent setVisitorConfigURL:@"https://arkpaastest.analysys.cn:4089"];
+//#if DEBUG
+//    [AnalysysAgent setVisitorDebugURL:@"ws://192.168.220.105:9091"];
+//#endif
+//    [AnalysysAgent setVisitorConfigURL:@"http://192.168.220.105:8089"];
     
     
     CFAbsoluteTime linkTime = (CFAbsoluteTimeGetCurrent() - startTime);

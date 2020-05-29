@@ -53,7 +53,7 @@ static CTTelephonyNetworkInfo *_networkInfo = nil;
         if (status == ANSReachableViaWiFi) {
             network = @"WIFI";
         } else if (status == ANSReachableViaWWAN) {
-            if ([UIDevice currentDevice].systemVersion.floatValue >= 12.0) {
+            if (@available(iOS 12.0, *)) {
                 network = _networkInfo.serviceCurrentRadioAccessTechnology.allValues.lastObject;
             }
             if (!network) {

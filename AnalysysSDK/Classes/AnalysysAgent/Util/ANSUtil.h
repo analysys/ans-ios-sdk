@@ -54,6 +54,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// 适配xcode11使用SceneDelegate对象创建window
 + (UIWindow *)currentKeyWindow;
 
+
++ (NSArray *)allPropertiesWithObject:(Class)objectCls;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -47,9 +47,9 @@
     }
     
     return @{
-             @"objects": [context allSerializedObjects],
-             @"rootObject": [_objectIdentityProvider identifierForObject:rootObject]
-             };
+        @"objects": [context allSerializedObjects],
+        @"rootObject": [_objectIdentityProvider identifierForObject:rootObject]
+    };
 }
 
 
@@ -117,15 +117,15 @@
         }
         
         NSDictionary *serializedObject = @{
-                                           @"id": [_objectIdentityProvider identifierForObject:object],
-                                           @"class": [self classHierarchyArrayForObject:object],
-                                           @"properties": propertyValues,
-                                           @"indexOfSuperView": [NSNumber numberWithInteger:indexOfSuperView],
-                                           @"delegate": @{
-                                                   @"class": delegate ? NSStringFromClass([delegate class]) : @"",
-                                                   @"selectors": delegateMethods
-                                                   }
-                                           };
+            @"id": [_objectIdentityProvider identifierForObject:object],
+            @"class": [self classHierarchyArrayForObject:object],
+            @"properties": propertyValues,
+            @"indexOfSuperView": [NSNumber numberWithInteger:indexOfSuperView],
+            @"delegate": @{
+                    @"class": delegate ? NSStringFromClass([delegate class]) : @"",
+                    @"selectors": delegateMethods
+            }
+        };
         
         [context addSerializedObject:serializedObject];
     }
@@ -245,6 +245,8 @@
             //  未处理对象，对象类型在配置中，则添加未遍历对象
             //  如 HomeVC 为 UIViewController 类型
             [context enqueueUnvisitedObject:propertyValue];
+            //            [self addEnqueueUnvisitedObject:propertyValue withContext:context];
+            
             return [_objectIdentityProvider identifierForObject:propertyValue];
         } else if ([propertyValue isKindOfClass:[NSArray class]] || [propertyValue isKindOfClass:[NSSet class]]) {
             //  如subviews子视图
@@ -252,6 +254,7 @@
             for (id value in propertyValue) {
                 if ([context isVisitedObject:value] == NO) {
                     [context enqueueUnvisitedObject:value];
+                    //                    [self addEnqueueUnvisitedObject:value withContext:context];
                 }
                 
                 [arrayOfIdentifiers addObject:[_objectIdentityProvider identifierForObject:value]];
@@ -262,6 +265,18 @@
     //  其他值转换为对应值 如float cgrect值等
     return [propertyDescription.valueTransformer transformedValue:propertyValue];
 }
+
+//  处理特殊view，某些父控制器直接添加子控制器view，而未添加自控制器
+//- (void)addEnqueueUnvisitedObject:(id)value withContext:(ANSObjectSerializerContext *)context {
+//    if ([value isKindOfClass:UIView.class]) {
+//        UIView *view = (UIView *)value;
+//        if ([view.nextResponder isKindOfClass:UIViewController.class]) {
+//            if ([context isVisitedObject:view.nextResponder] == NO) {
+//                [context enqueueUnvisitedObject:view.nextResponder];
+//            }
+//        }
+//    }
+//}
 
 /** 对象及属性描述信息 -> 属性值 */
 - (id)propertyValueForObject:(NSObject *)object withPropertyDescription:(ANSPropertyDescription *)propertyDescription context:(ANSObjectSerializerContext *)context {
@@ -296,17 +311,24 @@
         if ([selectorDescription.selectorName isEqualToString:@"frame"]) {
             //  将当前相对坐标转换为相对window的坐标
             if ([value isKindOfClass:[NSDictionary class]]) {
-                UIWindow * window = [ANSUtil currentKeyWindow];
+                UIWindow *window = [ANSUtil currentKeyWindow];
                 UIView *view = (UIView *)object;
                 CGRect absoluteRect = [view convertRect:view.bounds toView:window];
+
+                if (absoluteRect.origin.x < -MAXFLOAT || absoluteRect.origin.y < -MAXFLOAT) {
+                    //NSLog(@"---数据不在当前window中--%@", NSStringFromCGPoint(absoluteRect.origin));
+                    _isPrePageElement = YES;
+                    return nil;
+                }
+
                 value[@"AX"] = [NSNumber numberWithFloat:absoluteRect.origin.x];
                 value[@"AY"] = [NSNumber numberWithFloat:absoluteRect.origin.y];
             }
         }
         
         NSDictionary *valueDictionary = @{
-                                          @"value": (value ?: [NSNull null])
-                                          };
+            @"value": (value ?: [NSNull null])
+        };
         
         [values addObject:valueDictionary];
     } else if (propertyDescription.useInstanceVariableAccess) {
@@ -318,8 +340,8 @@
                                context:context];
         
         NSDictionary *valueDictionary = @{
-                                          @"value": (value ?: [NSNull null])
-                                          };
+            @"value": (value ?: [NSNull null])
+        };
         
         [values addObject:valueDictionary];
     } else {
@@ -341,9 +363,9 @@
                                        context:context];
                 
                 NSDictionary *valueDictionary = @{
-                                                  @"where": @{ @"parameters": parameters },
-                                                  @"value": (value ?: [NSNull null])
-                                                  };
+                    @"where": @{ @"parameters": parameters },
+                    @"value": (value ?: [NSNull null])
+                };
                 
                 [values addObject:valueDictionary];
             }

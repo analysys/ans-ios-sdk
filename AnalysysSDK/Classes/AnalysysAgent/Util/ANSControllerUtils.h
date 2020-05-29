@@ -35,6 +35,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// 当前根视图
 + (UIViewController *)rootViewController;
 
+/// 获取当前堆栈所有页面
++ (NSArray *)allShowViewControllers;
+
 @end
 
 NS_ASSUME_NONNULL_END

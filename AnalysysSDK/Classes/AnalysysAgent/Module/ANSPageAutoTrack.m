@@ -45,13 +45,13 @@
             UIViewController *controller = (UIViewController *)obj;
             [[ANSPageAutoTrack shareInstance] trackViewAppear:controller isFromBackground:NO];
         };
-        void (^viewWillDisappearBlock)(id, SEL, id) = ^(id obj, SEL sel, NSNumber *num) {
+        void (^viewDidDisappearBlock)(id, SEL, id) = ^(id obj, SEL sel, NSNumber *num) {
             UIViewController *controller = (UIViewController *)obj;
             [[ANSPageAutoTrack shareInstance] trackViewDisappear:controller];
         };
 
         [ANSSwizzler swizzleSelector:@selector(viewDidAppear:) onClass:[UIViewController class] withBlock:viewDidAppearBlock named:@"ANSViewDidAppear"];
-        [ANSSwizzler swizzleSelector:@selector(viewWillDisappear:) onClass:[UIViewController class] withBlock:viewWillDisappearBlock named:@"ANSViewDidDisappear"];
+        [ANSSwizzler swizzleSelector:@selector(viewDidDisappear:) onClass:[UIViewController class] withBlock:viewDidDisappearBlock named:@"ANSViewDidDisappear"];
     }];
 }
 
@@ -74,9 +74,6 @@
         return NO;
     }
     NSString *className = NSStringFromClass(vClass);
-    if ([[ANSControllerUtils systemBuildInClasses] containsObject:className]) {
-        return NO;
-    }
     
     if ([[AnalysysSDK sharedManager] isViewAutoTrack]) {
         if ([[AnalysysSDK sharedManager] isIgnoreTrackWithClassName:className]) {
@@ -102,6 +99,10 @@
         [[ANSSession shareInstance] generateSessionId];
         [[ANSSession shareInstance] updatePageAppearDate];
         
+        if ([[ANSControllerUtils systemBuildInClasses] containsObject:NSStringFromClass(controller.class)]) {
+            return;
+        }
+        
         if ([self canTrackViewController:controller]) {
             if (!background && self.lastViewController == controller) {
                 //  前台页面切换 防止右滑手势多次触发
@@ -109,9 +110,8 @@
             }
             [self autoTrackViewController:controller];
         }
-        if (![[ANSControllerUtils systemBuildInClasses] containsObject:NSStringFromClass(controller.class)]) {
-            self.lastViewController = controller;
-        }
+        
+        self.lastViewController = controller;
     }];
 }
 

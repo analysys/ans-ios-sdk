@@ -268,12 +268,6 @@
 		<array>
 			<dict>
 				<key>interface</key>
-				<string>UIWebView</string>
-				<key>backgroundColor</key>
-				<string>#1E90FF</string>
-			</dict>
-			<dict>
-				<key>interface</key>
 				<string>WKWebView</string>
 				<key>backgroundColor</key>
 				<string>#1E90FF</string>

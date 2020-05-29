@@ -59,7 +59,7 @@
     }
     if (class_getInstanceMethod(cls, NSSelectorFromString(@"application:continueUserActivity:restorationHandler:"))) {
         selector = NSSelectorFromString(@"application:continueUserActivity:restorationHandler:");
-        if ([UIDevice currentDevice].systemVersion.floatValue >= 8.0) {
+        if (@available(iOS 8.0, *)) {
             [ANSSwizzler swizzleSelector:selector
                                  onClass:cls
                                withBlock:^(id view, SEL command, UIApplication *application, NSUserActivity *userActivity, id restorationHandler) {
@@ -86,7 +86,7 @@
 + (NSDictionary *)parameterWithURL:(NSURL *)url {
     NSDictionary *queryParameters;
     NSURLComponents *urlComponents = [[NSURLComponents alloc] initWithString:url.absoluteString];
-    if ([UIDevice currentDevice].systemVersion.floatValue >= 8.0) {
+    if (@available(iOS 8.0, *)) {
         NSMutableDictionary *query = [NSMutableDictionary dictionary];
         [urlComponents.queryItems enumerateObjectsUsingBlock:^(NSURLQueryItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             [query setValue:obj.value forKey:obj.name];
@@ -102,7 +102,7 @@
 /** 获取URL/Scheme参数 数组 */
 + (NSArray *)queryArrayWithURL:(NSURL *)url {
     NSString *queryStr;
-    if ([UIDevice currentDevice].systemVersion.floatValue >= 9.0) {
+    if (@available(iOS 9.0, *)) {
         queryStr = [url.query stringByRemovingPercentEncoding];
     } else {
         queryStr = [url.query stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];

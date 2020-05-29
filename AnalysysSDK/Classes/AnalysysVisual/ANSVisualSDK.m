@@ -19,14 +19,13 @@
 #import "AnalysysLogger.h"
 
 #import "ANSSwizzler.h"
-#import "ANSJsonUtil.h"
 #import "ANSTelephonyNetwork.h"
 #import "ANSDeviceInfo.h"
 #import "ANSReachability.h"
 #import "ANSUtil.h"
+#import "ANSControllerUtils.h"
 
 #import "ANSConst+private.h"
-#import "ANSControllerUtils.h"
 #import "UIView+ANSHelper.h"
 
 #define AgentLock() dispatch_semaphore_wait(self->_lock, DISPATCH_TIME_FOREVER);
@@ -82,7 +81,7 @@ static NSString *const ANSVisualConfigDefaultPort = @"4089";
         
         [ANSSwizzler swizzleSelector:@selector(sendEvent:) onClass:[UIApplication class] withBlock:^(id view, SEL command, UIEvent *event){
             [self monitoVisualSendEvent:event];
-        } named:@"ANSVisualSendEvent"];
+        } named:@"ANSVisualSendEvent" order:AnalysysSwizzleOrderBefore];
         
         _lock = dispatch_semaphore_create(0);
         NSString *netLabel = [NSString stringWithFormat:@"com.analysys.VisualNetworkQueue"];
@@ -118,7 +117,7 @@ static NSString *const ANSVisualConfigDefaultPort = @"4089";
     if (self.designerConnection) {
         [self.designerConnection close];
     }
-    
+        
     NSString *url = [ANSUtil getSocketUrlString:visualUrl];
     if (url.length > 0) {
         self.connectUrl = [NSString stringWithFormat:@"%@?appkey=%@&version=%@&os=ios",url, AnalysysConfig.appKey, [ANSDeviceInfo getAppVersion]];
@@ -163,7 +162,7 @@ static NSString *const ANSVisualConfigDefaultPort = @"4089";
     [[AnalysysSDK sharedManager] track:event properties:nil];
 }
 
-/// 事件点击 获取当前页面
+/// 事件点击 获取当前控件文本信息
 /// @param event event
 - (void)monitoVisualSendEvent:(UIEvent *)event {
     if (event.type == UIEventTypeTouches) {
@@ -256,12 +255,12 @@ static NSString *const ANSVisualConfigDefaultPort = @"4089";
     responseInfo[@"$pos_top"] = [NSString stringWithFormat:@"%.1f",position.origin.y];
     responseInfo[@"$pos_width"] = [NSString stringWithFormat:@"%.1f",position.size.width];
     responseInfo[@"$pos_height"] = [NSString stringWithFormat:@"%.1f",position.size.height];
-
-//    NSLog(@"currentPage:%@", self.currentPage);
-    [self.designerConnection sendJsonMessage:@{@"event_info": responseInfo,
-                                               @"type":@"eventinfo_request",
-                                               @"target_page": self.currentPage ?: @""
-                                             }];
+    
+    [self.designerConnection sendJsonMessage:@{
+        @"event_info": responseInfo,
+        @"type":@"eventinfo_request",
+        @"target_page": self.currentPage ?: @""
+    }];
 }
 
 #pragma mark - 内部方法

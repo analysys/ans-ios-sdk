@@ -82,7 +82,7 @@ static NSString *const startOther = @"0"; //  其他，如home键切换、后台
             self.appStartType = startOpenURL;
             return;
         }
-        if ([UIDevice currentDevice].systemVersion.floatValue >= 8.0) {
+        if (@available(iOS 8.0, *)) {
             NSDictionary *userActivity = [launchOptions objectForKey:UIApplicationLaunchOptionsUserActivityDictionaryKey];
             if (userActivity) {
                 self.appStartType = startOpenURL;
@@ -94,7 +94,7 @@ static NSString *const startOther = @"0"; //  其他，如home键切换、后台
             self.appStartType = startNotification;
             return;
         }
-        if ([UIDevice currentDevice].systemVersion.floatValue >= 9.0) {
+        if (@available(iOS 9.0, *)) {
             id touch3D = [launchOptions objectForKey:UIApplicationLaunchOptionsShortcutItemKey];
             if (touch3D) {
                 self.appStartType = start3D;
@@ -106,7 +106,7 @@ static NSString *const startOther = @"0"; //  其他，如home键切换、后台
 
 /** 3D touch启动 */
 - (void)track3DTouchWithAppDelegate:(id<UIApplicationDelegate>)delegate {
-    if ([UIDevice currentDevice].systemVersion.floatValue >= 9.0) {
+    if (@available(iOS 9.0, *)) {
         SEL touchSel = @selector(application:performActionForShortcutItem:completionHandler:);
         if ([delegate respondsToSelector:touchSel]) {
             typedef void (^handler)(BOOL);
@@ -153,7 +153,7 @@ static NSString *const startOther = @"0"; //  其他，如home键切换、后台
     SEL userActivitySel = @selector(application:continueUserActivity:restorationHandler:);
     if ([delegate respondsToSelector:userActivitySel]) {
         typedef void (^handler)(NSArray *);
-        if ([UIDevice currentDevice].systemVersion.floatValue >= 8.0) {
+        if (@available(iOS 8.0, *)) {
             [ANSSwizzler swizzleSelector:userActivitySel
                                  onClass:[delegate class]
                                withBlock:^(id view, SEL command, UIApplication *application, NSUserActivity *userActivity,handler restorableObjects){
@@ -166,7 +166,7 @@ static NSString *const startOther = @"0"; //  其他，如home键切换、后台
 /** 通知启动 */
 - (void)trackRemoteNotificationWithAppDelegate:(id<UIApplicationDelegate>)delegate {
     //  iOS 10 ~
-    if ([UIDevice currentDevice].systemVersion.floatValue >= 10.0) {
+    if (@available(iOS 10.0, *)) {
         SEL selector = @selector(userNotificationCenter:didReceiveNotificationResponse:withCompletionHandler:);
         if ([delegate respondsToSelector:selector]) {
             typedef void (^completionHandler)(void);

@@ -61,9 +61,15 @@ static inline NSString * AnsLogSring(NSString *format, ...) {
     return [message copy];
 }
 
-- (NSString *)substringText:(NSString *)text {
-    if (text.length > ANSPrintLogLength) {
-        return [NSString stringWithFormat:@"%@...",[text substringToIndex:ANSPrintLogLength]];
+- (NSString *)substringText:(id)text {
+    if (text == nil) {
+        return @"";
+    }
+    if ([text isKindOfClass:NSString.class]) {
+        NSString *string = (NSString*)text;
+        if (string.length > ANSPrintLogLength) {
+            return [NSString stringWithFormat:@"%@...",[text substringToIndex:ANSPrintLogLength]];
+        }
     }
     return text;
 }

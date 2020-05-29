@@ -45,6 +45,12 @@ typedef NS_ENUM(NSUInteger, AnalysysLoggerLevel) {
     AnalysysLoggerLevelError,
 };
 
+typedef NS_ENUM(NSInteger, AnalysysLogMode) {
+    AnalysysLogOff = 0,
+    AnalysysLogOn = 1,
+};
+
+
 /**
  * @class
  * 日志打印
@@ -58,6 +64,8 @@ typedef NS_ENUM(NSUInteger, AnalysysLoggerLevel) {
 @interface AnalysysLogger : NSObject
 
 @property (class , readonly, strong) AnalysysLogger *sharedInstance;
+
+@property (nonatomic, assign) AnalysysLogMode logMode;
 
 + (BOOL)isLoggerEnabled;
 

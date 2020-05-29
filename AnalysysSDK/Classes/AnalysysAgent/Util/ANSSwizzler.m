@@ -35,7 +35,19 @@ extern ANSSwizzle * __strong *getSwizzleByName (NSString * name);
 + (void)swizzleSelector:(SEL)aSelector
                 onClass:(Class)aClass
               withBlock:(swizzleBlock)aBlock
-                  named:(NSString *)aName;{
+                  named:(NSString *)aName {
+    [self swizzleSelector:aSelector
+                  onClass:aClass
+                withBlock:aBlock
+                    named:aName
+                    order:AnalysysSwizzleOrderAfter];
+}
+
++ (void)swizzleSelector:(SEL)aSelector
+                onClass:(Class)aClass
+              withBlock:(swizzleBlock)aBlock
+                  named:(NSString *)aName
+                  order:(AnalysysSwizzleOrder)order {
     if (!aSelector || !aClass || ! aBlock || !aName) {
         return;
     }
@@ -54,7 +66,7 @@ extern ANSSwizzle * __strong *getSwizzleByName (NSString * name);
         if (!*swizzle) {
             IMP originalMethod = method_getImplementation(aMethod);
             method_setImplementation(aMethod, aSwizzleMethod);
-            *swizzle = [[ANSSwizzle alloc] initWithBlock:aBlock named:aName forClass:aClass selector:aSelector originalMethod:originalMethod];
+            *swizzle = [[ANSSwizzle alloc] initWithBlock:aBlock named:aName forClass:aClass selector:aSelector originalMethod:originalMethod order:order];
         } else {
             [(*swizzle).blocks setObject:aBlock forKey:aName];
         }
@@ -72,7 +84,7 @@ extern ANSSwizzle * __strong *getSwizzleByName (NSString * name);
             ANSDebug(@"SwizzleException:Newly added method for %@::%@ was the same as the old method", NSStringFromClass(aClass), NSStringFromSelector(aSelector));
             return;
         }
-        *swizzle = [[ANSSwizzle alloc] initWithBlock:aBlock named:aName forClass:aClass selector:aSelector originalMethod:originalMethod];
+        *swizzle = [[ANSSwizzle alloc] initWithBlock:aBlock named:aName forClass:aClass selector:aSelector originalMethod:originalMethod order:order];
     }
 }
 
@@ -102,11 +114,13 @@ extern ANSSwizzle * __strong *getSwizzleByName (NSString * name);
                         named:(NSString *)aName
                      forClass:(Class)aClass
                      selector:(SEL)aSelector
-               originalMethod:(IMP)aMethod {
+               originalMethod:(IMP)aMethod
+                        order:(AnalysysSwizzleOrder)order {
     if ((self = [self init])) {
         self.class = aClass;
         self.selector = aSelector;
         self.originalMethod = aMethod;
+        self.order = order;
         [self.blocks setObject:aBlock forKey:aName];
     }
     return self;

@@ -9,6 +9,7 @@
 #import "ANSControllerUtils.h"
 #import "NSThread+ANSHelper.h"
 #import "ANSUtil.h"
+#import <UIKit/UIKit.h>
 
 @implementation ANSControllerUtils
 
@@ -19,7 +20,6 @@
         systemBlackList = @[
             @"SFBrowserRemoteViewController",
             @"SFSafariViewController",
-            @"UIViewController",
             @"UITableViewController",
             @"UIAlertController",
             @"UITabBarController",
@@ -93,6 +93,7 @@
             @"_UIRemoteInputViewController",
             @"_UIUserDefaultsActivityNavigationController",
             @"_SFAppPasswordSavingViewController",
+            @"_UIActivityNavigationController",
             @"QLPreviewController",
             @"QLPreviewCollection",
             @"QLItemPresenterViewController",
@@ -101,7 +102,9 @@
             @"SKRemoteReviewViewController",
             @"SKStoreReviewViewController",
             @"UIEditingOverlayViewController",
+            @"MFMessageComposeViewController",
             @"MFMailComposeRemoteViewController",
+            @"MFMailComposeViewController",
             @"MFMailComposeInternalViewController"
         ];
     });
@@ -113,7 +116,21 @@
     void (^block)(void) = ^{
         UIWindow *window = [ANSUtil currentKeyWindow];
         UIViewController *rootViewController = window.rootViewController;
-        currentViewController = [ANSControllerUtils findCurrentVCFromRootVC:rootViewController isRoot:YES];
+        NSArray *allProperties = [ANSUtil allPropertiesWithObject:rootViewController.class];
+        if ([allProperties containsObject:@"m_tabBarController"]) {
+            id object = [rootViewController valueForKey:@"m_tabBarController"];
+            if ([object isKindOfClass:NSClassFromString(@"AKTabBarController")]) {
+                UIViewController *tabBarController = (UIViewController *)object;
+                if ([tabBarController respondsToSelector:NSSelectorFromString(@"selectedViewController")]) {
+                    UIViewController *nav = [tabBarController performSelector:NSSelectorFromString(@"selectedViewController") withObject:nil];
+                    if ([nav respondsToSelector:NSSelectorFromString(@"topViewController")]) {
+                        currentViewController = [nav performSelector:NSSelectorFromString(@"topViewController")];
+                    }
+                }
+            }
+        } else {
+            currentViewController = [ANSControllerUtils findCurrentVCFromRootVC:rootViewController isRoot:YES];
+        }
     };
     [NSThread ansRunOnMainThread:block];
 
@@ -156,7 +173,7 @@
 }
 
 + (UIViewController *)rootViewController {
-    UIWindow *window = [ANSControllerUtils topWindow];
+    UIWindow *window = [ANSUtil currentKeyWindow];
     UIViewController *result = window.rootViewController;
     while (result.presentedViewController) {
         result = result.presentedViewController;
@@ -170,7 +187,30 @@
     return result;
 }
 
++ (NSArray *)allShowViewControllers {
+    NSMutableArray *controllers = [NSMutableArray array];
+    [self getChildrenVCWithParentVC:[ANSUtil currentKeyWindow].rootViewController allVC:controllers];
+    return [controllers copy];
+}
+
 #pragma mark - private
+
+//  当前控件及所有子控件
++ (void)getChildrenVCWithParentVC:(UIViewController *)parentVC allVC:(NSMutableArray *)allControllers {
+    
+    if (parentVC) {
+        [allControllers addObject:parentVC];
+    }
+    
+    NSArray *childViewControllers = parentVC.childViewControllers;
+    if (parentVC.presentedViewController) {
+        childViewControllers = @[parentVC.presentedViewController];
+    }
+    for (UIViewController *childVC in childViewControllers) {
+        //NSLog(@"childVC:%@", childVC);
+        [self getChildrenVCWithParentVC:childVC allVC:allControllers];
+    }
+}
 
 + (UIViewController *)findCurrentVCFromRootVC:(UIViewController *)viewController isRoot:(BOOL)isRoot {
     UIViewController *currentViewController = nil;
@@ -247,23 +287,6 @@
         }
     } while ((next = next.nextResponder));
     return [next isKindOfClass:UIViewController.class] ? (UIViewController *)next : nil;
-}
-
-+ (UIWindow *)topWindow {
-    __block UIWindow *window;
-    [NSThread ansRunOnMainThread:^{
-        window = [ANSUtil currentKeyWindow];
-        if (window.windowLevel != UIWindowLevelNormal) {
-            NSArray *windows = [[UIApplication sharedApplication] windows];
-            for(UIWindow * tmpWin in windows){
-                if (tmpWin.windowLevel == UIWindowLevelNormal){
-                    window = tmpWin;
-                    break;
-                }
-            }
-        }
-    }];
-    return window;
 }
 
 /** 递归获取文本内容 */

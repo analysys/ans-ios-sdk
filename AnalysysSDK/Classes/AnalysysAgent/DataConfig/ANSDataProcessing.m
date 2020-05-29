@@ -155,6 +155,7 @@
                 NSDictionary *fieldRules = dataConfig.dataRules[outerFieldName][contextFieldName];
                 id fieldValue = [self getValueWithFieldRules:fieldRules andAciton:action key:outerFieldName error:checkResult];
                 if (*checkResult != nil) {
+                    ANSBriefWarning(@"%@",[*checkResult messageDisplay]);
                     return nil;
                 }
                 [contextInfo setValue:fieldValue forKey:contextFieldName];
@@ -164,6 +165,7 @@
             //  1.1 填充并校验外层模板数据
             id outerValue =[self getValueWithFieldRules:dataConfig.dataRules[outerFieldName] andAciton:action key:outerFieldName error:checkResult];
             if (*checkResult != nil ) {
+                ANSBriefWarning(@"%@",[*checkResult messageDisplay]);
                 return nil;
             }
             [uploadInfo setValue:outerValue forKey:outerFieldName];

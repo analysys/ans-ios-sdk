@@ -89,14 +89,11 @@ static NSString *ANSUserAgentId = @"UserAgent";
     dispatch_block_t block = ^(){
         NSString *ansUserAgent = [ANSFileManager userDefaultValueWithKey:ANSUserAgentId];
         if (ansUserAgent) {
-            UIWebView *webView = [[UIWebView alloc] initWithFrame:CGRectZero];
-            NSString *userAgent = [webView stringByEvaluatingJavaScriptFromString:@"navigator.userAgent"];
-            userAgent = [userAgent stringByReplacingOccurrencesOfString:ANSHybridId withString:@""];
+            NSString *userAgent = [ansUserAgent stringByReplacingOccurrencesOfString:ANSHybridId withString:@""];
             NSDictionary *userAgentDict = @{ANSUserAgentId: userAgent};
             ANSUserDefaultsLock();
             [[NSUserDefaults standardUserDefaults] registerDefaults:userAgentDict];
             ANSUserDefaultsUnlock();
-            webView = nil;
         }
     };
     if ([[NSThread currentThread] isMainThread]) {
@@ -110,36 +107,59 @@ static NSString *ANSUserAgentId = @"UserAgent";
 
 /** 设置webview agent标识，供hybrid使用 */
 - (void)addUserAgent:(id)webView {
+    dispatch_block_t block = ^(){
+        NSString *ansUserAgent = [ANSFileManager userDefaultValueWithKey:ANSUserAgentId];
+        if (ansUserAgent == nil || [ansUserAgent rangeOfString:ANSHybridId].location == NSNotFound) {
+            [self WKWebView:webView uaBlock:^(NSString *userAgent) {
+                [self setUserAgent:userAgent WKWebView:webView];
+            }];
+        }
+    };
+    if ([[NSThread currentThread] isMainThread]) {
+        block();
+    } else {
+        dispatch_async(dispatch_get_main_queue(), block);
+    }
+}
+
+//  获取WKWebView的UA
+- (void)WKWebView:(id)webView uaBlock:(void(^)(NSString *))uaBlock {
     @try {
-        dispatch_block_t block = ^(){
-            NSString *ansUserAgent = [ANSFileManager userDefaultValueWithKey:ANSUserAgentId];
-            if (ansUserAgent == nil || [ansUserAgent rangeOfString:ANSHybridId].location == NSNotFound) {
-                UIWebView *web = [[UIWebView alloc] initWithFrame:CGRectZero];
-                NSString *userAgent = [web stringByEvaluatingJavaScriptFromString:@"navigator.userAgent"];
-                userAgent = [userAgent stringByAppendingString:ANSHybridId];
-                NSDictionary *userAgentDict = @{ANSUserAgentId: userAgent};
-                //  回写
-                ANSUserDefaultsLock();
-                [[NSUserDefaults standardUserDefaults] registerDefaults:userAgentDict];
-                ANSUserDefaultsUnlock();
-                web = nil;
-                
-                //  WKWebView 需要设置 setCustomUserAgent:
-                SEL selector = NSSelectorFromString(@"setCustomUserAgent:");
-                if ([webView respondsToSelector:selector]) {
-                    IMP imp = [webView methodForSelector:selector];
-                    void *(*func)(id, SEL, NSString*) = (void *)imp;
-                    func(webView, selector, userAgent);
-                }
+        if ([webView isKindOfClass:NSClassFromString(@"WKWebView")]) {
+            SEL evaluateSelector = NSSelectorFromString(@"evaluateJavaScript:completionHandler:");
+            if (evaluateSelector) {
+                typedef void(^CompletionBlock)(id, NSError *);
+                CompletionBlock completionHandler = ^(id response, NSError *error) {
+                    //                NSLog(@"response:%@ error:%@",response, error.description);
+                    if (response && [response isKindOfClass:NSString.class]) {
+                        uaBlock(response);
+                    }
+                };
+                IMP evaluateImp = [webView methodForSelector:evaluateSelector];
+                void *(*func)(id, SEL, NSString*, CompletionBlock) = (void *(*)(id, SEL, NSString *, CompletionBlock))evaluateImp;
+                func(webView, evaluateSelector, @"navigator.userAgent", completionHandler);
             }
-        };
-        if ([[NSThread currentThread] isMainThread]) {
-            block();
-        } else {
-            dispatch_async(dispatch_get_main_queue(), block);
         }
     } @catch (NSException *exception) {
         
+    }
+}
+
+/** 更新本地及WKWebView的UA */
+- (void)setUserAgent:(NSString *)userAgent WKWebView:(id)webView {
+    userAgent = [userAgent stringByAppendingString:ANSHybridId];
+    NSDictionary *userAgentDict = @{ANSUserAgentId: userAgent};
+    
+    ANSUserDefaultsLock();
+    [[NSUserDefaults standardUserDefaults] registerDefaults:userAgentDict];
+    ANSUserDefaultsUnlock();
+    
+    //  WKWebView 需要设置 setCustomUserAgent:
+    SEL selector = NSSelectorFromString(@"setCustomUserAgent:");
+    if ([webView respondsToSelector:selector]) {
+        IMP imp = [webView methodForSelector:selector];
+        void *(*func)(id, SEL, NSString*) = (void *)imp;
+        func(webView, selector, userAgent);
     }
 }
 
@@ -161,15 +181,10 @@ static NSString *ANSUserAgentId = @"UserAgent";
 /** iOS 回调 JS */
 - (void)jsCallBackMethod:(NSString *)methodStr withWebView:(id)webView {
     methodStr = [[methodStr stringByReplacingOccurrencesOfString:@"\n" withString:@""] stringByReplacingOccurrencesOfString:@" " withString:@""];
-    if ([webView isKindOfClass:[UIWebView class]]) {
-        [webView stringByEvaluatingJavaScriptFromString:methodStr];
-    } else if ([webView isKindOfClass:NSClassFromString(@"WKWebView")]) {
+    if ([webView isKindOfClass:NSClassFromString(@"WKWebView")]) {
         SEL evaluateSelector = NSSelectorFromString(@"evaluateJavaScript:completionHandler:");
         if (evaluateSelector) {
             typedef void(^CompletionBlock)(id, NSError *);
-//            CompletionBlock completionHandler = ^(id response, NSError *error) {
-//                NSLog(@"response:%@ error:%@",response, error.description);
-//            };
             IMP evaluateImp = [webView methodForSelector:evaluateSelector];
             void *(*func)(id, SEL, NSString *, CompletionBlock) = (void *(*)(id, SEL, NSString *, CompletionBlock))evaluateImp;
             func(webView, evaluateSelector, methodStr, nil);
@@ -338,7 +353,7 @@ static NSString *ANSUserAgentId = @"UserAgent";
     ANSBriefWarning(@"Hybrid: alias method must have 2 parameter.");
 }
 
-- (void)getDistinctId:(NSArray *)params webView:(UIWebView *)webView {
+- (void)getDistinctId:(NSArray *)params webView:(id)webView {
     NSString *distinctId = [AnalysysAgent getDistinctId];
     NSString *jsMethod;
     if (distinctId) {

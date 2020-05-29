@@ -24,7 +24,7 @@ typedef enum : NSUInteger {
 @interface ANSABTestDesignerConnection : NSObject
 
 /** 当前App所处的状态(在snapshotRequest中控制是否需要上传数据) */
-@property (nonatomic, assign) ANSAppStatus uploadStatus;
+@property (nonatomic, assign) ANSAppStatus appStatus;
 /** 是否已连接websocket */
 @property (nonatomic, readonly) BOOL connected;
 /** session是否结束(暂未使用) */

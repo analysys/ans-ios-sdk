@@ -7,8 +7,9 @@
 //
 //  Copyright (c) 2014 Mixpanel. All rights reserved.
 
-#import "ANSABTestDesignerConnection.h"
 #import "ANSDesignerEventBindingMessage.h"
+
+#import "ANSABTestDesignerConnection.h"
 #import "ANSEventBinding.h"
 #import "AnalysysLogger.h"
 

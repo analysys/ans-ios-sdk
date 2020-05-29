@@ -49,13 +49,6 @@
  */
 - (void)setVisitorConfigURL:(NSString *)configURL;
 
-/**
- 是否采集用户点击坐标
- 
- @param autoTrack YES/NO
- */
-- (void)setAutomaticHeatmap:(BOOL)autoTrack;
-
 
 #pragma mark - SDK发送策略
 
@@ -94,13 +87,8 @@
     
 /// 清理数据库缓存
 - (void)cleanDBCache;
+
 #pragma mark - 点击事件
-
-
-/**
- 热图事件
- */
-- (void)trackHeatMapWithSDKProperties:(NSDictionary *)sdkProperties;
 
 /**
  添加事件及附加属性
@@ -145,6 +133,13 @@
 - (void)setIgnoredAutomaticCollectionControllers:(NSArray<NSString *> *)controllers;
 
 #pragma mark - 热图模块儿接口
+
+/**
+ 是否采集用户点击坐标
+ 
+ @param autoTrack YES/NO
+ */
+- (void)setAutomaticHeatmap:(BOOL)autoTrack;
 
 /**
  忽略部分页面上所有的点击事件
@@ -304,6 +299,11 @@
 - (void)trackCampaign:(id)userInfo isClick:(BOOL)isClick userCallback:(void(^)(id campaignInfo))userCallback;
 
 #pragma mark - other
+
+/**
+ 热图事件
+ */
+- (void)trackHeatMapWithSDKProperties:(NSDictionary *)sdkProperties;
 
 /**
  页面是否忽略了自动采集

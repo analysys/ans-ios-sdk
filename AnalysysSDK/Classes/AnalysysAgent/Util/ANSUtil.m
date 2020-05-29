@@ -7,6 +7,7 @@
 //
 
 #import "ANSUtil.h"
+#import <objc/runtime.h>
 
 @implementation ANSUtil
 
@@ -69,7 +70,7 @@
 + (UIWindow *)currentKeyWindow {
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
     UIWindow *window = nil;
-    if ([UIDevice currentDevice].systemVersion.floatValue >= 13.0) {
+    if (@available(iOS 13.0, *)) {
         for (UIWindowScene *windowScene in [UIApplication sharedApplication].connectedScenes) {
             if (windowScene.activationState == UISceneActivationStateForegroundActive) {
                 window = windowScene.windows.firstObject;
@@ -79,9 +80,21 @@
     }
     return window ?: [UIApplication sharedApplication].keyWindow;
 #else
-    
     return [UIApplication sharedApplication].keyWindow;
 #endif
+}
+
++ (NSArray *)allPropertiesWithObject:(Class)objectCls {
+    unsigned int outCount = 0;
+    Ivar *ivars = class_copyIvarList(objectCls, &outCount);
+    NSMutableArray *varArray = [NSMutableArray array];
+    for (unsigned int i = 0; i < outCount; i ++) {
+        Ivar ivar = ivars[i];
+        NSString *name = [NSString stringWithCString:ivar_getName(ivar) encoding:NSUTF8StringEncoding];
+        [varArray addObject:name ];
+    }
+    free(ivars);
+    return [varArray copy];
 }
 
 

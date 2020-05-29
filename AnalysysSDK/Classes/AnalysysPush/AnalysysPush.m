@@ -82,24 +82,27 @@ static NSString * const ANSCampaignKey = @"EGPUSH_CINFO";//  易观推送标识
 - (NSDictionary *)parseAnalysysPushInfo:(id)userInfo {
     _isContainAnsPush = NO;
     _ansPushInfo = nil;
-    
-    if ([userInfo isKindOfClass:[NSString class]]) {
-        NSString *pushStr = (NSString *)userInfo;
-        if ([pushStr rangeOfString:ANSCampaignKey].location != NSNotFound) {
-            NSDictionary *pushInfo = [ANSJsonUtil convertToMapWithString:pushStr];
-            if (pushInfo) {
-                [self parseCampaignWithPushInfo:pushInfo];
+    @try {
+        if ([userInfo isKindOfClass:[NSString class]]) {
+            NSString *pushStr = (NSString *)userInfo;
+            if ([pushStr rangeOfString:ANSCampaignKey].location != NSNotFound) {
+                NSDictionary *pushInfo = [ANSJsonUtil convertToMapWithString:pushStr];
+                if (pushInfo) {
+                    [self parseCampaignWithPushInfo:pushInfo];
+                }
             }
+        } else if ([userInfo isKindOfClass:[NSDictionary class]]) {
+            NSDictionary *remotePushInfo = (NSDictionary *)userInfo;
+            [self parseCampaignWithPushInfo:remotePushInfo];
         }
-    } else if ([userInfo isKindOfClass:[NSDictionary class]]) {
-        NSDictionary *remotePushInfo = (NSDictionary *)userInfo;
-        [self parseCampaignWithPushInfo:remotePushInfo];
+        
+        if ([_ansPushInfo isKindOfClass:[NSString class]]) {
+            _ansPushInfo = [ANSJsonUtil convertToMapWithString:_ansPushInfo];
+        }
+        return _ansPushInfo;
+    } @catch (NSException *exception) {
+        return nil;
     }
-    
-    if ([_ansPushInfo isKindOfClass:[NSString class]]) {
-        _ansPushInfo = [ANSJsonUtil convertToMapWithString:_ansPushInfo];
-    }
-    return _ansPushInfo;
 }
 
 /** 判断推送信息中是否包含活动信息 */
@@ -136,9 +139,9 @@ static NSString * const ANSCampaignKey = @"EGPUSH_CINFO";//  易观推送标识
 - (void)openUrlStr:(NSString *)urlStr {
     NSURL *openURL = [NSURL URLWithString:urlStr];
     if ([[UIApplication sharedApplication] canOpenURL:openURL]) {
-        if ([UIDevice currentDevice].systemVersion.floatValue >= 9.0) {
+        if (@available(iOS 9.0, *)) {
             SFSafariViewController *safari = [[SFSafariViewController alloc] initWithURL:openURL];
-            [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:safari animated:YES completion:nil];
+            [[ANSUtil currentKeyWindow].rootViewController presentViewController:safari animated:YES completion:nil];
         } else {
             [[UIApplication sharedApplication] openURL:openURL];
         }

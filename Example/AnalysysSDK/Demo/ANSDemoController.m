@@ -13,7 +13,6 @@
 #import "ANSDemoCollectionHeaderView.h"
 #import "UIColor+Transform.h"
 
-#import "ANSWebViewController.h"
 #import "ANSWKWebViewController.h"
 #import "ANSListTableViewController.h"
 
@@ -469,12 +468,6 @@ static NSString *const kBackgroundColor = @"backgroundColor";
     } else if (indexPath.section == 7) {
         switch (indexPath.row) {
             case 0: {
-                ANSWebViewController *webView = [[ANSWebViewController alloc] initWithNibName:@"ANSWebViewController" bundle:nil];
-                webView.hidesBottomBarWhenPushed = YES;
-                [self.navigationController pushViewController:webView animated:YES];
-                break;
-            }
-            case 1: {
                 ANSWKWebViewController *wkWebView = [[ANSWKWebViewController alloc] initWithNibName:@"ANSWKWebViewController" bundle:nil];
                 wkWebView.hidesBottomBarWhenPushed = YES;
                 [self.navigationController pushViewController:wkWebView animated:YES];

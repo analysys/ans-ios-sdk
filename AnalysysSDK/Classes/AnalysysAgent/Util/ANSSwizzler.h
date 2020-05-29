@@ -13,6 +13,12 @@
 typedef void (^swizzleBlock)();
 #pragma clang diagnostic pop
 
+//  交换方法时，SDK方法与系统方法的先后执行顺序
+typedef NS_ENUM(NSInteger, AnalysysSwizzleOrder) {
+    AnalysysSwizzleOrderBefore,  // SDK在前，系统在后
+    AnalysysSwizzleOrderAfter  // 系统在前，SDK在后
+};
+
 @interface ANSSwizzler : NSObject
 
 
@@ -25,6 +31,12 @@ typedef void (^swizzleBlock)();
  @param aName hook标识
  */
 + (void)swizzleSelector:(SEL)aSelector onClass:(Class)aClass withBlock:(swizzleBlock)aBlock named:(NSString *)aName;
+
++ (void)swizzleSelector:(SEL)aSelector
+                onClass:(Class)aClass
+              withBlock:(swizzleBlock)aBlock
+                  named:(NSString *)aName
+                  order:(AnalysysSwizzleOrder)order;
 
 /**
  取消hook
@@ -43,10 +55,12 @@ typedef void (^swizzleBlock)();
 @property (nonatomic, assign) IMP originalMethod;
 @property (nonatomic, assign) uint numArgs;
 @property (nonatomic, copy) NSMapTable *blocks;
+@property (nonatomic, assign) AnalysysSwizzleOrder order;
 
 - (instancetype)initWithBlock:(swizzleBlock)aBlock
                         named:(NSString *)aName
                      forClass:(Class)aClass
                      selector:(SEL)aSelector
-               originalMethod:(IMP)aMethod;
+               originalMethod:(IMP)aMethod
+                        order:(AnalysysSwizzleOrder)order;
 @end

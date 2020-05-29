@@ -55,7 +55,7 @@
         if (autoTrack) {
             [ANSSwizzler swizzleSelector:@selector(sendEvent:) onClass:[UIApplication class] withBlock:^(id view, SEL command, UIEvent *event){
                 [[ANSHeatMapAutoTrack sharedManager] ansSentEvent:event];
-            } named:@"ANSSendEvent"];
+            } named:@"ANSSendEvent" order:AnalysysSwizzleOrderBefore];
         } else {
             [ANSSwizzler unswizzleSelector:@selector(sendEvent:) onClass:[UIApplication class] named:@"ANSSendEvent"];
         }
@@ -71,7 +71,6 @@
             if (touch.view == nil) {
                 [self trackHeatMap:touch];
             }
-            [ANSHeatMapAutoTrack sharedManager].currentViewController = [ANSControllerUtils findViewControllerByView:touch.view];
             _beginLocation = [touch locationInView:touch.view];
             _touchView = touch.view;
             _isTouchMoved = NO;
@@ -113,7 +112,8 @@
         _touchView = (UISwitch *)_touchView.nextResponder.nextResponder.nextResponder;
     }
     
-    if ([[ANSControllerUtils systemBuildInClasses] containsObject:self.viewControllerName]) {
+    self.currentViewController = [ANSControllerUtils currentViewController];
+    if (!self.currentViewController || [[ANSControllerUtils systemBuildInClasses] containsObject:NSStringFromClass(self.currentViewController.class)]) {
         return;
     }
     
@@ -152,8 +152,9 @@
     }
 }
 
-
 - (NSString *)viewControllerName {
-    return [ANSHeatMapAutoTrack sharedManager].currentViewController?NSStringFromClass([[ANSHeatMapAutoTrack sharedManager].currentViewController class]):@"";
+    NSString *vc = NSStringFromClass(self.currentViewController.class);
+    return vc ?: @"";
 }
+
 @end

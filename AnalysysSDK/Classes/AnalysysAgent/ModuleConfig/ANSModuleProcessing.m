@@ -49,7 +49,7 @@
 
 + (id)encryptJsonString:(NSString *)jsonString param:(NSDictionary *)param {
     NSString *funcString = [ANSModuleProcessing sharedManager].configInfo[@"Encrypt"][@"start"];
-    if (funcString.length > 0) {
+    if (funcString.length > 0 && jsonString.length > 0 && param != nil) {
         NSString *encryptString = [ANSModuleProcessing excuteFuncString:funcString param:@[jsonString, param]];
         jsonString = encryptString ?: jsonString;
     }
@@ -67,14 +67,14 @@
 
 + (void)setVisitorDebugURL:(NSString *)visitorDebugURL {
     NSString *funcString = [ANSModuleProcessing sharedManager].configInfo[@"Visual"][@"start"];
-    if (funcString.length > 0) {
+    if (funcString.length > 0 && visitorDebugURL.length > 0) {
         [ANSModuleProcessing excuteFuncString:funcString param:@[visitorDebugURL]];
     }
 }
 
 + (void)setVisualConfigUrl:(NSString *)configUrl {
     NSString *funcString = [ANSModuleProcessing sharedManager].configInfo[@"VisualConfig"][@"start"];
-    if (funcString.length > 0) {
+    if (funcString.length > 0 && configUrl.length > 0) {
         [ANSModuleProcessing excuteFuncString:funcString param:@[configUrl]];
     }
 }
@@ -91,7 +91,7 @@
 
 + (NSDictionary *)parsePushInfo:(id)parameter {
     NSString *funcString = [ANSModuleProcessing sharedManager].configInfo[@"PushParse"][@"start"];
-    if (funcString.length > 0) {
+    if (funcString.length > 0 && parameter != nil) {
         return [ANSModuleProcessing excuteFuncString:funcString param:@[parameter]];
     }
     return nil;
@@ -99,7 +99,7 @@
 
 + (NSDictionary *)parsePushContext:(id)parameter {
     NSString *funcString = [ANSModuleProcessing sharedManager].configInfo[@"PushSplice"][@"start"];
-    if (funcString.length > 0) {
+    if (funcString.length > 0 && parameter != nil) {
         return [ANSModuleProcessing excuteFuncString:funcString param:@[parameter]];
     }
     return nil;
@@ -107,7 +107,7 @@
 
 + (void)pushClickParameter:(id)parameter {
     NSString *funcString = [ANSModuleProcessing sharedManager].configInfo[@"PushClick"][@"start"];
-    if (funcString.length > 0) {
+    if (funcString.length > 0 && parameter != nil) {
         [ANSModuleProcessing excuteFuncString:funcString param:@[parameter]];
     }
 }

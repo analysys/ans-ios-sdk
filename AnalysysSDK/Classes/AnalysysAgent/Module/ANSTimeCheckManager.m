@@ -19,7 +19,6 @@
 @implementation ANSTimeCheckManager {
     ANSUploadManager *_uploadManager;
     BOOL _isTimeCheckRequestFinished;  //  时间校准请求是否完成
-    BOOL _isNeedTimeCheck;  // 是否需要时间校准
     NSTimeInterval _serverTimerDiff;    // 服务器与本地时间差
 }
 
@@ -68,8 +67,7 @@
         
         self->_serverTimerDiff = timerDiff;
         self->_isTimeCheckRequestFinished = YES;
-        self->_isNeedTimeCheck = YES;
-        
+
         if (fabs(timerDiff) > AnalysysConfig.maxDiffTimeInterval) {
             ANSLog(@"收到服务器的时间：%@，本地时间：%@，时间相差：%.f 秒，数据将会进行时间校准。", [ANSDateUtil convertToLocalDate:serverDate], [ANSDateUtil convertToLocalDate:[NSDate date]], fabs(timerDiff));
         }
@@ -81,15 +79,26 @@
 }
 
 - (NSArray *)checkDataArray:(NSArray *)dataArray {
-    if (!AnalysysConfig.allowTimeCheck) {
-        return [self getLogsFromArray:dataArray];
+    if (AnalysysConfig.allowTimeCheck && fabs(_serverTimerDiff) >= AnalysysConfig.maxDiffTimeInterval) {
+        return [self getCheckTimeDataFromArray:dataArray];
+    } else {
+        return [self getUncheckTimeDataFromArray:dataArray];
     }
-    if (fabs(_serverTimerDiff) < AnalysysConfig.maxDiffTimeInterval) {
-        return [self getLogsFromArray:dataArray];
+}
+
+/** 未校验时间数据 */
+- (NSArray *)getUncheckTimeDataFromArray:(NSArray *)dataArray {
+    NSMutableArray *logs = [NSMutableArray array];
+    for (NSDictionary *dataInfo in dataArray) {
+        if ([dataInfo.allKeys containsObject:ANSLogJson]) {
+            [logs addObject:dataInfo[ANSLogJson]];
+        }
     }
-    if (!_isNeedTimeCheck) {
-        return [self getLogsFromArray:dataArray];
-    }
+    return [NSArray arrayWithArray:logs];
+}
+
+/** 校验时间后数据 */
+- (NSArray *)getCheckTimeDataFromArray:(NSArray *)dataArray {
     NSMutableArray *uploadArray = [NSMutableArray array];
     for (NSDictionary *logInfo in dataArray) {
         NSString *logJsonString = logInfo[ANSLogJson];
@@ -107,17 +116,7 @@
         }
         [uploadArray addObject:[ANSJsonUtil convertToStringWithObject:mutableLogDic]];
     }
-    return uploadArray;
-}
-
-- (NSArray *)getLogsFromArray:(NSArray *)dataArray {
-    NSMutableArray *logs = [NSMutableArray array];
-    for (NSDictionary *dataInfo in dataArray) {
-        if ([dataInfo.allKeys containsObject:ANSLogJson]) {
-            [logs addObject:dataInfo[ANSLogJson]];
-        }
-    }
-    return [NSArray arrayWithArray:logs];
+    return [uploadArray copy];
 }
 
 @end

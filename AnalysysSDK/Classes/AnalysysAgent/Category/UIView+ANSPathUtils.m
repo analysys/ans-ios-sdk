@@ -9,6 +9,7 @@
 #import "UIView+ANSPathUtils.h"
 
 #import "UIView+ANSHelper.h"
+#import "ANSControllerUtils.h"
 
 static NSString *pathLeft = @"["; // 路径子视图排序左侧标识
 static NSString *pathRight = @"]"; // 路径子视图排序右侧标识
@@ -152,8 +153,23 @@ static NSString *pathRight = @"]"; // 路径子视图排序右侧标识
         if (![tmpView.nextResponder isKindOfClass:[UIViewController class]]) {
             [viewPathArray addObject:tmpView];
         } else {
-            [viewPathArray addObject:tmpView];
-            break;
+            UIViewController *controller = (UIViewController *)tmpView.nextResponder;
+            NSArray *controllers = [ANSControllerUtils allShowViewControllers];
+            //NSLog(@"allControllers:\n%@", controllers);
+            //  防止某些父vc直接将子vc.view添加至视图，导致与服务器路径不一致
+            if (![controllers containsObject:controller]) {
+                if (tmpView.superview) {
+                    [viewPathArray addObject:tmpView];
+                    tmpView = tmpView.superview;
+                    continue;
+                } else {
+                    [viewPathArray addObject:tmpView];
+                    break;
+                }
+            } else {
+                [viewPathArray addObject:tmpView];
+                break;
+            }
         }
         if (tmpView.superview) {
             tmpView = tmpView.superview;
@@ -161,6 +177,7 @@ static NSString *pathRight = @"]"; // 路径子视图排序右侧标识
             break;
         }
     }
+    
     return [viewPathArray copy];
 }
 

@@ -9,7 +9,6 @@
 #import "ANSCaseViewController.h"
 #import "AnalysysAgent.h"
 #import "ANSDemoTableViewCell.h"
-#import "UnitTestCase.h"
 #import "ANSSearchTableViewController.h"
 #import "ANSTableHeaderFooterView.h"
 
@@ -117,90 +116,18 @@ static NSString *headerViewIdentify = @"HeaderView";
 -(NSArray *)dataSource {
     if (!_dataSource) {
         NSMutableArray* mutDataArr = [NSMutableArray array];
-        [mutDataArr addObject:self.trackArr];
-        [mutDataArr addObject:self.pageViewArr];
-        [mutDataArr addObject:self.aliasArr];
-        [mutDataArr addObject:self.superPropertyArr];
-        [mutDataArr addObject:self.profileSetArr];
-        [mutDataArr addObject:self.profileSetOnceArr];
-        [mutDataArr addObject:self.profileIncrementArr];
-        [mutDataArr addObject:self.profileAppendArr];
+        [mutDataArr addObject:@[@"track_cell"]];
+        [mutDataArr addObject:@[@"pageview_cell"]];
+        [mutDataArr addObject:@[@"alias_cell"]];
+        [mutDataArr addObject:@[@"superProperty_cell"]];
+        [mutDataArr addObject:@[@"profileSet_cell"]];
+        [mutDataArr addObject:@[@"profileSetOnce_cell"]];
+        [mutDataArr addObject:@[@"profileIncrement_cell"]];
+        [mutDataArr addObject:@[@"profileAppend_cell"]];
         
         _dataSource = mutDataArr.copy;
     }
     return _dataSource;
-}
-
-- (NSArray *)aliasArr {
-    NSMutableArray *arr = [NSMutableArray arrayWithCapacity:2];
-    for (int i = 0; i < 5; i++) {
-        NSString *selectorStr = [NSString stringWithFormat:@"alias_%d",i];
-        [arr addObject:selectorStr];
-    }
-    return arr.copy;
-}
-
-- (NSArray *)superPropertyArr {
-    NSMutableArray *arr = [NSMutableArray arrayWithCapacity:7];
-    for (int i = 0; i < 6; i++) {
-        NSString *selectorStr = [NSString stringWithFormat:@"superProperty_%d",i];
-        [arr addObject:selectorStr];
-    }
-    return arr.copy;
-}
-
-- (NSArray *)profileSetArr {
-    NSMutableArray *arr = [NSMutableArray arrayWithCapacity:7];
-    for (int i = 0; i< 7; i++) {
-        NSString *selectorStr = [NSString stringWithFormat:@"profileSet_%d",i];
-        [arr addObject:selectorStr];
-    }
-    return arr.copy;
-}
-
-- (NSArray *)profileSetOnceArr {
-    NSMutableArray *arr = [NSMutableArray arrayWithCapacity:7];
-    for (int i = 0; i< 7; i++) {
-        NSString *selectorStr = [NSString stringWithFormat:@"profileSetOnce_%d",i];
-        [arr addObject:selectorStr];
-    }
-    return arr.copy;
-}
-
-- (NSArray *)profileIncrementArr {
-    NSMutableArray *arr = [NSMutableArray arrayWithCapacity:7];
-    for (int i = 0; i< 7; i++) {
-        NSString *selectorStr = [NSString stringWithFormat:@"profileIncrement_%d",i];
-        [arr addObject:selectorStr];
-    }
-    return arr.copy;
-}
-
-- (NSArray *)profileAppendArr {
-    NSMutableArray *arr = [NSMutableArray arrayWithCapacity:7];
-    for (int i = 0; i< 7; i++) {
-        NSString *selectorStr = [NSString stringWithFormat:@"profileAppend_%d",i];
-        [arr addObject:selectorStr];
-    }
-    return arr.copy;
-}
-
-- (NSArray *)trackArr {
-    NSMutableArray *arr = [NSMutableArray arrayWithCapacity:9];
-    for (int i = 0; i< 9; i++) {
-        NSString *selectorStr = [NSString stringWithFormat:@"track_%d",i];
-        [arr addObject:selectorStr];
-    }
-    return arr.copy;
-}
-
-- (NSArray *)pageViewArr {
-    NSMutableArray *arr = [NSMutableArray arrayWithCapacity:8];
-    for (int i = 0; i< 8; i++) {
-        NSString *selectorStr = [NSString stringWithFormat:@"pageView_%d",i];
-        [arr addObject:selectorStr];
-    }
-    return arr.copy;
 }
 
 - (NSArray *)titleArr {
@@ -244,9 +171,6 @@ static NSString *headerViewIdentify = @"HeaderView";
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
-    
-    NSString *selStr = self.dataSource[indexPath.section][indexPath.row];
-    [UnitTestCase performSelector:NSSelectorFromString(selStr)];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {

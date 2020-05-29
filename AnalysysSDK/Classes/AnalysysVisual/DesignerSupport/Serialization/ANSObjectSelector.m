@@ -11,6 +11,7 @@
 
 #import <UIKit/UIKit.h>
 #import "NSThread+AnsHelper.h"
+#import "ANSUtil.h"
 
 /**
  * 主要存放解析出的path路径信息
@@ -359,7 +360,7 @@
         if (presentingViewController) {
             [result addObject:presentingViewController];
         }
-        UIWindow *keyWindow = [UIApplication sharedApplication].keyWindow;
+        UIWindow *keyWindow = [ANSUtil currentKeyWindow];
         if (keyWindow.rootViewController == obj) {
             //TODO is there a better way to get the actual window that has this VC
             [result addObject:keyWindow];
@@ -374,7 +375,7 @@
     // A UIWindow is also a UIView, so we could in theory follow the subviews chain from UIWindow, but
     // for now we only follow rootViewController from UIView.
     if ([obj isKindOfClass:[UIWindow class]]) {
-        NSArray *subviews = [[UIApplication sharedApplication].keyWindow subviews];
+        NSArray *subviews = [ANSUtil currentKeyWindow].subviews;
         if (subviews.count > 1) {
             //  弹窗直接添加至UIWindow类型的视图
             for (NSObject *child in subviews) {

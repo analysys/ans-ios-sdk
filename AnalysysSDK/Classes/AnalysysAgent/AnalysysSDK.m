@@ -36,7 +36,6 @@
 #import "ANSPageAutoTrack.h"
 #import "ANSOpenURLAutoTrack.h"
 #import "ANSHeatMapAutoTrack.h"
-#import "ANSAllBuryPoint.h"
 
 #import "ANSStrategyManager.h"
 
@@ -79,10 +78,12 @@ typedef NS_ENUM(NSInteger, ANSResetType) {
     BOOL _canSendProfileSetOnce;    // 是否可发送profileSetOnce
     BOOL _canSendAutoInstallation;  // 是否可发送渠道追踪
     BOOL _isAutoCollectionPage; // 页面自动采集
+    BOOL _isSDKInit;    //  是否调用SDK初始化
     NSInteger _maxCacheSize;    // 本地允许最大缓存
     long long _appBecomeActiveTime; // App活跃点
     
     AnalysysNetworkType _uploadNetworkType;
+
     NSLock *_isSendingDataLock; // 数据发送锁
 }
 
@@ -124,9 +125,9 @@ typedef NS_ENUM(NSInteger, ANSResetType) {
         
         [self registNotifications];
         
-        self->_dbHelper = [[ANSDatabase alloc] initWithDatabaseName:@"ANALYSYS.db"];
+        _dbHelper = [[ANSDatabase alloc] initWithDatabaseName:@"ANALYSYS.db"];
         
-        [self->_dbHelper resetLogStatus];
+        [_dbHelper resetLogStatus];
     }
     return self;
 }
@@ -157,6 +158,7 @@ typedef NS_ENUM(NSInteger, ANSResetType) {
             [self profileResetWithType:ANSStartReset];
         }
         
+        _isSDKInit = YES;
         NSLog(@"\n\n----------------------- [Analysys] [Log] ----------------------- \
               \n------ Init iOS Analysys OC SDK Success. Version: %@ ------ \
               \n----------------------------------------------------------------",ANSSDKVersion);
@@ -178,6 +180,9 @@ typedef NS_ENUM(NSInteger, ANSResetType) {
 
 /** 设置上传数据地址 */
 - (void)setUploadURL:(NSString *)uploadURL {
+    if (![self isSDKInitBeforeInterface:@"setUploadURL"]) {
+        return;
+    }
     ANSDataCheckLog *checkResult = [[ANSDataCheckLog alloc] init];
     checkResult.value = uploadURL;
     
@@ -206,17 +211,18 @@ typedef NS_ENUM(NSInteger, ANSResetType) {
 
 /** 设置可视化websocket服务器地址 */
 - (void)setVisitorDebugURL:(NSString *)visitorDebugURL {
+    if (![self isSDKInitBeforeInterface:@"setVisitorDebugURL"]) {
+        return;
+    }
     [ANSModuleProcessing setVisitorDebugURL:visitorDebugURL];
 }
 
 /** 设置线上请求埋点配置的服务器地址 */
 - (void)setVisitorConfigURL:(NSString *)configURL {
+    if (![self isSDKInitBeforeInterface:@"setVisitorConfigURL"]) {
+        return;
+    }
     [ANSModuleProcessing setVisualConfigUrl:configURL];
-}
-
-/** 是否采集热图坐标 */
-- (void)setAutomaticHeatmap:(BOOL)autoTrack {
-    [ANSHeatMapAutoTrack heatMapAutoTrack:autoTrack];
 }
 
 
@@ -226,8 +232,13 @@ typedef NS_ENUM(NSInteger, ANSResetType) {
 - (void)setDebugMode:(AnalysysDebugMode)debugMode {
     switch (debugMode) {
         case AnalysysDebugOff:
+            [AnalysysLogger sharedInstance].logMode = AnalysysLogOff;
+            break;
         case AnalysysDebugOnly:
+            [AnalysysLogger sharedInstance].logMode = AnalysysLogOn;
+            break;
         case AnalysysDebugButTrack: {
+            [AnalysysLogger sharedInstance].logMode = AnalysysLogOn;
             if ([self isDebugModeChanged:debugMode]) {
                 [self profileResetWithType:ANSStartReset];
             }
@@ -250,33 +261,44 @@ typedef NS_ENUM(NSInteger, ANSResetType) {
 
 /** 设置上传间隔时间 */
 - (void)setIntervalTime:(NSInteger)flushInterval {
-    NSInteger _flushInterval = MAX(1, flushInterval);
-    [[ANSStrategyManager sharedManager] setUserIntervalTimeValue:_flushInterval];
-    
     ANSDataCheckLog *checkResult = [[ANSDataCheckLog alloc] init];
-    checkResult.resultType = AnalysysResultSetSuccess;
-    checkResult.value = [NSNumber numberWithInteger:_flushInterval];
+    checkResult.value = [NSNumber numberWithInteger:flushInterval];
+    if (flushInterval <= 1) {
+        checkResult.resultType = AnalysysResultSetFailed;
+        checkResult.remarks = @"flushInterval must be > 1";
+    } else {
+        checkResult.resultType = AnalysysResultSetSuccess;
+        [[ANSStrategyManager sharedManager] setUserIntervalTimeValue:flushInterval];
+    }
     ANSLog(@"%@",[checkResult messageDisplay]);
 }
 
 /** 数据累积"size"条数后触发上传 */
 - (void)setMaxEventSize:(NSInteger)flushSize {
-    NSInteger _flushSize = MAX(1, flushSize);
-    [[ANSStrategyManager sharedManager] setUserMaxEventSizeValue:_flushSize];
-    
     ANSDataCheckLog *checkResult = [[ANSDataCheckLog alloc] init];
-    checkResult.resultType = AnalysysResultSetSuccess;
-    checkResult.value = [NSNumber numberWithInteger:_flushSize];
+    checkResult.value = [NSNumber numberWithInteger:flushSize];
+    if (flushSize <= 1) {
+        checkResult.resultType = AnalysysResultSetFailed;
+        checkResult.remarks = @"flushSize must be > 1";
+    } else {
+        checkResult.resultType = AnalysysResultSetSuccess;
+        [[ANSStrategyManager sharedManager] setUserMaxEventSizeValue:flushSize];
+    }
     ANSLog(@"%@",[checkResult messageDisplay]);
 }
 
 /** 本地缓存上限值 */
 - (void)setMaxCacheSize:(NSInteger)cacheSize {
-    _maxCacheSize = MAX(100, cacheSize);
-    
     ANSDataCheckLog *checkResult = [[ANSDataCheckLog alloc] init];
-    checkResult.resultType = AnalysysResultSetSuccess;
-    checkResult.value = [NSNumber numberWithInteger:_maxCacheSize];
+    checkResult.value = [NSNumber numberWithInteger:cacheSize];
+    if (cacheSize < 100 || cacheSize > 10000) {
+        checkResult.resultType = AnalysysResultSetFailed;
+        checkResult.remarks = @"cacheSize must be >= 100 and <= 10000,otherwise use default";
+    } else {
+        checkResult.resultType = AnalysysResultSetSuccess;
+        checkResult.value = [NSNumber numberWithInteger:cacheSize];
+        _maxCacheSize = cacheSize;
+    }
     ANSLog(@"%@",[checkResult messageDisplay]);
 }
 
@@ -297,26 +319,18 @@ typedef NS_ENUM(NSInteger, ANSResetType) {
         _uploadNetworkType = networkType;
     }
 }
-    
+
 - (void)cleanDBCache {
-    [ANSQueue dispatchAsyncLogSerialQueueWithBlock:^{
-        [self->_dbHelper clearDB];
-    }];
-}
-
-#pragma mark - 热图
-
-- (void)trackHeatMapWithSDKProperties:(NSDictionary *)sdkProperties  {
-    [ANSQueue dispatchAsyncLogSerialQueueWithBlock:^{
-        NSDictionary *heatMap = [ANSDataProcessing processHeatMapWithSDKProperties:sdkProperties];
-        [self saveUploadInfo:heatMap event:ANSEventHeatMap handler:^{}];
-    }];
+    [_dbHelper cleanDBCache];
 }
 
 #pragma mark - 事件
 
 /** 添加事件及附加属性 */
 - (void)track:(NSString *)event properties:(NSDictionary *)properties {
+    if (![self isSDKInitBeforeInterface:@"track"]) {
+        return;
+    }
     NSDictionary *tProperties = [properties mutableCopy];
     dispatch_block_t block = ^(){
         ANSDataCheckLog *checkResult = [ANSDataCheckRouter checkEvent:event];
@@ -334,6 +348,9 @@ typedef NS_ENUM(NSInteger, ANSResetType) {
 
 /** 页面跟踪及附加属性 */
 - (void)pageView:(NSString *)pageName properties:(NSDictionary *)properties {
+    if (![self isSDKInitBeforeInterface:@"pageView"]) {
+        return;
+    }
     if (![pageName isKindOfClass:NSString.class]) {
         pageName = nil;
         ANSBriefWarning(@"pagename is not <NSString>.");
@@ -371,7 +388,7 @@ typedef NS_ENUM(NSInteger, ANSResetType) {
     }
     NSSet *sControllers = [controllers mutableCopy];
     ANSPropertyLock();
-    [self->_pageViewWhiteList setSet:sControllers];
+    [_pageViewWhiteList setSet:sControllers];
     
     ANSPropertyUnlock();
 }
@@ -383,7 +400,7 @@ typedef NS_ENUM(NSInteger, ANSResetType) {
     }
     NSSet *sControllers = [controllers mutableCopy];
     ANSPropertyLock();
-    [self->_pageViewBlackList setSet:sControllers];
+    [_pageViewBlackList setSet:sControllers];
     ANSPropertyUnlock();
 }
 
@@ -397,6 +414,11 @@ typedef NS_ENUM(NSInteger, ANSResetType) {
 }
 
 #pragma mark - 热图模块儿接口
+
+/** 是否采集热图坐标 */
+- (void)setAutomaticHeatmap:(BOOL)autoTrack {
+    [ANSHeatMapAutoTrack heatMapAutoTrack:autoTrack];
+}
 
 - (void)setHeatmapIgnoreAutoClickByPage:(NSSet<NSString *> *)controllerNames {
     if (controllerNames.count == 0 || ![controllerNames isKindOfClass:NSSet.class]) {
@@ -430,10 +452,10 @@ typedef NS_ENUM(NSInteger, ANSResetType) {
         }
     }
     ANSPropertyLock();
-    NSMutableDictionary *tmp = [NSMutableDictionary dictionaryWithDictionary:self->_superProperties];
+    NSMutableDictionary *tmp = [NSMutableDictionary dictionaryWithDictionary:_superProperties];
     [tmp addEntriesFromDictionary:superProperties];
-    self->_superProperties = [NSDictionary dictionaryWithDictionary:tmp];
-    BOOL result = [ANSFileManager archiveSuperProperties:self->_superProperties];
+    _superProperties = [NSDictionary dictionaryWithDictionary:tmp];
+    BOOL result = [ANSFileManager archiveSuperProperties:_superProperties];
     ANSPropertyUnlock();
     if (result) {
         ANSDataCheckLog *checkResult = [[ANSDataCheckLog alloc] init];
@@ -526,14 +548,14 @@ typedef NS_ENUM(NSInteger, ANSResetType) {
     [presetProperties setValue:netWork forKey:ANSPresetNetwork];
     
     NSString *firstLaunchDate = [self appFirstLauchDate];
-    if (!firstLaunchDate) {
-        firstLaunchDate = [self resetFirstLaunchDate];
-    }
-    [presetProperties setValue:firstLaunchDate forKey:ANSPresetFirstVisitTime];
-
+    [presetProperties setValue:(firstLaunchDate ?: @"") forKey:ANSPresetFirstVisitTime];
     
-    NSString *session = [[ANSSession shareInstance] localSession];
-    [presetProperties setValue:session forKey:ANSPresetSessionId];
+    if (_isSDKInit) {
+        NSString *session = [[ANSSession shareInstance] localSession];
+        [presetProperties setValue:session forKey:ANSPresetSessionId];
+    } else {
+        [presetProperties setValue:@"" forKey:ANSPresetSessionId];
+    }
     
     [presetProperties setValue:ANSSDKVersion forKey:ANSPresetLibVersion];
     [presetProperties setValue:@"iOS" forKey:ANSPresetPlatform];
@@ -555,10 +577,10 @@ typedef NS_ENUM(NSInteger, ANSResetType) {
         return;
     }
     ANSPropertyLock();
-    NSMutableDictionary *tmpCommonProperties = [NSMutableDictionary dictionaryWithDictionary:self->_commonProperties];
+    NSMutableDictionary *tmpCommonProperties = [NSMutableDictionary dictionaryWithDictionary:_commonProperties];
     [tmpCommonProperties setValue:anonymousId forKey:ANSAnonymousId];
-    self->_commonProperties = [NSDictionary dictionaryWithDictionary:tmpCommonProperties];
-    BOOL result = [ANSFileManager archiveCommonProperties:self->_commonProperties];
+    _commonProperties = [NSDictionary dictionaryWithDictionary:tmpCommonProperties];
+    BOOL result = [ANSFileManager archiveCommonProperties:_commonProperties];
     ANSPropertyUnlock();
     
     [self updateUserId];
@@ -573,6 +595,9 @@ typedef NS_ENUM(NSInteger, ANSResetType) {
 
 /** 用户关联 */
 - (void)alias:(NSString *)aliasId originalId:(NSString *)originalId {
+    if (![self isSDKInitBeforeInterface:@"alias"]) {
+        return;
+    }
     dispatch_block_t block = ^(){
         ANSDataCheckLog *checkResult = [ANSDataCheckRouter checkLengthOfAliasId:aliasId];
         if (checkResult) {
@@ -640,6 +665,9 @@ typedef NS_ENUM(NSInteger, ANSResetType) {
 
 /** 设置用户属性 */
 - (void)profileSet:(NSDictionary *)property {
+    if (![self isSDKInitBeforeInterface:@"profileSet"]) {
+        return;
+    }
     NSDictionary *sProperties = [property mutableCopy];
     [ANSQueue dispatchAsyncLogSerialQueueWithBlock:^{
         NSDictionary *upInfo = [ANSDataProcessing processProfileSetProperties:sProperties];
@@ -657,6 +685,9 @@ typedef NS_ENUM(NSInteger, ANSResetType) {
 
 /** 设置用户固有属性 */
 - (void)profileSetOnce:(NSDictionary *)property {
+    if (![self isSDKInitBeforeInterface:@"profileSetOnce"]) {
+        return;
+    }
     NSDictionary *sProperties = [property mutableCopy];
     [ANSQueue dispatchAsyncLogSerialQueueWithBlock:^{
         NSDictionary *upInfo = [ANSDataProcessing processProfileSetOnceProperties:sProperties SDKProperties:nil];
@@ -674,6 +705,9 @@ typedef NS_ENUM(NSInteger, ANSResetType) {
 
 /** 设置用户属性相对变化值 */
 - (void)profileIncrement:(NSDictionary<NSString*, NSNumber*> *)property {
+    if (![self isSDKInitBeforeInterface:@"profileIncrement"]) {
+        return;
+    }
     __block NSDictionary *blockProperty = [property mutableCopy];
     dispatch_block_t block = ^(){
         ANSDataCheckLog *checkResult = [ANSDataCheckRouter checkIncrementProperties:&blockProperty];
@@ -698,6 +732,9 @@ typedef NS_ENUM(NSInteger, ANSResetType) {
 
 /** 增加列表类型的属性 */
 - (void)profileAppend:(NSDictionary *)property {
+    if (![self isSDKInitBeforeInterface:@"profileAppend"]) {
+        return;
+    }
     __block NSDictionary *blockProperty = [property mutableCopy];
     dispatch_block_t block = ^(){
         ANSDataCheckLog *checkResult = nil;
@@ -732,6 +769,9 @@ typedef NS_ENUM(NSInteger, ANSResetType) {
 
 /** 删除某个用户属性 */
 - (void)profileUnset:(NSString *)propertyName {
+    if (![self isSDKInitBeforeInterface:@"profileUnset"]) {
+        return;
+    }
     if (propertyName.length == 0) {
         return;
     }
@@ -743,6 +783,9 @@ typedef NS_ENUM(NSInteger, ANSResetType) {
 
 /** 删除当前用户的所有属性 */
 - (void)profileDelete {
+    if (![self isSDKInitBeforeInterface:@"profileDelete"]) {
+        return;
+    }
     [ANSQueue dispatchAsyncLogSerialQueueWithBlock:^{
         NSDictionary *upInfo = [ANSDataProcessing processProfileDelete];
         [self saveUploadInfo:upInfo event:ANSEventProfileDelete handler:^{}];
@@ -753,13 +796,16 @@ typedef NS_ENUM(NSInteger, ANSResetType) {
 
 /** 清除本地设置 */
 - (void)reset {
+    if (![self isSDKInitBeforeInterface:@"reset"]) {
+        return;
+    }
     [self profileResetWithType:ANSProfileReset];
     [self sendResetInfo];
 }
 
 #pragma mark - Hybrid 页面
 
-/** UIWebView和WKWebView统计 */
+/** WKWebView统计 */
 - (BOOL)setHybridModel:(id)webView request:(NSURLRequest *)request {
     if (webView == nil) {
         return NO;
@@ -818,19 +864,23 @@ typedef NS_ENUM(NSInteger, ANSResetType) {
 
 /** 追踪活动推广，可回调用户自定义信息 */
 - (void)trackCampaign:(id)userInfo isClick:(BOOL)isClick userCallback:(void(^ _Nullable )(id campaignInfo))userCallback {
-    dispatch_block_t block = ^(){
-        NSDictionary *analysysPushInfo = [ANSModuleProcessing parsePushInfo:userInfo];
-        if (analysysPushInfo) {
-            if (userCallback) {
-                userCallback(analysysPushInfo);
-            }
-            //  防止App活着时，收到推送消息处理早于start事件，造成session不一致
-            [ANSQueue dispatchAfterSeconds:0.5 onLogSerialQueueWithBlock:^{
+    if (userInfo == nil) {
+        return;
+    }
+    NSDictionary *analysysPushInfo = [ANSModuleProcessing parsePushInfo:userInfo];
+    if (analysysPushInfo) {
+        if (userCallback) {
+            userCallback(analysysPushInfo);
+        }
+        //  防止App活着时，收到推送消息处理早于start事件
+        if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
+            [self handlePushInfo:analysysPushInfo isClick:isClick];
+        } else {
+            [ANSQueue dispatchAfterSeconds:1.0 onLogSerialQueueWithBlock:^{
                 [self handlePushInfo:analysysPushInfo isClick:isClick];
             }];
         }
-    };
-    [ANSQueue dispatchAsyncLogSerialQueueWithBlock:block];
+    }
 }
 
 /** 处理推送通知 */
@@ -860,6 +910,15 @@ typedef NS_ENUM(NSInteger, ANSResetType) {
 }
 
 #pragma mark - --------- private method ---------
+
+#pragma mark - 热图
+
+- (void)trackHeatMapWithSDKProperties:(NSDictionary *)sdkProperties  {
+    [ANSQueue dispatchAsyncLogSerialQueueWithBlock:^{
+        NSDictionary *heatMap = [ANSDataProcessing processHeatMapWithSDKProperties:sdkProperties];
+        [self saveUploadInfo:heatMap event:ANSEventHeatMap handler:^{}];
+    }];
+}
 
 #pragma mark - 重要信息改变
 
@@ -1014,8 +1073,8 @@ typedef NS_ENUM(NSInteger, ANSResetType) {
 
 /** 渠道追踪 */
 - (void)upFirstInstallation {
-    if (self->_canSendAutoInstallation && AnalysysConfig.autoInstallation) {
-        self->_canSendAutoInstallation = NO;
+    if (_canSendAutoInstallation && AnalysysConfig.autoInstallation) {
+        _canSendAutoInstallation = NO;
         NSDictionary *utm = [ANSOpenURLAutoTrack utmParameters];
         NSDictionary *attribute = [ANSDataProcessing processInstallationSDKProperties:utm];
         [self saveUploadInfo:attribute event:ANSEventInstallation handler:^{}];
@@ -1024,34 +1083,30 @@ typedef NS_ENUM(NSInteger, ANSResetType) {
 
 /** 重置本地缓存 */
 - (void)profileResetWithType:(ANSResetType)resetType {
-    dispatch_block_t block = ^(){
-        
-        ANSPropertyLock();
-        NSMutableDictionary *tmp = [NSMutableDictionary dictionaryWithDictionary:self->_commonProperties];
-        if (resetType == ANSProfileReset) {
-            [tmp setValue:[[NSUUID UUID] UUIDString] forKey:ANSUUID];
-        }
-        self->_canSendProfileSetOnce = YES;
-        [tmp removeObjectForKey:ANSAnonymousId];
-        [tmp removeObjectForKey:ANSEventAlias];
-        [tmp removeObjectForKey:ANSOriginalId];
-        self->_superProperties = [NSDictionary dictionary];
-        [ANSFileManager archiveSuperProperties:self->_superProperties];
-        self->_commonProperties = tmp;
-        [ANSFileManager archiveCommonProperties:self->_commonProperties];
-        ANSPropertyUnlock();
-        
-        [self updateUserId];
-        
-        [[ANSSession shareInstance] resetSession];
-        
-        [[ANSStrategyManager sharedManager] resetStrategy];
-
-        [ANSFileManager saveUserDefaultWithKey:ANSAppLaunchDate value:nil];
-        
-        [self->_dbHelper clearDB];
-    };
-    [ANSQueue dispatchAsyncLogSerialQueueWithBlock:block];
+    ANSPropertyLock();
+    NSMutableDictionary *tmp = [NSMutableDictionary dictionaryWithDictionary:_commonProperties];
+    if (resetType == ANSProfileReset) {
+        [tmp setValue:[[NSUUID UUID] UUIDString] forKey:ANSUUID];
+    }
+    _canSendProfileSetOnce = YES;
+    [tmp removeObjectForKey:ANSAnonymousId];
+    [tmp removeObjectForKey:ANSEventAlias];
+    [tmp removeObjectForKey:ANSOriginalId];
+    _superProperties = [NSDictionary dictionary];
+    [ANSFileManager archiveSuperProperties:_superProperties];
+    _commonProperties = tmp;
+    [ANSFileManager archiveCommonProperties:_commonProperties];
+    ANSPropertyUnlock();
+    
+    [self updateUserId];
+    
+    [[ANSSession shareInstance] resetSession];
+    
+    [[ANSStrategyManager sharedManager] resetStrategy];
+    
+    [ANSFileManager saveUserDefaultWithKey:ANSAppLaunchDate value:nil];
+    
+    [_dbHelper cleanDBCache];
 }
 
 /** 发送reset事件 */
@@ -1080,7 +1135,6 @@ typedef NS_ENUM(NSInteger, ANSResetType) {
     }
     return firstStartDate;
 }
-
 
 /** 首次启动 */
 - (NSString *)appFirstLauchDate {
@@ -1361,7 +1415,7 @@ static BOOL isSendingData = NO;
 }
 
 - (ANSDatabase *)getDBHelper {
-    return self->_dbHelper;
+    return _dbHelper;
 }
 
 - (AnalysysNetworkType)currentNetworkType {
@@ -1375,5 +1429,14 @@ static BOOL isSendingData = NO;
     }
     return networkType;
 }
-    
+
+- (BOOL)isSDKInitBeforeInterface:(NSString *)interface {
+    if (!_isSDKInit) {
+        NSLog(@"[Analysys] [Log] The SDK is not initialized, please call %@ after initialization.", interface);
+        return NO;
+    } else {
+        return YES;
+    }
+}
+
 @end

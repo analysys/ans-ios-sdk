@@ -144,7 +144,7 @@ static NSString *const ANSKeychainIdentifier = @"Analysys";
 + (NSString *)getCarrierName {
     @try {
         CTCarrier *carrier = nil;
-        if ([UIDevice currentDevice].systemVersion.floatValue >= 12.0) {
+        if (@available(iOS 12.0, *)) {
             carrier = [ANSDeviceInfo shareInstance].networkInfo.serviceSubscriberCellularProviders.allValues.lastObject;
         }
         if(!carrier) {

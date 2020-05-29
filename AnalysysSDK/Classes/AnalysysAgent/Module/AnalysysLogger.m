@@ -13,7 +13,6 @@
 
 #import <Foundation/Foundation.h>
 #import "AnalysysLogger.h"
-#import "AnalysysSDK.h"
 
 static BOOL __enableLog__ ;
 static dispatch_queue_t __logQueue__ ;
@@ -56,7 +55,7 @@ static dispatch_queue_t __logQueue__ ;
        line:(NSUInteger)line
      format:(NSString *)format, ... {
     @try {
-        if ([AnalysysSDK sharedManager].debugMode != AnalysysDebugOff) {
+        if ([[self sharedInstance] logMode] != AnalysysLogOff) {
             va_list args;
             va_start(args, format);
             NSString *message = [[NSString alloc] initWithFormat:format arguments:args];

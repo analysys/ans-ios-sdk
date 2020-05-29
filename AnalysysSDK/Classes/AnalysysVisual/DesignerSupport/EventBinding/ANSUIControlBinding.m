@@ -71,7 +71,7 @@
     if (self = [super initWithEventBindingInfo:bindingInfo]) {
         // iOS 12: UITextField now implements -didMoveToWindow, without calling the parent implementation. so Swizzle UIControl won't work
         NSString *path = bindingInfo[@"path"];
-        if ([UIDevice currentDevice].systemVersion.floatValue >= 12.0) {
+        if (@available(iOS 12.0, *)) {
             [self setSwizzleClass:[path containsString:@"UITextField"] ? [UITextField class] : [UIControl class]];
         } else {
             [self setSwizzleClass:[UIControl class]];
@@ -113,13 +113,22 @@
     }
     
     if (!self.running) {
+        //  是否当次循环
+        static BOOL isInLoop = YES;
         void (^executeBlock)(id, SEL) = ^(id view, SEL command) {
             [NSThread ansRunOnMainThread:^{
                 NSArray *objects;
-                NSArray *rootArray = [self getRootObject];
-                for (NSObject *root in rootArray) {
+                NSSet *rootObjects = [self getRootObject];
+                if (rootObjects.count == 0) {
+                    return;
+                }
+                isInLoop = YES;
+                for (NSObject *root in rootObjects) {
                     if (view && [self.appliedTo containsObject:view]) {
-                        //  离开页面 移除绑定
+                        if (isInLoop) {
+                            //  当次遍历不进行绑定移除操作
+                            return;
+                        }
                         if (![self.path fuzzyIsLeafSelected:view fromRoot:root]) {
                             [self stopOnView:view];
                             [self.appliedTo removeObject:view];
@@ -154,19 +163,20 @@
                         }
                     }
                 }
+                isInLoop = NO;
             }];
         };
         
         executeBlock(nil, _cmd);
         
         [ANSSwizzler swizzleSelector:NSSelectorFromString(@"didMoveToWindow")
-                            onClass:self.swizzleClass
-                          withBlock:executeBlock
-                              named:self.name];
+                             onClass:self.swizzleClass
+                           withBlock:executeBlock
+                               named:self.name];
         [ANSSwizzler swizzleSelector:NSSelectorFromString(@"didMoveToSuperview")
-                            onClass:self.swizzleClass
-                          withBlock:executeBlock
-                              named:self.name];
+                             onClass:self.swizzleClass
+                           withBlock:executeBlock
+                               named:self.name];
         self.running = true;
     }
 }
@@ -176,11 +186,11 @@
         [[NSNotificationCenter defaultCenter] removeObserver:self];
         // remove what has been swizzled
         [ANSSwizzler unswizzleSelector:NSSelectorFromString(@"didMoveToWindow")
-                              onClass:self.swizzleClass
-                                named:self.name];
+                               onClass:self.swizzleClass
+                                 named:self.name];
         [ANSSwizzler unswizzleSelector:NSSelectorFromString(@"didMoveToSuperview")
-                              onClass:self.swizzleClass
-                                named:self.name];
+                               onClass:self.swizzleClass
+                                 named:self.name];
         
         // remove target-action pairs
         for (UIControl *control in self.appliedTo.allObjects) {
@@ -210,8 +220,8 @@
 #pragma mark -- To execute for Target-Action event firing
 
 - (BOOL)verifyControlMatchesPath:(id)control {
-    NSArray *rootArray = [self getRootObject];
-    for (NSObject *root in rootArray) {
+    NSSet *rootObjects = [self getRootObject];
+    for (NSObject *root in rootObjects) {
         if ([self.path isLeafSelected:control fromRoot:root]) {
             return YES;
         }
@@ -235,6 +245,7 @@
         shouldTrack = [self verifyControlMatchesPath:sender];
     }
     if (shouldTrack) {
+        // 页面匹配
         if (self.targetPage && ![self.targetPage isEqualToString:[ANSVisualSDK sharedManager].currentPage]) {
             return;
         }
@@ -263,33 +274,10 @@
 }
 
 /** 获取根视图 */
-- (NSArray *)getRootObject {
-    NSMutableArray *rootArray = [NSMutableArray array];
+- (NSSet *)getRootObject {
     UIWindow *window = [ANSUtil currentKeyWindow];
-    if (!window) {
-        return @[];
-    }
     NSObject *rootVC = window.rootViewController;
-    if (!rootVC) {
-        return @[];
-    }
-    [rootArray addObject:rootVC];
-    
-    for (UIView *view in [window subviews]) {
-        if ([view isKindOfClass:NSClassFromString(@"UITransitionView")]) {
-            continue;
-        } else if ([view isKindOfClass:NSClassFromString(@"UILayoutContainerView")]) {
-            continue;
-        } else if (view.alpha < 0.1 || view.hidden == YES) {
-            continue;
-        } else {
-            //  视图直接添加至UIWindow
-            [rootArray addObject:[UIApplication sharedApplication].keyWindow];
-            break;
-        }
-    }
-    
-    return [rootArray copy];
+    return [NSSet setWithObjects:rootVC, window, nil];
 }
 
 #pragma mark - 对象比较

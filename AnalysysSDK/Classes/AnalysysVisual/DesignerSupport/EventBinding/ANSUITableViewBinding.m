@@ -11,6 +11,7 @@
 #import <UIKit/UIKit.h>
 #import "ANSSwizzler.h"
 #import "AnalysysLogger.h"
+#import "ANSUtil.h"
 
 @implementation ANSUITableViewBinding
 
@@ -72,7 +73,7 @@
 {
     if (!self.running && self.swizzleClass != nil) {
         void (^block)(id, SEL, id, id) = ^(id view, SEL command, UITableView *tableView, NSIndexPath *indexPath) {
-            NSObject *root = [UIApplication sharedApplication].keyWindow.rootViewController;
+            NSObject *root = [ANSUtil currentKeyWindow].rootViewController;
             // select targets based off path
             if (tableView && [self.path isLeafSelected:tableView fromRoot:root]) {
 //                UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];

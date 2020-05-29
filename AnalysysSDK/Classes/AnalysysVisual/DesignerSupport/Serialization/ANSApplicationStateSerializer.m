@@ -14,6 +14,7 @@
 #import "ANSObjectIdentityProvider.h"
 #import "ANSObjectSerializer.h"
 #import "ANSObjectSerializerConfig.h"
+#import "ANSUtil.h"
 
 #import "AnalysysLogger.h"
 
@@ -53,8 +54,16 @@
 }
 
 - (UIWindow *)windowAtIndex:(NSUInteger)index {
+    UIWindow *currentWindow = [ANSUtil currentKeyWindow];
+    if (currentWindow) {
+        return currentWindow;
+    }
     NSParameterAssert(index < _application.windows.count);
-    UIWindow *currentWindow = _application.windows[index];
+    if (index >= _application.windows.count) {
+        return nil;
+    }
+    
+    currentWindow = _application.windows[index];
     if (!currentWindow.hidden) {
         return currentWindow;
     }
