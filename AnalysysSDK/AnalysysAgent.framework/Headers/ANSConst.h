@@ -69,5 +69,4 @@ typedef NS_ENUM(NSInteger, AnalysysNetworkType) {
     AnalysysNetworkALL = 0xFF
 };
 
-
 #endif /* ANSConst_h */

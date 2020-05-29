@@ -8,14 +8,13 @@
 
 
 // ********************************
-// ***** 当前 SDK 版本号：4.4.5 *****
+// ***** 当前 SDK 版本号：4.4.6 *****
 // ********************************
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import "ANSConst.h"
 #import "AnalysysAgentConfig.h"
-#import <UIKit/UIKit.h>
 
 
 /**
@@ -153,13 +152,6 @@
  */
 + (void)setVisitorConfigURL:(NSString *)configURL;
 
-/**
- 是否采集用户点击坐标
-
- @param autoTrack YES/NO
- */
-+ (void)setAutomaticHeatmap:(BOOL)autoTrack;
-
 #pragma mark - SDK发送策略
 
 /**
@@ -207,7 +199,6 @@
  */
 + (void)flush;
 
-    
 /// 设置数据网络上传策略
 /// 默认只要存在网络即会上传，不区分移动网络即WIFI网络
 /// @param networkType 网络类型
@@ -215,6 +206,7 @@
     
 /// 清除本地所有已缓存数据
 + (void)cleanDBCache;
+
 
 #pragma mark - 点击事件
 
@@ -334,6 +326,13 @@
 + (void)setAutoClickWhiteListByViewTypes:(NSSet<NSString *> *)viewNames;
 
 #pragma mark - 热图功能模块接口
+
+/**
+ 是否采集用户点击坐标
+
+ @param autoTrack YES/NO
+ */
++ (void)setAutomaticHeatmap:(BOOL)autoTrack;
 
 /**
  忽略部分页面上所有的点击事件
@@ -531,10 +530,10 @@
 #pragma mark - Hybrid 页面
 
 /**
- 监听webview
+ 监听WKWebView
  
  @param request 请求对象
- @param webView UIWebView/WKWebView对象
+ @param webView WKWebView对象
  @return 统计是否完成
  */
 + (BOOL)setHybridModel:(id)webView request:(NSURLRequest *)request;
@@ -548,14 +547,15 @@
 
 #pragma mark - 消息推送
 
-/**
- 推送基本设置
- 
- @param provider 推送提供方标识，目前支持 AnalysysPushProvider 枚举中的类型
- @param pushID 第三方推送标识。如：极光的registrationID，个推的clientId，百度的channelid，小米的xmRegId
- */
-+ (void)setPushProvider:(AnalysysPushProvider)provider pushID:(NSString *)pushID;
++ (void)setPushProvider:(AnalysysPushProvider)provider pushID:(NSString *)pushID __attribute__((deprecated("已过时！建议使用setPushID:provider:接口")));
 
+/**
+推送基本设置
+
+@param pushID 第三方推送标识。如：极光的registrationID，个推的clientId，百度的channelid，小米的xmRegId
+@param provider 推送提供方标识，目前支持 AnalysysPushProvider 枚举中的类型
+*/
++ (void)setPushID:(NSString *)pushID provider:(AnalysysPushProvider)provider;
 
 /**
  推送效果统计

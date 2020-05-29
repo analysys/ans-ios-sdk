@@ -26,27 +26,13 @@
     return YES;
 }
 
+//  AnalysysAgent SDK配置信息
 - (void)_initAnalysysSDKWithOptions:(NSDictionary *)launchOptions {
-    
     CFAbsoluteTime startTime = CFAbsoluteTimeGetCurrent();
-    
-//    [AnalysysAgent monitorAppDelegate:self launchOptions:launchOptions];
-    
-//    [AnalysysAgent setAutomaticCollection:YES];
-//    [AnalysysAgent setAutomaticHeatmap:YES];
-//    [AnalysysAgent setAutoTrackClick:YES];
-    
-    //  AnalysysAgent SDK配置信息
-    AnalysysConfig.appKey = @"heatmaptest0916";
+    AnalysysConfig.appKey = @"datacollection";
     AnalysysConfig.channel = @"App Store";
-    AnalysysConfig.autoProfile = YES;
-    AnalysysConfig.autoInstallation =  YES;
     AnalysysConfig.encryptType = AnalysysEncryptAES;
-    AnalysysConfig.allowTimeCheck = YES;
-    AnalysysConfig.maxDiffTimeInterval = 5 * 60;
-    //  使用配置信息初始化SDK
     [AnalysysAgent startWithConfig:AnalysysConfig];
-    
     
     // *** 放置到startWithConfig: 后 *** //
     #if DEBUG
@@ -55,7 +41,7 @@
         [AnalysysAgent setDebugMode:AnalysysDebugOff];
     #endif
 
-    [AnalysysAgent setUploadURL:@"https://arkpaastest.analysys.cn:4089"];
+    [AnalysysAgent setUploadURL:@"http://arksdk.analysys.cn:8089"];
     
 //#if DEBUG
 //    [AnalysysAgent setVisitorDebugURL:<#wsurl#>];
