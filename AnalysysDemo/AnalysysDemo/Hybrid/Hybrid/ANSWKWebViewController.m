@@ -87,7 +87,7 @@
     //  加载本地文件 带有css、js
 //    NSURL *filePath = [[NSBundle mainBundle] URLForResource:@"app/index.html" withExtension:nil];
 //    NSURL *filePath = [NSURL URLWithString:@"https://uc.analysys.cn/huaxiang/heatmap0321/index.html"];
-    NSURL *filePath = [NSURL URLWithString:@"http://uc.analysys.cn/huaxiang/hybrid-4.3.0.10"];
+    NSURL *filePath = [NSURL URLWithString:@"http://uc.analysys.cn/huaxiang/cqqtest/index.html"];
     NSURLRequest *request = [NSURLRequest requestWithURL:filePath];
     [self.webView loadRequest:request];
     

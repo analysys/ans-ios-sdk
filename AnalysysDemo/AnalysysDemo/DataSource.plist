@@ -255,7 +255,7 @@
 		<array>
 			<dict>
 				<key>interface</key>
-				<string>UIWebView</string>
+				<string>UIWeb(已废弃)</string>
 				<key>backgroundColor</key>
 				<string>#1E90FF</string>
 			</dict>

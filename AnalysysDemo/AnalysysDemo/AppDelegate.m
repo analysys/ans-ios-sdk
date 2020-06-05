@@ -41,7 +41,7 @@
         [AnalysysAgent setDebugMode:AnalysysDebugOff];
     #endif
 
-    [AnalysysAgent setUploadURL:@"http://arksdk.analysys.cn:8089"];
+    [AnalysysAgent setUploadURL:@"http://192.168.220.105:8089"];
     
 //#if DEBUG
 //    [AnalysysAgent setVisitorDebugURL:<#wsurl#>];
