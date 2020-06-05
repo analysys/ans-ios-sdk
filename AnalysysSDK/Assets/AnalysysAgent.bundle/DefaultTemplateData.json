@@ -36,8 +36,7 @@
             "$session_id",
             "$crash_name",
             "$crash_reason",
-            "$crash_data",
-            "$crash_type"
+            "$crash_data"
         ]
     },
     "$startup":{

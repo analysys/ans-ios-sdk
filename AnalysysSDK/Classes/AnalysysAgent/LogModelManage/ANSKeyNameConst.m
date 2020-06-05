@@ -64,6 +64,12 @@ NSString *const ANSScreenWidth = @"$screen_width";
 /** $screen_height */
 NSString *const ANSScreenHeight = @"$screen_height";
 
+/** $page_width */
+NSString *const ANSPageWidth = @"$page_width";
+
+/** $page_height */
+NSString *const ANSPageHeight = @"$page_height";
+
 /** $brand */
 NSString *const ANSBrand = @"$brand";
 

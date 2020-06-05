@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'AnalysysSDK'
-  s.version          = '4.4.6'
+  s.version          = '4.4.7'
   s.summary          = 'This is the official iOS SDK for Analysys.'
   s.homepage         = 'https://github.com/analysys/ana-ios-sdk'
   s.license          = { :type => 'GPL', :file => 'LICENSE' }

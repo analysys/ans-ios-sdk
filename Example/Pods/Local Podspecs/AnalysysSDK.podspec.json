@@ -1,6 +1,6 @@
 {
   "name": "AnalysysSDK",
-  "version": "4.4.6",
+  "version": "4.4.7",
   "summary": "This is the official iOS SDK for Analysys.",
   "homepage": "https://github.com/analysys/ana-ios-sdk",
   "license": {
@@ -12,7 +12,7 @@
   },
   "source": {
     "git": "https://github.com/analysys/ana-ios-sdk.git",
-    "tag": "4.4.6"
+    "tag": "4.4.7"
   },
   "platforms": {
     "ios": "8.0"

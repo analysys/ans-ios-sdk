@@ -51,6 +51,8 @@
     [xContent setValue:[ANSLogParamsUtil getCarrierName] forKey:ANSCarrierName];
     [xContent setValue:[ANSLogParamsUtil getScreenWidth] forKey:ANSScreenWidth];
     [xContent setValue:[ANSLogParamsUtil getScreenHeight] forKey:ANSScreenHeight];
+    [xContent setValue:[ANSLogParamsUtil getScreenWidth] forKey:ANSPageWidth];
+    [xContent setValue:[ANSLogParamsUtil getScreenHeight] forKey:ANSPageHeight];
     [xContent setValue:[ANSLogParamsUtil getIsFirstDay] forKey:ANSIsFirstDay];
     [xContent setValue:[ANSLogParamsUtil getSessionID] forKey:ANSSessionID];
     [xContent setValue:self.url forKey:ANSUrl];
