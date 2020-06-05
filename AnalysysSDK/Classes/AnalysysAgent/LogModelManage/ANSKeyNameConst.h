@@ -66,6 +66,12 @@ extern NSString *const ANSScreenWidth;
 /** $screen_height */
 extern NSString *const ANSScreenHeight;
 
+/** $page_width */
+extern NSString *const ANSPageWidth;
+
+/** $page_height */
+extern NSString *const ANSPageHeight;
+
 /** $brand */
 extern NSString *const ANSBrand;
 

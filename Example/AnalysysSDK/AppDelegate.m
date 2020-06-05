@@ -56,7 +56,7 @@
     [AnalysysAgent startWithConfig:AnalysysConfig];
     
     
-    //**********  务必将debug及上传地址放置到 startWithConfig: 之后，否则无法正常上报数据  ********//
+    //**********  务必将debug及上传地址放置到 startWithConfig: 之后，否则可能无法正常上报数据  ********//
 #if DEBUG
     [AnalysysAgent setDebugMode:AnalysysDebugButTrack];
 #else
@@ -64,11 +64,6 @@
 #endif
     
     [AnalysysAgent setUploadURL:@"http://192.168.220.105:8089"];
-    
-//#if DEBUG
-//    [AnalysysAgent setVisitorDebugURL:@"ws://192.168.220.105:9091"];
-//#endif
-//    [AnalysysAgent setVisitorConfigURL:@"http://192.168.220.105:8089"];
     
     
     CFAbsoluteTime linkTime = (CFAbsoluteTimeGetCurrent() - startTime);

@@ -340,6 +340,7 @@ static NSString *ANSUserAgentId = @"UserAgent";
         id aliasId = param[0];
         if ([aliasId isKindOfClass:[NSString class]]) {
             [AnalysysAgent alias:aliasId];
+            return;
         }
     } else if (param.count == 2) {
         id aliasId = param[0];
@@ -347,6 +348,7 @@ static NSString *ANSUserAgentId = @"UserAgent";
             id originalId = param[1];
             if ([originalId isKindOfClass:[NSString class]] || originalId == nil) {
                 [AnalysysAgent alias:aliasId originalId:originalId];
+                return;
             }
         }
     }
@@ -375,10 +377,12 @@ static NSString *ANSUserAgentId = @"UserAgent";
     if ([property isKindOfClass:[NSDictionary class]]) {
         //  携带多个属性
         [AnalysysAgent profileSet:property];
+        return;
     } else if ([property isKindOfClass:[NSString class]]) {
         if (param.count == 2) {
             id propertyValue = param[1];
             [AnalysysAgent profileSet:property propertyValue:propertyValue];
+            return;
         }
     }
     ANSBriefWarning(@"Hybrid: profileSet parameter must be {key:value}.");
@@ -393,10 +397,12 @@ static NSString *ANSUserAgentId = @"UserAgent";
     if ([property isKindOfClass:[NSDictionary class]]) {
         //  携带多个属性
         [AnalysysAgent profileSetOnce:property];
+        return;
     } else if ([property isKindOfClass:[NSString class]]) {
         if (param.count == 2) {
             id propertyValue = param[1];
             [AnalysysAgent profileSetOnce:property propertyValue:propertyValue];
+            return;
         }
     }
     ANSBriefWarning(@"Hybrid: profileSetOnce parameter must be {key:value}.");
@@ -411,11 +417,13 @@ static NSString *ANSUserAgentId = @"UserAgent";
     if ([property isKindOfClass:[NSDictionary class]]) {
         //  携带多个属性
         [AnalysysAgent profileIncrement:property];
+        return;
     } else if ([property isKindOfClass:[NSString class]]) {
         if (param.count == 2) {
             id propertyValue = param[1];
             if ([propertyValue isKindOfClass:[NSNumber class]]) {
                 [AnalysysAgent profileIncrement:property propertyValue:propertyValue];
+                return;
             }
         }
     }
@@ -431,6 +439,7 @@ static NSString *ANSUserAgentId = @"UserAgent";
     if ([property isKindOfClass:[NSDictionary class]]) {
         //  携带多个属性
         [AnalysysAgent profileAppend:property];
+        return;
     } else if ([property isKindOfClass:[NSString class]]) {
         if (param.count == 2) {
             id propertyValue = param[1];
@@ -439,6 +448,7 @@ static NSString *ANSUserAgentId = @"UserAgent";
             } else {
                 [AnalysysAgent profileAppend:property value:propertyValue];
             }
+            return;
         }
     }
     ANSBriefWarning(@"Hybrid: check profileAppend.");
@@ -464,6 +474,19 @@ static NSString *ANSUserAgentId = @"UserAgent";
 
 - (void)reset:(NSArray *)param {
     [AnalysysAgent reset];
+}
+
+/** 预置属性*/
+- (void)getPresetProperties:(NSArray *)param webView:(id)webView {
+    NSDictionary *presetProperties = [[AnalysysSDK sharedManager] getPresetProperties];
+    NSString *jsMethod;
+    if (presetProperties) {
+        NSString *jsonStr = [self jsonStringWithobject:presetProperties];
+        jsMethod = [NSString stringWithFormat:@"%@('%@')",param.lastObject, jsonStr];
+    } else {
+        jsMethod = [NSString stringWithFormat:@"%@('')",param.lastObject];
+    }
+    [self jsCallBackMethod:jsMethod withWebView:webView];
 }
 
 #pragma mark - hybird通用属性
