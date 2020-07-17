@@ -132,6 +132,20 @@ typedef NS_ENUM(NSInteger, ANSResetType) {
     return self;
 }
 
+/**
+注册事件监听对象
+
+@param observerListener 事件监听对象
+*/
+- (void)setObserverListener:(id)observerListener {
+    self.delegate = (id<EventDataDelegate>)observerListener;
+    NSString *userId = [self getXwho];
+    // EA xwho 回传
+    if (self.delegate && [self.delegate respondsToSelector:@selector(onUserProfile:value:)]) {
+        [self.delegate onUserProfile:@"xwho" value:userId];
+    }
+}
+
 - (void)startWithConfig:(AnalysysAgentConfig *)config {
     @try {
         static dispatch_once_t autoTrackOnceToken ;
@@ -634,6 +648,10 @@ typedef NS_ENUM(NSInteger, ANSResetType) {
         [self upProfileSetOnce];
     };
     [ANSQueue dispatchAsyncLogSerialQueueWithBlock:block];
+    // EA xwho 回传
+    if (self.delegate && [self.delegate respondsToSelector:@selector(onUserProfile:value:)]) {
+        [self.delegate onUserProfile:@"xwho" value:aliasId];
+    }
 }
 
 - (NSString *)getDistinctIdInternal {
@@ -1161,6 +1179,11 @@ typedef NS_ENUM(NSInteger, ANSResetType) {
 - (void)saveUploadInfo:(NSDictionary *)dataInfo event:(NSString *)event handler:(void(^)(void))handler {
     if (!dataInfo) {
         return;
+    }
+    
+    // EA 事件回传
+    if (self.delegate && [self.delegate respondsToSelector:@selector(onEventDataReceived:)]) {
+        [self.delegate onEventDataReceived:dataInfo];
     }
     
     [_dbHelper insertRecordObject:dataInfo event:event maxCacheSize:_maxCacheSize result:^(BOOL success) {
