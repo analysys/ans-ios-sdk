@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "AnalysysAgent"
-  s.version      = "4.4.7"
+  s.version      = "4.4.8"
   s.summary      = "易观 iOS PaaS 版本SDK，集成方法参考相关版本SDK集成文档。"
   s.homepage     = "https://github.com/AnalysysSDK/Analysys_SDK_iOS/tree/dev"
   s.social_media_url = "https://ark.analysys.cn/"
@@ -12,9 +12,9 @@ Pod::Spec.new do |s|
   s.frameworks   = 'UIKit', 'Foundation', 'SystemConfiguration', 'CoreTelephony', 'AdSupport'
   s.libraries    = 'z', 'sqlite3', 'icucore'
 
-  s.ios.vendored_frameworks = 'AnalysysSDK/AnalysysAgent.framework','AnalysysSDK/AnalysysEncrypt.framework','AnalysysSDK/AnalysysVisual.framework','AnalysysSDK/AnalysysPush.framework'
+  s.ios.vendored_frameworks = 'AnalysysDemo/AnalysysSDK/AnalysysAgent.framework','AnalysysDemo/AnalysysSDK/AnalysysEncrypt.framework','AnalysysDemo/AnalysysSDK/AnalysysVisual.framework','AnalysysDemo/AnalysysSDK/AnalysysPush.framework'
 
-  s.resource = 'AnalysysSDK/Resources/AnalysysAgent.bundle'
+  s.resource = 'AnalysysDemo/AnalysysSDK/Resources/AnalysysAgent.bundle'
 
 
 end

@@ -138,17 +138,6 @@ end
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
-    //  4.3.0版本后部分设置在SDK初始化前设置
-    
-    #ifdef DEBUG
-        [AnalysysAgent setDebugMode:AnalysysDebugButTrack];
-    #else
-        [AnalysysAgent setDebugMode:AnalysysDebugOff];
-    #endif
-
-    //  设置上传地址
-    [AnalysysAgent setUploadURL:@"https://url:port"];
-    
     //  设置key，77a52s552c892bn442v721为样例数据，请根据实际情况替换相应内容
     //  AnalysysAgent 配置信息
     AnalysysConfig.appKey = @"77a52s552c892bn442v721";
@@ -166,6 +155,16 @@ end
     //  AnalysysConfig.maxDiffTimeInterval = 5 * 60;
     //  使用配置初始化SDK
     [AnalysysAgent startWithConfig:AnalysysConfig];
+    
+    #ifdef DEBUG
+        [AnalysysAgent setDebugMode:AnalysysDebugButTrack];
+    #else
+        [AnalysysAgent setDebugMode:AnalysysDebugOff];
+    #endif
+
+    //  设置上传地址
+    [AnalysysAgent setUploadURL:@"https://url:port"];
+
 
     return YES;
 }
@@ -182,18 +181,6 @@ end
 import AnalysysAgent
 
 func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-
-    //  4.3.0版本后部分设置在SDK初始化前设置
-    
-    #if DEBUG
-        AnalysysAgent.setDebugMode(.butTrack)
-    #else
-        AnalysysAgent.setDebugMode(.off)
-    #endif
-
-    //  设置上传地址
-    AnalysysAgent.setUploadURL("https://url:port")
-    
     //  AnalysysAgent 配置信息
         AnalysysAgentConfig.shareInstance()?.appKey = "sdktest201907"
         AnalysysAgentConfig.shareInstance()?.channel = "App Store"
@@ -204,6 +191,15 @@ func application(_ application: UIApplication, didFinishLaunchingWithOptions lau
         
         //  使用配置信息初始化SDK
         AnalysysAgent.start(with: AnalysysAgentConfig.shareInstance())
+        
+          #if DEBUG
+        AnalysysAgent.setDebugMode(.butTrack)
+    #else
+        AnalysysAgent.setDebugMode(.off)
+    #endif
+
+    //  设置上传地址
+    AnalysysAgent.setUploadURL("https://url:port")
 
 }
 ```
