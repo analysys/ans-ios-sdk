@@ -51,6 +51,10 @@
 
 @implementation AnalysysAgent
 
++ (void)setObserverListener:(id)observerListener {
+    [[AnalysysSDK sharedManager] setObserverListener:observerListener];
+}
+
 + (void)startWithConfig:(AnalysysAgentConfig *)config {
     [[AnalysysSDK sharedManager] startWithConfig:config];
 }

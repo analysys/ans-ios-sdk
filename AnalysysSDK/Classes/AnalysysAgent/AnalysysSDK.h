@@ -12,6 +12,21 @@
 
 @class AnalysysAgentConfig;
 
+@protocol EventDataDelegate <NSObject>
+
+@optional
+
+/// 接收到用户属性回调
+/// @param key 属性 key 值
+/// @param value 属性 value 值
+- (void)onUserProfile:(NSString *)key value:(NSString *)value;
+
+/// 接收到事件回调
+/// @param eventData 回调数据
+- (void)onEventDataReceived:(id)eventData;
+
+@end
+
 @interface AnalysysSDK : NSObject
 
 
@@ -19,6 +34,14 @@
 
 @property (nonatomic, assign) BOOL isBackgroundActive;  //  是否后台激活
 @property (nonatomic, assign) long long appDuration;    //  App本次运行时长
+@property (nonatomic, weak) id<EventDataDelegate> delegate; // 事件监听代理
+
+/**
+注册事件监听对象
+
+@param observerListener 事件监听对象
+*/
+- (void)setObserverListener:(id)observerListener;
 
 /**
  通过配置初始化SDK

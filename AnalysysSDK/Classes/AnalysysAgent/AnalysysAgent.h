@@ -8,7 +8,7 @@
 
 
 // ********************************
-// ***** 当前 SDK 版本号：4.4.7 *****
+// ***** 当前 SDK 版本号：4.4.8 *****
 // ********************************
 
 #import <Foundation/Foundation.h>
@@ -96,6 +96,12 @@
 
 #pragma mark - 基本配置
 
+/**
+注册事件监听对象
+
+@param observerListener 事件监听对象
+*/
++ (void)setObserverListener:(id)observerListener;
 
 /**
  使用配置信息初始化SDK
