@@ -1,0 +1,1224 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 51;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		4817383D24C975AA005CF330 /* AnalysysDataCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 4817383C24C975AA005CF330 /* AnalysysDataCache.m */; };
+		4819E73724CEBD1700739E23 /* AnalysysLogVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 4819E73624CEBD1700739E23 /* AnalysysLogVC.m */; };
+		4819E73B24CEBD2E00739E23 /* AnalysysLogDetailVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 4819E73924CEBD2E00739E23 /* AnalysysLogDetailVC.m */; };
+		4819E73C24CEBD2E00739E23 /* AnalysysLogDetailVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4819E73A24CEBD2E00739E23 /* AnalysysLogDetailVC.xib */; };
+		4819E74024CEBE1900739E23 /* AnalysysLogManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4819E73F24CEBE1900739E23 /* AnalysysLogManager.m */; };
+		4819E74324CED53700739E23 /* AnalysysLogData.m in Sources */ = {isa = PBXBuildFile; fileRef = 4819E74224CED53600739E23 /* AnalysysLogData.m */; };
+		4819E74724CEDAA700739E23 /* AnalysysLogCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4819E74524CEDAA700739E23 /* AnalysysLogCell.m */; };
+		4819E74824CEDAA700739E23 /* AnalysysLogCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4819E74624CEDAA700739E23 /* AnalysysLogCell.xib */; };
+		4821940B24C1588D00B79D8F /* ANSTabVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 4821940A24C1588D00B79D8F /* ANSTabVC.m */; };
+		4821941B24C172C600B79D8F /* FastExperienceVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 4821941924C172C600B79D8F /* FastExperienceVC.m */; };
+		4821941C24C172C600B79D8F /* FastExperienceVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4821941A24C172C600B79D8F /* FastExperienceVC.xib */; };
+		4821942124C182DC00B79D8F /* AnalysysHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 4821942024C182DC00B79D8F /* AnalysysHUD.m */; };
+		4821942824C1864D00B79D8F /* UIViewController+Alert.m in Sources */ = {isa = PBXBuildFile; fileRef = 4821942724C1864D00B79D8F /* UIViewController+Alert.m */; };
+		4821944124C18D2000B79D8F /* MainModuleVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4821943B24C18D2000B79D8F /* MainModuleVC.xib */; };
+		4821944324C18D2000B79D8F /* MainModuleVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 4821943D24C18D2000B79D8F /* MainModuleVC.m */; };
+		4821944724C18FCF00B79D8F /* main_module.json in Resources */ = {isa = PBXBuildFile; fileRef = 4821944624C18FCF00B79D8F /* main_module.json */; };
+		4821944F24C197D100B79D8F /* ANSConfigVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 4821944D24C197D100B79D8F /* ANSConfigVC.m */; };
+		4821945024C197D100B79D8F /* ANSConfigVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4821944E24C197D100B79D8F /* ANSConfigVC.xib */; };
+		486F186D24DBE1FE0009FCC9 /* UIColor+ColorChange.m in Sources */ = {isa = PBXBuildFile; fileRef = 486F186C24DBE1FE0009FCC9 /* UIColor+ColorChange.m */; };
+		48945F3024C1549000CCFA38 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 48945F2F24C1549000CCFA38 /* AppDelegate.m */; };
+		48945F3624C1549100CCFA38 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 48945F3524C1549100CCFA38 /* ViewController.m */; };
+		48945F3924C1549100CCFA38 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 48945F3724C1549100CCFA38 /* Main.storyboard */; };
+		48945F3C24C1549100CCFA38 /* AnalysysOCDemo.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 48945F3A24C1549100CCFA38 /* AnalysysOCDemo.xcdatamodeld */; };
+		48945F3E24C1549300CCFA38 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 48945F3D24C1549300CCFA38 /* Assets.xcassets */; };
+		48945F4124C1549300CCFA38 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 48945F3F24C1549300CCFA38 /* LaunchScreen.storyboard */; };
+		48945F4424C1549300CCFA38 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 48945F4324C1549300CCFA38 /* main.m */; };
+		48945F4E24C1549300CCFA38 /* AnalysysOCDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 48945F4D24C1549300CCFA38 /* AnalysysOCDemoTests.m */; };
+		48945F5924C1549300CCFA38 /* AnalysysOCDemoUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 48945F5824C1549300CCFA38 /* AnalysysOCDemoUITests.m */; };
+		48A8CD9A24C540B60012C53C /* SuperProtertyVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 48A8CD9824C540B60012C53C /* SuperProtertyVC.xib */; };
+		48A8CD9B24C540B60012C53C /* SuperProtertyVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 48A8CD9924C540B60012C53C /* SuperProtertyVC.m */; };
+		48A8CDA024C54C9E0012C53C /* FuncDetailsBaseVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 48A8CD9E24C54C9E0012C53C /* FuncDetailsBaseVC.m */; };
+		48A8CDA124C54C9E0012C53C /* FuncDetailsBaseVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 48A8CD9F24C54C9E0012C53C /* FuncDetailsBaseVC.xib */; };
+		48A8CDA624C569D60012C53C /* PageViewVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 48A8CDA424C569D60012C53C /* PageViewVC.m */; };
+		48A8CDA724C569D60012C53C /* PageViewVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 48A8CDA524C569D60012C53C /* PageViewVC.xib */; };
+		48A8CDAC24C56A820012C53C /* AllBuryVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 48A8CDAA24C56A820012C53C /* AllBuryVC.m */; };
+		48A8CDAD24C56A820012C53C /* AllBuryVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 48A8CDAB24C56A820012C53C /* AllBuryVC.xib */; };
+		48A8CDB224C56AE70012C53C /* HeatMapVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 48A8CDB024C56AE70012C53C /* HeatMapVC.m */; };
+		48A8CDB324C56AE70012C53C /* HeatMapVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 48A8CDB124C56AE70012C53C /* HeatMapVC.xib */; };
+		48A8CDB824C56B690012C53C /* VisualVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 48A8CDB624C56B690012C53C /* VisualVC.m */; };
+		48A8CDB924C56B690012C53C /* VisualVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 48A8CDB724C56B690012C53C /* VisualVC.xib */; };
+		48A8CDBE24C56C2D0012C53C /* TrackingVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 48A8CDBC24C56C2D0012C53C /* TrackingVC.m */; };
+		48A8CDBF24C56C2D0012C53C /* TrackingVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 48A8CDBD24C56C2D0012C53C /* TrackingVC.xib */; };
+		48A8CDC424C56C8F0012C53C /* UserIDWithPropertyVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 48A8CDC224C56C8F0012C53C /* UserIDWithPropertyVC.m */; };
+		48A8CDC524C56C8F0012C53C /* UserIDWithPropertyVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 48A8CDC324C56C8F0012C53C /* UserIDWithPropertyVC.xib */; };
+		48A8CDCA24C56D180012C53C /* HybridVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 48A8CDC824C56D180012C53C /* HybridVC.m */; };
+		48A8CDCB24C56D180012C53C /* HybridVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 48A8CDC924C56D180012C53C /* HybridVC.xib */; };
+		48A8CDD024C56D770012C53C /* OtherVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 48A8CDCE24C56D770012C53C /* OtherVC.m */; };
+		48A8CDD124C56D770012C53C /* OtherVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 48A8CDCF24C56D770012C53C /* OtherVC.xib */; };
+		48A8CDD424C570CB0012C53C /* AnalysysJson.m in Sources */ = {isa = PBXBuildFile; fileRef = 48A8CDD324C570CB0012C53C /* AnalysysJson.m */; };
+		48A8CDD824C57B740012C53C /* PageFirstVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 48A8CDD624C57B740012C53C /* PageFirstVC.m */; };
+		48A8CDD924C57B740012C53C /* PageFirstVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 48A8CDD724C57B740012C53C /* PageFirstVC.xib */; };
+		48A8CDDD24C57B920012C53C /* PageSecondVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 48A8CDDB24C57B920012C53C /* PageSecondVC.m */; };
+		48A8CDDE24C57B920012C53C /* PageSecondVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 48A8CDDC24C57B920012C53C /* PageSecondVC.xib */; };
+		48A8CDE224C57BB00012C53C /* PageThirdVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 48A8CDE024C57BB00012C53C /* PageThirdVC.m */; };
+		48A8CDE324C57BB00012C53C /* PageThirdVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 48A8CDE124C57BB00012C53C /* PageThirdVC.xib */; };
+		48A8CDE724C582EF0012C53C /* AllBuryFirstVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 48A8CDE524C582EF0012C53C /* AllBuryFirstVC.m */; };
+		48A8CDE824C582EF0012C53C /* AllBuryFirstVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 48A8CDE624C582EF0012C53C /* AllBuryFirstVC.xib */; };
+		48A8CDEC24C583070012C53C /* AllBurySecondVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 48A8CDEA24C583070012C53C /* AllBurySecondVC.m */; };
+		48A8CDED24C583070012C53C /* AllBurySecondVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 48A8CDEB24C583070012C53C /* AllBurySecondVC.xib */; };
+		48A8CDF124C583160012C53C /* AllBuryThirdVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 48A8CDEF24C583150012C53C /* AllBuryThirdVC.m */; };
+		48A8CDF224C583160012C53C /* AllBuryThirdVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 48A8CDF024C583150012C53C /* AllBuryThirdVC.xib */; };
+		48A8CDF624C585860012C53C /* AnalysysButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 48A8CDF524C585860012C53C /* AnalysysButton.m */; };
+		48A8CDF924C585A10012C53C /* AnalysysSwitch.m in Sources */ = {isa = PBXBuildFile; fileRef = 48A8CDF824C585A10012C53C /* AnalysysSwitch.m */; };
+		48A8CDFD24C590330012C53C /* HeatMapFirstVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 48A8CDFB24C590330012C53C /* HeatMapFirstVC.m */; };
+		48A8CDFE24C590330012C53C /* HeatMapFirstVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 48A8CDFC24C590330012C53C /* HeatMapFirstVC.xib */; };
+		48A8CE1124C594F80012C53C /* ANSBindCollectionHeaderFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 48A8CDFF24C594F70012C53C /* ANSBindCollectionHeaderFooterView.xib */; };
+		48A8CE1224C594F80012C53C /* ANSBindNormalVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 48A8CE0024C594F70012C53C /* ANSBindNormalVC.xib */; };
+		48A8CE1324C594F80012C53C /* ANSBindCollectionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 48A8CE0124C594F70012C53C /* ANSBindCollectionCell.xib */; };
+		48A8CE1424C594F80012C53C /* ANSBindCollectionViewVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 48A8CE0324C594F70012C53C /* ANSBindCollectionViewVC.xib */; };
+		48A8CE1524C594F80012C53C /* ANSBindCollectionHeaderFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 48A8CE0424C594F70012C53C /* ANSBindCollectionHeaderFooterView.m */; };
+		48A8CE1624C594F80012C53C /* ANSBindTableViewVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 48A8CE0624C594F70012C53C /* ANSBindTableViewVC.xib */; };
+		48A8CE1724C594F80012C53C /* ANSBindCollectionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 48A8CE0A24C594F80012C53C /* ANSBindCollectionCell.m */; };
+		48A8CE1824C594F80012C53C /* ANSBindTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 48A8CE0B24C594F80012C53C /* ANSBindTableViewCell.m */; };
+		48A8CE1924C594F80012C53C /* ANSBindCollectionViewVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 48A8CE0C24C594F80012C53C /* ANSBindCollectionViewVC.m */; };
+		48A8CE1A24C594F80012C53C /* ANSBindTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 48A8CE0E24C594F80012C53C /* ANSBindTableViewCell.xib */; };
+		48A8CE1B24C594F80012C53C /* ANSBindTableViewVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 48A8CE0F24C594F80012C53C /* ANSBindTableViewVC.m */; };
+		48A8CE1C24C594F80012C53C /* ANSBindNormalVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 48A8CE1024C594F80012C53C /* ANSBindNormalVC.m */; };
+		48A8CE2024C596090012C53C /* ANSTableHeaderFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 48A8CE1D24C596090012C53C /* ANSTableHeaderFooterView.m */; };
+		48A8CE2124C596090012C53C /* ANSTableHeaderFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 48A8CE1E24C596090012C53C /* ANSTableHeaderFooterView.xib */; };
+		48A8CE2824C5ACA20012C53C /* ANSWKWebViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 48A8CE2224C5ACA20012C53C /* ANSWKWebViewController.xib */; };
+		48A8CE2924C5ACA20012C53C /* ANSWebViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 48A8CE2324C5ACA20012C53C /* ANSWebViewController.xib */; };
+		48A8CE2A24C5ACA20012C53C /* ANSWKWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 48A8CE2624C5ACA20012C53C /* ANSWKWebViewController.m */; };
+		48A8CE2B24C5ACA20012C53C /* ANSWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 48A8CE2724C5ACA20012C53C /* ANSWebViewController.m */; };
+		629A86BB4AD382D8F2CD84F8 /* libPods-AnalysysOCDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D3ACCF1E39FE5D33642D1FD3 /* libPods-AnalysysOCDemo.a */; };
+		E887170624E1553600A9CD80 /* analysys.cn.cer in Resources */ = {isa = PBXBuildFile; fileRef = E887170324E1553600A9CD80 /* analysys.cn.cer */; };
+		E887170724E1553600A9CD80 /* guoqi analysys.cn.cer in Resources */ = {isa = PBXBuildFile; fileRef = E887170424E1553600A9CD80 /* guoqi analysys.cn.cer */; };
+		E887170824E1553600A9CD80 /* analysysdata.com.cer in Resources */ = {isa = PBXBuildFile; fileRef = E887170524E1553600A9CD80 /* analysysdata.com.cer */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		48945F4A24C1549300CCFA38 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 48945F2324C1549000CCFA38 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 48945F2A24C1549000CCFA38;
+			remoteInfo = AnalysysOCDemo;
+		};
+		48945F5524C1549300CCFA38 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 48945F2324C1549000CCFA38 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 48945F2A24C1549000CCFA38;
+			remoteInfo = AnalysysOCDemo;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		19BF67D5F108A70683A9F6B9 /* Pods-AnalysysOCDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AnalysysOCDemo.debug.xcconfig"; path = "Target Support Files/Pods-AnalysysOCDemo/Pods-AnalysysOCDemo.debug.xcconfig"; sourceTree = "<group>"; };
+		34F64A23312F1099960A436A /* Pods-AnalysysOCDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AnalysysOCDemo.release.xcconfig"; path = "Target Support Files/Pods-AnalysysOCDemo/Pods-AnalysysOCDemo.release.xcconfig"; sourceTree = "<group>"; };
+		4817383B24C975AA005CF330 /* AnalysysDataCache.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AnalysysDataCache.h; sourceTree = "<group>"; };
+		4817383C24C975AA005CF330 /* AnalysysDataCache.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AnalysysDataCache.m; sourceTree = "<group>"; };
+		4819E73524CEBD1700739E23 /* AnalysysLogVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AnalysysLogVC.h; sourceTree = "<group>"; };
+		4819E73624CEBD1700739E23 /* AnalysysLogVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AnalysysLogVC.m; sourceTree = "<group>"; };
+		4819E73824CEBD2E00739E23 /* AnalysysLogDetailVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AnalysysLogDetailVC.h; sourceTree = "<group>"; };
+		4819E73924CEBD2E00739E23 /* AnalysysLogDetailVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AnalysysLogDetailVC.m; sourceTree = "<group>"; };
+		4819E73A24CEBD2E00739E23 /* AnalysysLogDetailVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AnalysysLogDetailVC.xib; sourceTree = "<group>"; };
+		4819E73E24CEBE1900739E23 /* AnalysysLogManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AnalysysLogManager.h; sourceTree = "<group>"; };
+		4819E73F24CEBE1900739E23 /* AnalysysLogManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AnalysysLogManager.m; sourceTree = "<group>"; };
+		4819E74124CED53600739E23 /* AnalysysLogData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AnalysysLogData.h; sourceTree = "<group>"; };
+		4819E74224CED53600739E23 /* AnalysysLogData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AnalysysLogData.m; sourceTree = "<group>"; };
+		4819E74424CEDAA700739E23 /* AnalysysLogCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AnalysysLogCell.h; sourceTree = "<group>"; };
+		4819E74524CEDAA700739E23 /* AnalysysLogCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AnalysysLogCell.m; sourceTree = "<group>"; };
+		4819E74624CEDAA700739E23 /* AnalysysLogCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AnalysysLogCell.xib; sourceTree = "<group>"; };
+		4821940924C1588D00B79D8F /* ANSTabVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ANSTabVC.h; sourceTree = "<group>"; };
+		4821940A24C1588D00B79D8F /* ANSTabVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ANSTabVC.m; sourceTree = "<group>"; };
+		4821941824C172C600B79D8F /* FastExperienceVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FastExperienceVC.h; sourceTree = "<group>"; };
+		4821941924C172C600B79D8F /* FastExperienceVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FastExperienceVC.m; sourceTree = "<group>"; };
+		4821941A24C172C600B79D8F /* FastExperienceVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FastExperienceVC.xib; sourceTree = "<group>"; };
+		4821941D24C1770B00B79D8F /* AnalysysOCDemo.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AnalysysOCDemo.pch; sourceTree = "<group>"; };
+		4821941F24C182DC00B79D8F /* AnalysysHUD.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AnalysysHUD.h; sourceTree = "<group>"; };
+		4821942024C182DC00B79D8F /* AnalysysHUD.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AnalysysHUD.m; sourceTree = "<group>"; };
+		4821942624C1864D00B79D8F /* UIViewController+Alert.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIViewController+Alert.h"; sourceTree = "<group>"; };
+		4821942724C1864D00B79D8F /* UIViewController+Alert.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+Alert.m"; sourceTree = "<group>"; };
+		4821943B24C18D2000B79D8F /* MainModuleVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainModuleVC.xib; sourceTree = "<group>"; };
+		4821943D24C18D2000B79D8F /* MainModuleVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainModuleVC.m; sourceTree = "<group>"; };
+		4821944024C18D2000B79D8F /* MainModuleVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainModuleVC.h; sourceTree = "<group>"; };
+		4821944624C18FCF00B79D8F /* main_module.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = main_module.json; sourceTree = "<group>"; };
+		4821944C24C197D100B79D8F /* ANSConfigVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ANSConfigVC.h; sourceTree = "<group>"; };
+		4821944D24C197D100B79D8F /* ANSConfigVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ANSConfigVC.m; sourceTree = "<group>"; };
+		4821944E24C197D100B79D8F /* ANSConfigVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ANSConfigVC.xib; sourceTree = "<group>"; };
+		486F186B24DBE1FE0009FCC9 /* UIColor+ColorChange.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIColor+ColorChange.h"; sourceTree = "<group>"; };
+		486F186C24DBE1FE0009FCC9 /* UIColor+ColorChange.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIColor+ColorChange.m"; sourceTree = "<group>"; };
+		48945F2B24C1549000CCFA38 /* AnalysysOCDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AnalysysOCDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		48945F2E24C1549000CCFA38 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		48945F2F24C1549000CCFA38 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		48945F3424C1549100CCFA38 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		48945F3524C1549100CCFA38 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		48945F3824C1549100CCFA38 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		48945F3B24C1549100CCFA38 /* AnalysysOCDemo.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = AnalysysOCDemo.xcdatamodel; sourceTree = "<group>"; };
+		48945F3D24C1549300CCFA38 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		48945F4024C1549300CCFA38 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		48945F4224C1549300CCFA38 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		48945F4324C1549300CCFA38 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		48945F4924C1549300CCFA38 /* AnalysysOCDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AnalysysOCDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		48945F4D24C1549300CCFA38 /* AnalysysOCDemoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AnalysysOCDemoTests.m; sourceTree = "<group>"; };
+		48945F4F24C1549300CCFA38 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		48945F5424C1549300CCFA38 /* AnalysysOCDemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AnalysysOCDemoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		48945F5824C1549300CCFA38 /* AnalysysOCDemoUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AnalysysOCDemoUITests.m; sourceTree = "<group>"; };
+		48945F5A24C1549300CCFA38 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		48A8CD9724C540B60012C53C /* SuperProtertyVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SuperProtertyVC.h; sourceTree = "<group>"; };
+		48A8CD9824C540B60012C53C /* SuperProtertyVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SuperProtertyVC.xib; sourceTree = "<group>"; };
+		48A8CD9924C540B60012C53C /* SuperProtertyVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SuperProtertyVC.m; sourceTree = "<group>"; };
+		48A8CD9C24C545100012C53C /* AnalysysEnum.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AnalysysEnum.h; sourceTree = "<group>"; };
+		48A8CD9D24C54C9E0012C53C /* FuncDetailsBaseVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FuncDetailsBaseVC.h; sourceTree = "<group>"; };
+		48A8CD9E24C54C9E0012C53C /* FuncDetailsBaseVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FuncDetailsBaseVC.m; sourceTree = "<group>"; };
+		48A8CD9F24C54C9E0012C53C /* FuncDetailsBaseVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FuncDetailsBaseVC.xib; sourceTree = "<group>"; };
+		48A8CDA324C569D60012C53C /* PageViewVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PageViewVC.h; sourceTree = "<group>"; };
+		48A8CDA424C569D60012C53C /* PageViewVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PageViewVC.m; sourceTree = "<group>"; };
+		48A8CDA524C569D60012C53C /* PageViewVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PageViewVC.xib; sourceTree = "<group>"; };
+		48A8CDA924C56A820012C53C /* AllBuryVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AllBuryVC.h; sourceTree = "<group>"; };
+		48A8CDAA24C56A820012C53C /* AllBuryVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AllBuryVC.m; sourceTree = "<group>"; };
+		48A8CDAB24C56A820012C53C /* AllBuryVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AllBuryVC.xib; sourceTree = "<group>"; };
+		48A8CDAF24C56AE70012C53C /* HeatMapVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HeatMapVC.h; sourceTree = "<group>"; };
+		48A8CDB024C56AE70012C53C /* HeatMapVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HeatMapVC.m; sourceTree = "<group>"; };
+		48A8CDB124C56AE70012C53C /* HeatMapVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HeatMapVC.xib; sourceTree = "<group>"; };
+		48A8CDB524C56B690012C53C /* VisualVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VisualVC.h; sourceTree = "<group>"; };
+		48A8CDB624C56B690012C53C /* VisualVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VisualVC.m; sourceTree = "<group>"; };
+		48A8CDB724C56B690012C53C /* VisualVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = VisualVC.xib; sourceTree = "<group>"; };
+		48A8CDBB24C56C2D0012C53C /* TrackingVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TrackingVC.h; sourceTree = "<group>"; };
+		48A8CDBC24C56C2D0012C53C /* TrackingVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TrackingVC.m; sourceTree = "<group>"; };
+		48A8CDBD24C56C2D0012C53C /* TrackingVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TrackingVC.xib; sourceTree = "<group>"; };
+		48A8CDC124C56C8F0012C53C /* UserIDWithPropertyVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UserIDWithPropertyVC.h; sourceTree = "<group>"; };
+		48A8CDC224C56C8F0012C53C /* UserIDWithPropertyVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UserIDWithPropertyVC.m; sourceTree = "<group>"; };
+		48A8CDC324C56C8F0012C53C /* UserIDWithPropertyVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UserIDWithPropertyVC.xib; sourceTree = "<group>"; };
+		48A8CDC724C56D180012C53C /* HybridVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HybridVC.h; sourceTree = "<group>"; };
+		48A8CDC824C56D180012C53C /* HybridVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HybridVC.m; sourceTree = "<group>"; };
+		48A8CDC924C56D180012C53C /* HybridVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HybridVC.xib; sourceTree = "<group>"; };
+		48A8CDCD24C56D770012C53C /* OtherVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OtherVC.h; sourceTree = "<group>"; };
+		48A8CDCE24C56D770012C53C /* OtherVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OtherVC.m; sourceTree = "<group>"; };
+		48A8CDCF24C56D770012C53C /* OtherVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OtherVC.xib; sourceTree = "<group>"; };
+		48A8CDD224C570CB0012C53C /* AnalysysJson.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AnalysysJson.h; sourceTree = "<group>"; };
+		48A8CDD324C570CB0012C53C /* AnalysysJson.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AnalysysJson.m; sourceTree = "<group>"; };
+		48A8CDD524C57B740012C53C /* PageFirstVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PageFirstVC.h; sourceTree = "<group>"; };
+		48A8CDD624C57B740012C53C /* PageFirstVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PageFirstVC.m; sourceTree = "<group>"; };
+		48A8CDD724C57B740012C53C /* PageFirstVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PageFirstVC.xib; sourceTree = "<group>"; };
+		48A8CDDA24C57B920012C53C /* PageSecondVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PageSecondVC.h; sourceTree = "<group>"; };
+		48A8CDDB24C57B920012C53C /* PageSecondVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PageSecondVC.m; sourceTree = "<group>"; };
+		48A8CDDC24C57B920012C53C /* PageSecondVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PageSecondVC.xib; sourceTree = "<group>"; };
+		48A8CDDF24C57BB00012C53C /* PageThirdVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PageThirdVC.h; sourceTree = "<group>"; };
+		48A8CDE024C57BB00012C53C /* PageThirdVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PageThirdVC.m; sourceTree = "<group>"; };
+		48A8CDE124C57BB00012C53C /* PageThirdVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PageThirdVC.xib; sourceTree = "<group>"; };
+		48A8CDE424C582EF0012C53C /* AllBuryFirstVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AllBuryFirstVC.h; sourceTree = "<group>"; };
+		48A8CDE524C582EF0012C53C /* AllBuryFirstVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AllBuryFirstVC.m; sourceTree = "<group>"; };
+		48A8CDE624C582EF0012C53C /* AllBuryFirstVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AllBuryFirstVC.xib; sourceTree = "<group>"; };
+		48A8CDE924C583070012C53C /* AllBurySecondVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AllBurySecondVC.h; sourceTree = "<group>"; };
+		48A8CDEA24C583070012C53C /* AllBurySecondVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AllBurySecondVC.m; sourceTree = "<group>"; };
+		48A8CDEB24C583070012C53C /* AllBurySecondVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AllBurySecondVC.xib; sourceTree = "<group>"; };
+		48A8CDEE24C583150012C53C /* AllBuryThirdVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AllBuryThirdVC.h; sourceTree = "<group>"; };
+		48A8CDEF24C583150012C53C /* AllBuryThirdVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AllBuryThirdVC.m; sourceTree = "<group>"; };
+		48A8CDF024C583150012C53C /* AllBuryThirdVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AllBuryThirdVC.xib; sourceTree = "<group>"; };
+		48A8CDF424C585860012C53C /* AnalysysButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AnalysysButton.h; sourceTree = "<group>"; };
+		48A8CDF524C585860012C53C /* AnalysysButton.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AnalysysButton.m; sourceTree = "<group>"; };
+		48A8CDF724C585A00012C53C /* AnalysysSwitch.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AnalysysSwitch.h; sourceTree = "<group>"; };
+		48A8CDF824C585A10012C53C /* AnalysysSwitch.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AnalysysSwitch.m; sourceTree = "<group>"; };
+		48A8CDFA24C590330012C53C /* HeatMapFirstVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HeatMapFirstVC.h; sourceTree = "<group>"; };
+		48A8CDFB24C590330012C53C /* HeatMapFirstVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HeatMapFirstVC.m; sourceTree = "<group>"; };
+		48A8CDFC24C590330012C53C /* HeatMapFirstVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HeatMapFirstVC.xib; sourceTree = "<group>"; };
+		48A8CDFF24C594F70012C53C /* ANSBindCollectionHeaderFooterView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ANSBindCollectionHeaderFooterView.xib; sourceTree = "<group>"; };
+		48A8CE0024C594F70012C53C /* ANSBindNormalVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ANSBindNormalVC.xib; sourceTree = "<group>"; };
+		48A8CE0124C594F70012C53C /* ANSBindCollectionCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ANSBindCollectionCell.xib; sourceTree = "<group>"; };
+		48A8CE0224C594F70012C53C /* ANSBindTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ANSBindTableViewCell.h; sourceTree = "<group>"; };
+		48A8CE0324C594F70012C53C /* ANSBindCollectionViewVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ANSBindCollectionViewVC.xib; sourceTree = "<group>"; };
+		48A8CE0424C594F70012C53C /* ANSBindCollectionHeaderFooterView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ANSBindCollectionHeaderFooterView.m; sourceTree = "<group>"; };
+		48A8CE0524C594F70012C53C /* ANSBindCollectionViewVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ANSBindCollectionViewVC.h; sourceTree = "<group>"; };
+		48A8CE0624C594F70012C53C /* ANSBindTableViewVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ANSBindTableViewVC.xib; sourceTree = "<group>"; };
+		48A8CE0724C594F70012C53C /* ANSBindTableViewVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ANSBindTableViewVC.h; sourceTree = "<group>"; };
+		48A8CE0824C594F70012C53C /* ANSBindCollectionHeaderFooterView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ANSBindCollectionHeaderFooterView.h; sourceTree = "<group>"; };
+		48A8CE0924C594F80012C53C /* ANSBindCollectionCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ANSBindCollectionCell.h; sourceTree = "<group>"; };
+		48A8CE0A24C594F80012C53C /* ANSBindCollectionCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ANSBindCollectionCell.m; sourceTree = "<group>"; };
+		48A8CE0B24C594F80012C53C /* ANSBindTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ANSBindTableViewCell.m; sourceTree = "<group>"; };
+		48A8CE0C24C594F80012C53C /* ANSBindCollectionViewVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ANSBindCollectionViewVC.m; sourceTree = "<group>"; };
+		48A8CE0D24C594F80012C53C /* ANSBindNormalVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ANSBindNormalVC.h; sourceTree = "<group>"; };
+		48A8CE0E24C594F80012C53C /* ANSBindTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ANSBindTableViewCell.xib; sourceTree = "<group>"; };
+		48A8CE0F24C594F80012C53C /* ANSBindTableViewVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ANSBindTableViewVC.m; sourceTree = "<group>"; };
+		48A8CE1024C594F80012C53C /* ANSBindNormalVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ANSBindNormalVC.m; sourceTree = "<group>"; };
+		48A8CE1D24C596090012C53C /* ANSTableHeaderFooterView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ANSTableHeaderFooterView.m; sourceTree = "<group>"; };
+		48A8CE1E24C596090012C53C /* ANSTableHeaderFooterView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ANSTableHeaderFooterView.xib; sourceTree = "<group>"; };
+		48A8CE1F24C596090012C53C /* ANSTableHeaderFooterView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ANSTableHeaderFooterView.h; sourceTree = "<group>"; };
+		48A8CE2224C5ACA20012C53C /* ANSWKWebViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ANSWKWebViewController.xib; sourceTree = "<group>"; };
+		48A8CE2324C5ACA20012C53C /* ANSWebViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ANSWebViewController.xib; sourceTree = "<group>"; };
+		48A8CE2424C5ACA20012C53C /* ANSWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ANSWebViewController.h; sourceTree = "<group>"; };
+		48A8CE2524C5ACA20012C53C /* ANSWKWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ANSWKWebViewController.h; sourceTree = "<group>"; };
+		48A8CE2624C5ACA20012C53C /* ANSWKWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ANSWKWebViewController.m; sourceTree = "<group>"; };
+		48A8CE2724C5ACA20012C53C /* ANSWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ANSWebViewController.m; sourceTree = "<group>"; };
+		D3ACCF1E39FE5D33642D1FD3 /* libPods-AnalysysOCDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-AnalysysOCDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E887170324E1553600A9CD80 /* analysys.cn.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = analysys.cn.cer; sourceTree = "<group>"; };
+		E887170424E1553600A9CD80 /* guoqi analysys.cn.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = "guoqi analysys.cn.cer"; sourceTree = "<group>"; };
+		E887170524E1553600A9CD80 /* analysysdata.com.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = analysysdata.com.cer; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		48945F2824C1549000CCFA38 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				629A86BB4AD382D8F2CD84F8 /* libPods-AnalysysOCDemo.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		48945F4624C1549300CCFA38 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		48945F5124C1549300CCFA38 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		15B7962E76AA52D6FB08DF0F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				D3ACCF1E39FE5D33642D1FD3 /* libPods-AnalysysOCDemo.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		4819E73D24CEBD8E00739E23 /* AnalysysLogManager */ = {
+			isa = PBXGroup;
+			children = (
+				4819E73524CEBD1700739E23 /* AnalysysLogVC.h */,
+				4819E73624CEBD1700739E23 /* AnalysysLogVC.m */,
+				4819E74424CEDAA700739E23 /* AnalysysLogCell.h */,
+				4819E74524CEDAA700739E23 /* AnalysysLogCell.m */,
+				4819E74624CEDAA700739E23 /* AnalysysLogCell.xib */,
+				4819E73824CEBD2E00739E23 /* AnalysysLogDetailVC.h */,
+				4819E73924CEBD2E00739E23 /* AnalysysLogDetailVC.m */,
+				4819E73A24CEBD2E00739E23 /* AnalysysLogDetailVC.xib */,
+				4819E73E24CEBE1900739E23 /* AnalysysLogManager.h */,
+				4819E73F24CEBE1900739E23 /* AnalysysLogManager.m */,
+				4819E74124CED53600739E23 /* AnalysysLogData.h */,
+				4819E74224CED53600739E23 /* AnalysysLogData.m */,
+			);
+			path = AnalysysLogManager;
+			sourceTree = "<group>";
+		};
+		4821941E24C1825000B79D8F /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				4821941F24C182DC00B79D8F /* AnalysysHUD.h */,
+				4821942024C182DC00B79D8F /* AnalysysHUD.m */,
+				48A8CDD224C570CB0012C53C /* AnalysysJson.h */,
+				48A8CDD324C570CB0012C53C /* AnalysysJson.m */,
+				4817383B24C975AA005CF330 /* AnalysysDataCache.h */,
+				4817383C24C975AA005CF330 /* AnalysysDataCache.m */,
+				48A8CD9C24C545100012C53C /* AnalysysEnum.h */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		4821942524C1860D00B79D8F /* AnalysysCategory */ = {
+			isa = PBXGroup;
+			children = (
+				4821942624C1864D00B79D8F /* UIViewController+Alert.h */,
+				4821942724C1864D00B79D8F /* UIViewController+Alert.m */,
+				486F186B24DBE1FE0009FCC9 /* UIColor+ColorChange.h */,
+				486F186C24DBE1FE0009FCC9 /* UIColor+ColorChange.m */,
+			);
+			path = AnalysysCategory;
+			sourceTree = "<group>";
+		};
+		4821942924C18B4A00B79D8F /* FastExperience */ = {
+			isa = PBXGroup;
+			children = (
+				4821941824C172C600B79D8F /* FastExperienceVC.h */,
+				4821941924C172C600B79D8F /* FastExperienceVC.m */,
+				4821941A24C172C600B79D8F /* FastExperienceVC.xib */,
+			);
+			path = FastExperience;
+			sourceTree = "<group>";
+		};
+		4821943A24C18D2000B79D8F /* MainModule */ = {
+			isa = PBXGroup;
+			children = (
+				48A8CD9524C540B60012C53C /* FuncDetailsModule */,
+				4821944024C18D2000B79D8F /* MainModuleVC.h */,
+				4821943D24C18D2000B79D8F /* MainModuleVC.m */,
+				4821943B24C18D2000B79D8F /* MainModuleVC.xib */,
+			);
+			name = MainModule;
+			path = AnalysysOCDemo/MainModule;
+			sourceTree = SOURCE_ROOT;
+		};
+		4821944524C18E1500B79D8F /* ANSResource */ = {
+			isa = PBXGroup;
+			children = (
+				4821944624C18FCF00B79D8F /* main_module.json */,
+			);
+			path = ANSResource;
+			sourceTree = "<group>";
+		};
+		4821944B24C197A200B79D8F /* ConfigModule */ = {
+			isa = PBXGroup;
+			children = (
+				4821944C24C197D100B79D8F /* ANSConfigVC.h */,
+				4821944D24C197D100B79D8F /* ANSConfigVC.m */,
+				4821944E24C197D100B79D8F /* ANSConfigVC.xib */,
+			);
+			path = ConfigModule;
+			sourceTree = "<group>";
+		};
+		48945F2224C1549000CCFA38 = {
+			isa = PBXGroup;
+			children = (
+				48945F2D24C1549000CCFA38 /* AnalysysOCDemo */,
+				48945F4C24C1549300CCFA38 /* AnalysysOCDemoTests */,
+				48945F5724C1549300CCFA38 /* AnalysysOCDemoUITests */,
+				48945F2C24C1549000CCFA38 /* Products */,
+				9302135ABEFE27A375BD4031 /* Pods */,
+				15B7962E76AA52D6FB08DF0F /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		48945F2C24C1549000CCFA38 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				48945F2B24C1549000CCFA38 /* AnalysysOCDemo.app */,
+				48945F4924C1549300CCFA38 /* AnalysysOCDemoTests.xctest */,
+				48945F5424C1549300CCFA38 /* AnalysysOCDemoUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		48945F2D24C1549000CCFA38 /* AnalysysOCDemo */ = {
+			isa = PBXGroup;
+			children = (
+				E887170224E1553600A9CD80 /* CertificateTest */,
+				4819E73D24CEBD8E00739E23 /* AnalysysLogManager */,
+				48A8CDF324C585200012C53C /* AnalysysGeneralUI */,
+				4821941E24C1825000B79D8F /* Utils */,
+				4821942524C1860D00B79D8F /* AnalysysCategory */,
+				4821943A24C18D2000B79D8F /* MainModule */,
+				4821942924C18B4A00B79D8F /* FastExperience */,
+				4821944B24C197A200B79D8F /* ConfigModule */,
+				48945F3424C1549100CCFA38 /* ViewController.h */,
+				48945F3524C1549100CCFA38 /* ViewController.m */,
+				48945F2E24C1549000CCFA38 /* AppDelegate.h */,
+				48945F2F24C1549000CCFA38 /* AppDelegate.m */,
+				4821940924C1588D00B79D8F /* ANSTabVC.h */,
+				4821940A24C1588D00B79D8F /* ANSTabVC.m */,
+				48945F3724C1549100CCFA38 /* Main.storyboard */,
+				48945F3D24C1549300CCFA38 /* Assets.xcassets */,
+				48945F3F24C1549300CCFA38 /* LaunchScreen.storyboard */,
+				48945F4224C1549300CCFA38 /* Info.plist */,
+				48945F4324C1549300CCFA38 /* main.m */,
+				4821941D24C1770B00B79D8F /* AnalysysOCDemo.pch */,
+				4821944524C18E1500B79D8F /* ANSResource */,
+				48945F3A24C1549100CCFA38 /* AnalysysOCDemo.xcdatamodeld */,
+			);
+			path = AnalysysOCDemo;
+			sourceTree = "<group>";
+		};
+		48945F4C24C1549300CCFA38 /* AnalysysOCDemoTests */ = {
+			isa = PBXGroup;
+			children = (
+				48945F4D24C1549300CCFA38 /* AnalysysOCDemoTests.m */,
+				48945F4F24C1549300CCFA38 /* Info.plist */,
+			);
+			path = AnalysysOCDemoTests;
+			sourceTree = "<group>";
+		};
+		48945F5724C1549300CCFA38 /* AnalysysOCDemoUITests */ = {
+			isa = PBXGroup;
+			children = (
+				48945F5824C1549300CCFA38 /* AnalysysOCDemoUITests.m */,
+				48945F5A24C1549300CCFA38 /* Info.plist */,
+			);
+			path = AnalysysOCDemoUITests;
+			sourceTree = "<group>";
+		};
+		48A8CD9524C540B60012C53C /* FuncDetailsModule */ = {
+			isa = PBXGroup;
+			children = (
+				48A8CDCC24C56D680012C53C /* OtherModule */,
+				48A8CDC624C56CFF0012C53C /* HybridModule */,
+				48A8CDC024C56C7D0012C53C /* UserIDWithPropertyModule */,
+				48A8CDBA24C56C1E0012C53C /* TrackingModule */,
+				48A8CDB424C56B560012C53C /* VisualModule */,
+				48A8CDAE24C56AD90012C53C /* HeatMapModule */,
+				48A8CDA824C56A650012C53C /* AllBuryModule */,
+				48A8CDA224C569BC0012C53C /* PageViewModule */,
+				48A8CD9624C540B60012C53C /* SuperPropertyModule */,
+				48A8CD9D24C54C9E0012C53C /* FuncDetailsBaseVC.h */,
+				48A8CD9E24C54C9E0012C53C /* FuncDetailsBaseVC.m */,
+				48A8CD9F24C54C9E0012C53C /* FuncDetailsBaseVC.xib */,
+			);
+			path = FuncDetailsModule;
+			sourceTree = "<group>";
+		};
+		48A8CD9624C540B60012C53C /* SuperPropertyModule */ = {
+			isa = PBXGroup;
+			children = (
+				48A8CD9724C540B60012C53C /* SuperProtertyVC.h */,
+				48A8CD9924C540B60012C53C /* SuperProtertyVC.m */,
+				48A8CD9824C540B60012C53C /* SuperProtertyVC.xib */,
+			);
+			path = SuperPropertyModule;
+			sourceTree = "<group>";
+		};
+		48A8CDA224C569BC0012C53C /* PageViewModule */ = {
+			isa = PBXGroup;
+			children = (
+				48A8CDA324C569D60012C53C /* PageViewVC.h */,
+				48A8CDA424C569D60012C53C /* PageViewVC.m */,
+				48A8CDA524C569D60012C53C /* PageViewVC.xib */,
+				48A8CDD524C57B740012C53C /* PageFirstVC.h */,
+				48A8CDD624C57B740012C53C /* PageFirstVC.m */,
+				48A8CDD724C57B740012C53C /* PageFirstVC.xib */,
+				48A8CDDA24C57B920012C53C /* PageSecondVC.h */,
+				48A8CDDB24C57B920012C53C /* PageSecondVC.m */,
+				48A8CDDC24C57B920012C53C /* PageSecondVC.xib */,
+				48A8CDDF24C57BB00012C53C /* PageThirdVC.h */,
+				48A8CDE024C57BB00012C53C /* PageThirdVC.m */,
+				48A8CDE124C57BB00012C53C /* PageThirdVC.xib */,
+			);
+			path = PageViewModule;
+			sourceTree = "<group>";
+		};
+		48A8CDA824C56A650012C53C /* AllBuryModule */ = {
+			isa = PBXGroup;
+			children = (
+				48A8CDA924C56A820012C53C /* AllBuryVC.h */,
+				48A8CDAA24C56A820012C53C /* AllBuryVC.m */,
+				48A8CDAB24C56A820012C53C /* AllBuryVC.xib */,
+				48A8CDE424C582EF0012C53C /* AllBuryFirstVC.h */,
+				48A8CDE524C582EF0012C53C /* AllBuryFirstVC.m */,
+				48A8CDE624C582EF0012C53C /* AllBuryFirstVC.xib */,
+				48A8CDE924C583070012C53C /* AllBurySecondVC.h */,
+				48A8CDEA24C583070012C53C /* AllBurySecondVC.m */,
+				48A8CDEB24C583070012C53C /* AllBurySecondVC.xib */,
+				48A8CDEE24C583150012C53C /* AllBuryThirdVC.h */,
+				48A8CDEF24C583150012C53C /* AllBuryThirdVC.m */,
+				48A8CDF024C583150012C53C /* AllBuryThirdVC.xib */,
+			);
+			path = AllBuryModule;
+			sourceTree = "<group>";
+		};
+		48A8CDAE24C56AD90012C53C /* HeatMapModule */ = {
+			isa = PBXGroup;
+			children = (
+				48A8CDAF24C56AE70012C53C /* HeatMapVC.h */,
+				48A8CDB024C56AE70012C53C /* HeatMapVC.m */,
+				48A8CDB124C56AE70012C53C /* HeatMapVC.xib */,
+				48A8CDFA24C590330012C53C /* HeatMapFirstVC.h */,
+				48A8CDFB24C590330012C53C /* HeatMapFirstVC.m */,
+				48A8CDFC24C590330012C53C /* HeatMapFirstVC.xib */,
+			);
+			path = HeatMapModule;
+			sourceTree = "<group>";
+		};
+		48A8CDB424C56B560012C53C /* VisualModule */ = {
+			isa = PBXGroup;
+			children = (
+				48A8CDB524C56B690012C53C /* VisualVC.h */,
+				48A8CDB624C56B690012C53C /* VisualVC.m */,
+				48A8CDB724C56B690012C53C /* VisualVC.xib */,
+				48A8CE0924C594F80012C53C /* ANSBindCollectionCell.h */,
+				48A8CE0A24C594F80012C53C /* ANSBindCollectionCell.m */,
+				48A8CE0124C594F70012C53C /* ANSBindCollectionCell.xib */,
+				48A8CE0824C594F70012C53C /* ANSBindCollectionHeaderFooterView.h */,
+				48A8CE0424C594F70012C53C /* ANSBindCollectionHeaderFooterView.m */,
+				48A8CDFF24C594F70012C53C /* ANSBindCollectionHeaderFooterView.xib */,
+				48A8CE0524C594F70012C53C /* ANSBindCollectionViewVC.h */,
+				48A8CE0C24C594F80012C53C /* ANSBindCollectionViewVC.m */,
+				48A8CE0324C594F70012C53C /* ANSBindCollectionViewVC.xib */,
+				48A8CE0D24C594F80012C53C /* ANSBindNormalVC.h */,
+				48A8CE1024C594F80012C53C /* ANSBindNormalVC.m */,
+				48A8CE0024C594F70012C53C /* ANSBindNormalVC.xib */,
+				48A8CE0224C594F70012C53C /* ANSBindTableViewCell.h */,
+				48A8CE0B24C594F80012C53C /* ANSBindTableViewCell.m */,
+				48A8CE0E24C594F80012C53C /* ANSBindTableViewCell.xib */,
+				48A8CE1F24C596090012C53C /* ANSTableHeaderFooterView.h */,
+				48A8CE1D24C596090012C53C /* ANSTableHeaderFooterView.m */,
+				48A8CE1E24C596090012C53C /* ANSTableHeaderFooterView.xib */,
+				48A8CE0724C594F70012C53C /* ANSBindTableViewVC.h */,
+				48A8CE0F24C594F80012C53C /* ANSBindTableViewVC.m */,
+				48A8CE0624C594F70012C53C /* ANSBindTableViewVC.xib */,
+			);
+			path = VisualModule;
+			sourceTree = "<group>";
+		};
+		48A8CDBA24C56C1E0012C53C /* TrackingModule */ = {
+			isa = PBXGroup;
+			children = (
+				48A8CDBB24C56C2D0012C53C /* TrackingVC.h */,
+				48A8CDBC24C56C2D0012C53C /* TrackingVC.m */,
+				48A8CDBD24C56C2D0012C53C /* TrackingVC.xib */,
+			);
+			path = TrackingModule;
+			sourceTree = "<group>";
+		};
+		48A8CDC024C56C7D0012C53C /* UserIDWithPropertyModule */ = {
+			isa = PBXGroup;
+			children = (
+				48A8CDC124C56C8F0012C53C /* UserIDWithPropertyVC.h */,
+				48A8CDC224C56C8F0012C53C /* UserIDWithPropertyVC.m */,
+				48A8CDC324C56C8F0012C53C /* UserIDWithPropertyVC.xib */,
+			);
+			path = UserIDWithPropertyModule;
+			sourceTree = "<group>";
+		};
+		48A8CDC624C56CFF0012C53C /* HybridModule */ = {
+			isa = PBXGroup;
+			children = (
+				48A8CDC724C56D180012C53C /* HybridVC.h */,
+				48A8CDC824C56D180012C53C /* HybridVC.m */,
+				48A8CDC924C56D180012C53C /* HybridVC.xib */,
+				48A8CE2424C5ACA20012C53C /* ANSWebViewController.h */,
+				48A8CE2724C5ACA20012C53C /* ANSWebViewController.m */,
+				48A8CE2324C5ACA20012C53C /* ANSWebViewController.xib */,
+				48A8CE2524C5ACA20012C53C /* ANSWKWebViewController.h */,
+				48A8CE2624C5ACA20012C53C /* ANSWKWebViewController.m */,
+				48A8CE2224C5ACA20012C53C /* ANSWKWebViewController.xib */,
+			);
+			path = HybridModule;
+			sourceTree = "<group>";
+		};
+		48A8CDCC24C56D680012C53C /* OtherModule */ = {
+			isa = PBXGroup;
+			children = (
+				48A8CDCD24C56D770012C53C /* OtherVC.h */,
+				48A8CDCE24C56D770012C53C /* OtherVC.m */,
+				48A8CDCF24C56D770012C53C /* OtherVC.xib */,
+			);
+			path = OtherModule;
+			sourceTree = "<group>";
+		};
+		48A8CDF324C585200012C53C /* AnalysysGeneralUI */ = {
+			isa = PBXGroup;
+			children = (
+				48A8CDF424C585860012C53C /* AnalysysButton.h */,
+				48A8CDF524C585860012C53C /* AnalysysButton.m */,
+				48A8CDF724C585A00012C53C /* AnalysysSwitch.h */,
+				48A8CDF824C585A10012C53C /* AnalysysSwitch.m */,
+			);
+			path = AnalysysGeneralUI;
+			sourceTree = "<group>";
+		};
+		9302135ABEFE27A375BD4031 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				19BF67D5F108A70683A9F6B9 /* Pods-AnalysysOCDemo.debug.xcconfig */,
+				34F64A23312F1099960A436A /* Pods-AnalysysOCDemo.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		E887170224E1553600A9CD80 /* CertificateTest */ = {
+			isa = PBXGroup;
+			children = (
+				E887170324E1553600A9CD80 /* analysys.cn.cer */,
+				E887170424E1553600A9CD80 /* guoqi analysys.cn.cer */,
+				E887170524E1553600A9CD80 /* analysysdata.com.cer */,
+			);
+			path = CertificateTest;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		48945F2A24C1549000CCFA38 /* AnalysysOCDemo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 48945F5D24C1549300CCFA38 /* Build configuration list for PBXNativeTarget "AnalysysOCDemo" */;
+			buildPhases = (
+				FFB99CA42022E371D0A82338 /* [CP] Check Pods Manifest.lock */,
+				48945F2724C1549000CCFA38 /* Sources */,
+				48945F2824C1549000CCFA38 /* Frameworks */,
+				48945F2924C1549000CCFA38 /* Resources */,
+				8B38CED6B575B27E35160CA6 /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = AnalysysOCDemo;
+			productName = AnalysysOCDemo;
+			productReference = 48945F2B24C1549000CCFA38 /* AnalysysOCDemo.app */;
+			productType = "com.apple.product-type.application";
+		};
+		48945F4824C1549300CCFA38 /* AnalysysOCDemoTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 48945F6024C1549300CCFA38 /* Build configuration list for PBXNativeTarget "AnalysysOCDemoTests" */;
+			buildPhases = (
+				48945F4524C1549300CCFA38 /* Sources */,
+				48945F4624C1549300CCFA38 /* Frameworks */,
+				48945F4724C1549300CCFA38 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				48945F4B24C1549300CCFA38 /* PBXTargetDependency */,
+			);
+			name = AnalysysOCDemoTests;
+			productName = AnalysysOCDemoTests;
+			productReference = 48945F4924C1549300CCFA38 /* AnalysysOCDemoTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		48945F5324C1549300CCFA38 /* AnalysysOCDemoUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 48945F6324C1549300CCFA38 /* Build configuration list for PBXNativeTarget "AnalysysOCDemoUITests" */;
+			buildPhases = (
+				48945F5024C1549300CCFA38 /* Sources */,
+				48945F5124C1549300CCFA38 /* Frameworks */,
+				48945F5224C1549300CCFA38 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				48945F5624C1549300CCFA38 /* PBXTargetDependency */,
+			);
+			name = AnalysysOCDemoUITests;
+			productName = AnalysysOCDemoUITests;
+			productReference = 48945F5424C1549300CCFA38 /* AnalysysOCDemoUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		48945F2324C1549000CCFA38 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1150;
+				ORGANIZATIONNAME = "xiao xu";
+				TargetAttributes = {
+					48945F2A24C1549000CCFA38 = {
+						CreatedOnToolsVersion = 11.5;
+					};
+					48945F4824C1549300CCFA38 = {
+						CreatedOnToolsVersion = 11.5;
+						TestTargetID = 48945F2A24C1549000CCFA38;
+					};
+					48945F5324C1549300CCFA38 = {
+						CreatedOnToolsVersion = 11.5;
+						TestTargetID = 48945F2A24C1549000CCFA38;
+					};
+				};
+			};
+			buildConfigurationList = 48945F2624C1549000CCFA38 /* Build configuration list for PBXProject "AnalysysOCDemo" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 48945F2224C1549000CCFA38;
+			productRefGroup = 48945F2C24C1549000CCFA38 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				48945F2A24C1549000CCFA38 /* AnalysysOCDemo */,
+				48945F4824C1549300CCFA38 /* AnalysysOCDemoTests */,
+				48945F5324C1549300CCFA38 /* AnalysysOCDemoUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		48945F2924C1549000CCFA38 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				48A8CDD924C57B740012C53C /* PageFirstVC.xib in Resources */,
+				48A8CDA724C569D60012C53C /* PageViewVC.xib in Resources */,
+				48A8CDB924C56B690012C53C /* VisualVC.xib in Resources */,
+				48A8CDC524C56C8F0012C53C /* UserIDWithPropertyVC.xib in Resources */,
+				48A8CE1624C594F80012C53C /* ANSBindTableViewVC.xib in Resources */,
+				4821945024C197D100B79D8F /* ANSConfigVC.xib in Resources */,
+				48A8CDF224C583160012C53C /* AllBuryThirdVC.xib in Resources */,
+				48A8CDE824C582EF0012C53C /* AllBuryFirstVC.xib in Resources */,
+				4821941C24C172C600B79D8F /* FastExperienceVC.xib in Resources */,
+				48A8CDAD24C56A820012C53C /* AllBuryVC.xib in Resources */,
+				4819E73C24CEBD2E00739E23 /* AnalysysLogDetailVC.xib in Resources */,
+				4821944124C18D2000B79D8F /* MainModuleVC.xib in Resources */,
+				E887170724E1553600A9CD80 /* guoqi analysys.cn.cer in Resources */,
+				48A8CDD124C56D770012C53C /* OtherVC.xib in Resources */,
+				48A8CE2824C5ACA20012C53C /* ANSWKWebViewController.xib in Resources */,
+				48A8CDED24C583070012C53C /* AllBurySecondVC.xib in Resources */,
+				48945F4124C1549300CCFA38 /* LaunchScreen.storyboard in Resources */,
+				48A8CDCB24C56D180012C53C /* HybridVC.xib in Resources */,
+				48A8CDBF24C56C2D0012C53C /* TrackingVC.xib in Resources */,
+				E887170824E1553600A9CD80 /* analysysdata.com.cer in Resources */,
+				48A8CE1224C594F80012C53C /* ANSBindNormalVC.xib in Resources */,
+				48A8CDA124C54C9E0012C53C /* FuncDetailsBaseVC.xib in Resources */,
+				48A8CE1324C594F80012C53C /* ANSBindCollectionCell.xib in Resources */,
+				48A8CDE324C57BB00012C53C /* PageThirdVC.xib in Resources */,
+				4819E74824CEDAA700739E23 /* AnalysysLogCell.xib in Resources */,
+				48945F3E24C1549300CCFA38 /* Assets.xcassets in Resources */,
+				48A8CD9A24C540B60012C53C /* SuperProtertyVC.xib in Resources */,
+				48A8CE2924C5ACA20012C53C /* ANSWebViewController.xib in Resources */,
+				4821944724C18FCF00B79D8F /* main_module.json in Resources */,
+				48A8CDFE24C590330012C53C /* HeatMapFirstVC.xib in Resources */,
+				48A8CE1424C594F80012C53C /* ANSBindCollectionViewVC.xib in Resources */,
+				48A8CE1124C594F80012C53C /* ANSBindCollectionHeaderFooterView.xib in Resources */,
+				48945F3924C1549100CCFA38 /* Main.storyboard in Resources */,
+				48A8CE2124C596090012C53C /* ANSTableHeaderFooterView.xib in Resources */,
+				48A8CDB324C56AE70012C53C /* HeatMapVC.xib in Resources */,
+				48A8CDDE24C57B920012C53C /* PageSecondVC.xib in Resources */,
+				E887170624E1553600A9CD80 /* analysys.cn.cer in Resources */,
+				48A8CE1A24C594F80012C53C /* ANSBindTableViewCell.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		48945F4724C1549300CCFA38 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		48945F5224C1549300CCFA38 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		8B38CED6B575B27E35160CA6 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-AnalysysOCDemo/Pods-AnalysysOCDemo-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-AnalysysOCDemo/Pods-AnalysysOCDemo-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AnalysysOCDemo/Pods-AnalysysOCDemo-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		FFB99CA42022E371D0A82338 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-AnalysysOCDemo-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		48945F2724C1549000CCFA38 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				48A8CE1B24C594F80012C53C /* ANSBindTableViewVC.m in Sources */,
+				48A8CDA024C54C9E0012C53C /* FuncDetailsBaseVC.m in Sources */,
+				4821940B24C1588D00B79D8F /* ANSTabVC.m in Sources */,
+				486F186D24DBE1FE0009FCC9 /* UIColor+ColorChange.m in Sources */,
+				48A8CDB824C56B690012C53C /* VisualVC.m in Sources */,
+				48A8CE1824C594F80012C53C /* ANSBindTableViewCell.m in Sources */,
+				4821944324C18D2000B79D8F /* MainModuleVC.m in Sources */,
+				48A8CE1524C594F80012C53C /* ANSBindCollectionHeaderFooterView.m in Sources */,
+				48945F4424C1549300CCFA38 /* main.m in Sources */,
+				48A8CDE724C582EF0012C53C /* AllBuryFirstVC.m in Sources */,
+				48A8CDAC24C56A820012C53C /* AllBuryVC.m in Sources */,
+				48A8CDF124C583160012C53C /* AllBuryThirdVC.m in Sources */,
+				48A8CDD824C57B740012C53C /* PageFirstVC.m in Sources */,
+				48A8CDEC24C583070012C53C /* AllBurySecondVC.m in Sources */,
+				4821942824C1864D00B79D8F /* UIViewController+Alert.m in Sources */,
+				4821941B24C172C600B79D8F /* FastExperienceVC.m in Sources */,
+				48A8CDE224C57BB00012C53C /* PageThirdVC.m in Sources */,
+				4817383D24C975AA005CF330 /* AnalysysDataCache.m in Sources */,
+				48945F3624C1549100CCFA38 /* ViewController.m in Sources */,
+				4821942124C182DC00B79D8F /* AnalysysHUD.m in Sources */,
+				48A8CDB224C56AE70012C53C /* HeatMapVC.m in Sources */,
+				48A8CDD424C570CB0012C53C /* AnalysysJson.m in Sources */,
+				48A8CDDD24C57B920012C53C /* PageSecondVC.m in Sources */,
+				48A8CE2024C596090012C53C /* ANSTableHeaderFooterView.m in Sources */,
+				48945F3024C1549000CCFA38 /* AppDelegate.m in Sources */,
+				4819E74324CED53700739E23 /* AnalysysLogData.m in Sources */,
+				4819E73724CEBD1700739E23 /* AnalysysLogVC.m in Sources */,
+				4819E74724CEDAA700739E23 /* AnalysysLogCell.m in Sources */,
+				48A8CDA624C569D60012C53C /* PageViewVC.m in Sources */,
+				48A8CDFD24C590330012C53C /* HeatMapFirstVC.m in Sources */,
+				48A8CDF924C585A10012C53C /* AnalysysSwitch.m in Sources */,
+				48A8CD9B24C540B60012C53C /* SuperProtertyVC.m in Sources */,
+				48A8CDCA24C56D180012C53C /* HybridVC.m in Sources */,
+				4819E74024CEBE1900739E23 /* AnalysysLogManager.m in Sources */,
+				4819E73B24CEBD2E00739E23 /* AnalysysLogDetailVC.m in Sources */,
+				48A8CDD024C56D770012C53C /* OtherVC.m in Sources */,
+				48A8CDF624C585860012C53C /* AnalysysButton.m in Sources */,
+				48A8CE1C24C594F80012C53C /* ANSBindNormalVC.m in Sources */,
+				48945F3C24C1549100CCFA38 /* AnalysysOCDemo.xcdatamodeld in Sources */,
+				4821944F24C197D100B79D8F /* ANSConfigVC.m in Sources */,
+				48A8CE1724C594F80012C53C /* ANSBindCollectionCell.m in Sources */,
+				48A8CDBE24C56C2D0012C53C /* TrackingVC.m in Sources */,
+				48A8CE2B24C5ACA20012C53C /* ANSWebViewController.m in Sources */,
+				48A8CDC424C56C8F0012C53C /* UserIDWithPropertyVC.m in Sources */,
+				48A8CE2A24C5ACA20012C53C /* ANSWKWebViewController.m in Sources */,
+				48A8CE1924C594F80012C53C /* ANSBindCollectionViewVC.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		48945F4524C1549300CCFA38 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				48945F4E24C1549300CCFA38 /* AnalysysOCDemoTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		48945F5024C1549300CCFA38 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				48945F5924C1549300CCFA38 /* AnalysysOCDemoUITests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		48945F4B24C1549300CCFA38 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 48945F2A24C1549000CCFA38 /* AnalysysOCDemo */;
+			targetProxy = 48945F4A24C1549300CCFA38 /* PBXContainerItemProxy */;
+		};
+		48945F5624C1549300CCFA38 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 48945F2A24C1549000CCFA38 /* AnalysysOCDemo */;
+			targetProxy = 48945F5524C1549300CCFA38 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		48945F3724C1549100CCFA38 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				48945F3824C1549100CCFA38 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		48945F3F24C1549300CCFA38 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				48945F4024C1549300CCFA38 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		48945F5B24C1549300CCFA38 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		48945F5C24C1549300CCFA38 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		48945F5E24C1549300CCFA38 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 19BF67D5F108A70683A9F6B9 /* Pods-AnalysysOCDemo.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = LJHDHDMM85;
+				GCC_PREFIX_HEADER = AnalysysOCDemo/AnalysysOCDemo.pch;
+				INFOPLIST_FILE = AnalysysOCDemo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.analysys.AnalysysOCDemo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		48945F5F24C1549300CCFA38 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 34F64A23312F1099960A436A /* Pods-AnalysysOCDemo.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = LJHDHDMM85;
+				GCC_PREFIX_HEADER = AnalysysOCDemo/AnalysysOCDemo.pch;
+				INFOPLIST_FILE = AnalysysOCDemo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.analysys.AnalysysOCDemo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		48945F6124C1549300CCFA38 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = LJHDHDMM85;
+				INFOPLIST_FILE = AnalysysOCDemoTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.analysys.AnalysysOCDemoTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AnalysysOCDemo.app/AnalysysOCDemo";
+			};
+			name = Debug;
+		};
+		48945F6224C1549300CCFA38 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = LJHDHDMM85;
+				INFOPLIST_FILE = AnalysysOCDemoTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.analysys.AnalysysOCDemoTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AnalysysOCDemo.app/AnalysysOCDemo";
+			};
+			name = Release;
+		};
+		48945F6424C1549300CCFA38 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = LJHDHDMM85;
+				INFOPLIST_FILE = AnalysysOCDemoUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.analysys.AnalysysOCDemoUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = AnalysysOCDemo;
+			};
+			name = Debug;
+		};
+		48945F6524C1549300CCFA38 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = LJHDHDMM85;
+				INFOPLIST_FILE = AnalysysOCDemoUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.analysys.AnalysysOCDemoUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = AnalysysOCDemo;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		48945F2624C1549000CCFA38 /* Build configuration list for PBXProject "AnalysysOCDemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				48945F5B24C1549300CCFA38 /* Debug */,
+				48945F5C24C1549300CCFA38 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		48945F5D24C1549300CCFA38 /* Build configuration list for PBXNativeTarget "AnalysysOCDemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				48945F5E24C1549300CCFA38 /* Debug */,
+				48945F5F24C1549300CCFA38 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		48945F6024C1549300CCFA38 /* Build configuration list for PBXNativeTarget "AnalysysOCDemoTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				48945F6124C1549300CCFA38 /* Debug */,
+				48945F6224C1549300CCFA38 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		48945F6324C1549300CCFA38 /* Build configuration list for PBXNativeTarget "AnalysysOCDemoUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				48945F6424C1549300CCFA38 /* Debug */,
+				48945F6524C1549300CCFA38 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		48945F3A24C1549100CCFA38 /* AnalysysOCDemo.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				48945F3B24C1549100CCFA38 /* AnalysysOCDemo.xcdatamodel */,
+			);
+			currentVersion = 48945F3B24C1549100CCFA38 /* AnalysysOCDemo.xcdatamodel */;
+			path = AnalysysOCDemo.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = 48945F2324C1549000CCFA38 /* Project object */;
+}

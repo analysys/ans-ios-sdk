@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" restorationIdentifier="HeaderView" id="iN0-l3-epB" customClass="ANSTableHeaderFooterView">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="40"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="section" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AF8-ci-a08">
+                    <rect key="frame" x="5" y="0.0" width="319" height="40"/>
+                    <color key="backgroundColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oL4-TH-SHn">
+                    <rect key="frame" x="324" y="0.0" width="80" height="40"/>
+                    <color key="backgroundColor" systemColor="systemYellowColor" red="1" green="0.80000000000000004" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="80" id="lSA-ZE-TfC"/>
+                    </constraints>
+                    <state key="normal" title="收藏">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </state>
+                    <connections>
+                        <action selector="touchColleciton:" destination="-1" eventType="touchUpInside" id="FFs-gs-ijJ"/>
+                    </connections>
+                </button>
+            </subviews>
+            <constraints>
+                <constraint firstItem="oL4-TH-SHn" firstAttribute="leading" secondItem="AF8-ci-a08" secondAttribute="trailing" id="6IJ-0S-pqc"/>
+                <constraint firstItem="oL4-TH-SHn" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="Psa-w7-dWC"/>
+                <constraint firstAttribute="trailing" secondItem="oL4-TH-SHn" secondAttribute="trailing" constant="10" id="V0Z-Bz-QYF"/>
+                <constraint firstItem="AF8-ci-a08" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="Ybq-sI-tmD"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="oL4-TH-SHn" secondAttribute="bottom" id="fB1-L4-AOH"/>
+                <constraint firstItem="AF8-ci-a08" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="5" id="nk3-bs-2RI"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="AF8-ci-a08" secondAttribute="bottom" id="vqN-I3-myg"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <connections>
+                <outlet property="collectionBtn" destination="oL4-TH-SHn" id="pMQ-3q-rzX"/>
+                <outlet property="titleLabel" destination="AF8-ci-a08" id="SA0-oM-lAU"/>
+            </connections>
+            <point key="canvasLocation" x="-145" y="128"/>
+        </view>
+    </objects>
+</document>

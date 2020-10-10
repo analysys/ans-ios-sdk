@@ -1,0 +1,42 @@
+PODS:
+  - AnalysysAgent (4.5.1):
+    - AnalysysAgent/Agent (= 4.5.1)
+    - AnalysysAgent/Encrypt (= 4.5.1)
+    - AnalysysAgent/Push (= 4.5.1)
+    - AnalysysAgent/Visual (= 4.5.1)
+  - AnalysysAgent/Agent (4.5.1)
+  - AnalysysAgent/Encrypt (4.5.1):
+    - AnalysysAgent/Agent
+  - AnalysysAgent/Push (4.5.1):
+    - AnalysysAgent/Agent
+  - AnalysysAgent/Visual (4.5.1):
+    - AnalysysAgent/Agent
+  - Bugly (2.5.71)
+  - IQKeyboardManager (6.5.6)
+  - MBProgressHUD (1.2.0)
+
+DEPENDENCIES:
+  - AnalysysAgent (from `../`)
+  - Bugly
+  - IQKeyboardManager
+  - MBProgressHUD
+
+SPEC REPOS:
+  https://github.com/CocoaPods/Specs.git:
+    - Bugly
+    - IQKeyboardManager
+    - MBProgressHUD
+
+EXTERNAL SOURCES:
+  AnalysysAgent:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  AnalysysAgent: 235e954dffcc1acdf2aba5428fafb7a5d86af07d
+  Bugly: fd066c75c4a0eca1440f9b6a84bd37d51bfc85ac
+  IQKeyboardManager: 2a6e97afdafc7becf0cb17a9a8d795e3a980717f
+  MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
+
+PODFILE CHECKSUM: a0f5290625c05c0dbc8d5f8336f151d8116efbbe
+
+COCOAPODS: 1.9.3

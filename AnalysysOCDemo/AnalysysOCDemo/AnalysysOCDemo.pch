@@ -1,0 +1,26 @@
+//
+//  AnalysysOCDemo.pch
+//  AnalysysOCDemo
+//
+//  Created by xiao xu on 2020/7/17.
+//  Copyright © 2020 xiao xu. All rights reserved.
+//
+
+#ifndef AnalysysOCDemo_pch
+#define AnalysysOCDemo_pch
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+
+#import <IQKeyboardManager/IQKeyboardManager.h>
+#import <AnalysysAgent/AnalysysAgent.h>
+#import <MBProgressHUD/MBProgressHUD.h>
+
+
+#import "AnalysysHUD.h"
+#import "UIViewController+Alert.h"
+#import "AnalysysEnum.h"
+#import "AnalysysJson.h"
+#import "UIColor+ColorChange.h"
+
+#endif /* AnalysysOCDemo_pch */
