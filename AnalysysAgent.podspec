@@ -1,15 +1,15 @@
 Pod::Spec.new do |s|
   s.name         = "AnalysysAgent"
-  s.version      = "4.5.1"
+  s.version      = "4.5.2"
   s.summary      = "易观 iOS PaaS 版本SDK，集成方法参考相关版本SDK集成文档。"
-  s.homepage     = "https://github.com/AnalysysSDK/Analysys_SDK_iOS/tree/dev"
+  s.homepage     = "https://github.com/AnalysysSDK/Analysys_SDK_iOS"
   s.social_media_url = "https://ark.analysys.cn/"
   s.source       = { :git => 'https://github.com/AnalysysSDK/Analysys_SDK_iOS.git', :tag => s.version }
   s.license      = "MIT"
   s.author       = { "analysys" => "analysys@analysys.com.cn" }
   s.platform     = :ios, "9.0"
 
-  s.frameworks   = 'UIKit', 'Foundation', 'SystemConfiguration', 'CoreTelephony', 'AdSupport'
+  s.frameworks   = 'UIKit', 'Foundation', 'SystemConfiguration', 'CoreTelephony', 'AdSupport', 'WebKit'
   s.libraries    = 'z', 'sqlite3', 'icucore'
 
   s.pod_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
