@@ -1,9 +1,8 @@
-EXCLUDED_ARCHS[sdk=iphonesimulator*] = arm64
 FRAMEWORK_SEARCH_PATHS = $(inherited) "${PODS_ROOT}/../../AnalysysSDK" "${PODS_ROOT}/Bugly"
 GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
 HEADER_SEARCH_PATHS = $(inherited) "${PODS_ROOT}/Headers/Public" "${PODS_ROOT}/Headers/Public/IQKeyboardManager" "${PODS_ROOT}/Headers/Public/MBProgressHUD"
 LIBRARY_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/IQKeyboardManager" "${PODS_CONFIGURATION_BUILD_DIR}/MBProgressHUD"
-OTHER_LDFLAGS = $(inherited) -ObjC -l"IQKeyboardManager" -l"MBProgressHUD" -l"c++" -l"icucore" -l"sqlite3" -l"z" -framework "AdSupport" -framework "AnalysysAgent" -framework "AnalysysEncrypt" -framework "AnalysysPush" -framework "AnalysysVisual" -framework "Bugly" -framework "CoreGraphics" -framework "CoreTelephony" -framework "Foundation" -framework "QuartzCore" -framework "Security" -framework "SystemConfiguration" -framework "UIKit"
+OTHER_LDFLAGS = $(inherited) -ObjC -l"IQKeyboardManager" -l"MBProgressHUD" -l"c++" -l"icucore" -l"sqlite3" -l"z" -framework "AdSupport" -framework "AnalysysAgent" -framework "AnalysysEncrypt" -framework "AnalysysPush" -framework "AnalysysVisual" -framework "Bugly" -framework "CoreGraphics" -framework "CoreTelephony" -framework "Foundation" -framework "QuartzCore" -framework "Security" -framework "SystemConfiguration" -framework "UIKit" -framework "WebKit"
 PODS_BUILD_DIR = ${BUILD_DIR}
 PODS_CONFIGURATION_BUILD_DIR = ${PODS_BUILD_DIR}/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)
 PODS_PODFILE_DIR_PATH = ${SRCROOT}/.
