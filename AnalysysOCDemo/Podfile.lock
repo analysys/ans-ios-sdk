@@ -1,15 +1,15 @@
 PODS:
-  - AnalysysAgent (4.5.1):
-    - AnalysysAgent/Agent (= 4.5.1)
-    - AnalysysAgent/Encrypt (= 4.5.1)
-    - AnalysysAgent/Push (= 4.5.1)
-    - AnalysysAgent/Visual (= 4.5.1)
-  - AnalysysAgent/Agent (4.5.1)
-  - AnalysysAgent/Encrypt (4.5.1):
+  - AnalysysAgent (4.5.3):
+    - AnalysysAgent/Agent (= 4.5.3)
+    - AnalysysAgent/Encrypt (= 4.5.3)
+    - AnalysysAgent/Push (= 4.5.3)
+    - AnalysysAgent/Visual (= 4.5.3)
+  - AnalysysAgent/Agent (4.5.3)
+  - AnalysysAgent/Encrypt (4.5.3):
     - AnalysysAgent/Agent
-  - AnalysysAgent/Push (4.5.1):
+  - AnalysysAgent/Push (4.5.3):
     - AnalysysAgent/Agent
-  - AnalysysAgent/Visual (4.5.1):
+  - AnalysysAgent/Visual (4.5.3):
     - AnalysysAgent/Agent
   - Bugly (2.5.71)
   - IQKeyboardManager (6.5.6)
@@ -32,7 +32,7 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  AnalysysAgent: 235e954dffcc1acdf2aba5428fafb7a5d86af07d
+  AnalysysAgent: a35877f13fefc906d766137102d23ef0f0130ee8
   Bugly: fd066c75c4a0eca1440f9b6a84bd37d51bfc85ac
   IQKeyboardManager: 2a6e97afdafc7becf0cb17a9a8d795e3a980717f
   MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
