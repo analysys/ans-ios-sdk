@@ -113,7 +113,7 @@
 - (WKWebViewConfiguration *)configuration {
     if (!_configuration) {
         _configuration = [[WKWebViewConfiguration alloc] init];
-        [AnalysysAgent setWebViewVisualConfig:_configuration scriptMessageHandler:self];
+        [AnalysysAgent setAnalysysAgentHybrid:_configuration scriptMessageHandler:self];
     }
     return _configuration;
 }
@@ -126,8 +126,7 @@
 -(void)dealloc {
     
     [AnalysysAgent resetHybridModel];
-    [AnalysysAgent resetWebViewVisualConfig:self.configuration];
-    
+    [AnalysysAgent resetAnalysysAgentHybrid:self.configuration];
     [self.configuration.userContentController removeScriptMessageHandlerForName:@"Native"];
     
     //  KVO
@@ -187,7 +186,7 @@
 #pragma mark - WKScriptMessageHandler
 
 - (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message {
-    [AnalysysAgent setScriptMessage:message];
+    [AnalysysAgent setAnalysysAgentHybridScriptMessage:message];
 }
 
 #pragma mark - WKNavigationDelegate

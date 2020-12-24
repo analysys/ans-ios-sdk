@@ -7,9 +7,9 @@
 //
 
 
-// ********************************
-// ***** 当前 SDK 版本号：4.5.3 *****
-// ********************************
+// *****************************************
+// ***** 当前 SDK 版本号：4.5.4 **************
+// *****************************************
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
@@ -17,7 +17,7 @@
 #import "AnalysysAgentConfig.h"
 @class WKWebViewConfiguration;
 @class WKScriptMessage;
-
+@class WKWebView;
 /**
  * @protocol
  * 页面自动采集协议
@@ -619,7 +619,5 @@ AnalysysAgent方法注销
 + (void)trackCampaign:(id)userInfo isClick:(BOOL)isClick userCallback:(void(^)(id campaignInfo))userCallback;
 
 
-
 @end
-
 

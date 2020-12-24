@@ -31,6 +31,18 @@
         "start":"ANSVisualHybrid.setScriptMessage:",
         "finished":""
     },
+    "VisualWebViewAgentGetEventList":{
+        "start":"ANSVisualHybrid.analysysAgentGetEventList:",
+        "finished":""
+    },
+    "VisualWebViewAgentGetProperty":{
+        "start":"ANSVisualHybrid.analysysAgentGetProperty:withParams:",
+        "finished":""
+    },
+    "VisualWebViewAgentTrack":{
+        "start":"ANSVisualHybrid.analysysAgentTrack:withParams:",
+        "finished":""
+    },
     "PushParse":{
         "start":"AnalysysPush.parseAnsPushInfo:",
         "finished":""
