@@ -94,6 +94,9 @@
 /// 证书配置
 @property (nonatomic, strong) ANSSecurityPolicy *securityPolicy;
 
+//页面时长开关
+@property (nonatomic, assign) BOOL autoPageViewDuration;
+
 @end
 
 
