@@ -8,7 +8,7 @@
 
 
 // *****************************************
-// ***** 当前 SDK 版本号：4.5.7 **************
+// ***** 当前 SDK 版本号：4.5.8 **************
 // *****************************************
 
 #import <Foundation/Foundation.h>
@@ -547,27 +547,23 @@
  @param webView WKWebView对象
  @return 统计是否完成
  */
-+ (BOOL)setHybridModel:(id)webView request:(NSURLRequest *)request __attribute__((deprecated("已过时！建议使用接口setAnalysysAgentHybrid:scriptMessageHandler:和setAnalysysAgentHybridScriptMessage:接口")));
++ (BOOL)setHybridModel:(id)webView request:(NSURLRequest *)request __attribute__((deprecated("已过时！建议使用接口setAnalysysAgentHybrid:scriptMessageHandler")));
 
 /**
  重置UserAgent
  */
 + (void)resetHybridModel __attribute__((deprecated("已过时！建议使用resetAnalysysAgentHybrid:接口")));
 
++ (void)setAnalysysAgentHybridScriptMessage:(WKScriptMessage *)scriptMessage __attribute__((deprecated("已过时！接口废弃")));
+
++ (void)setAnalysysAgentHybrid:(WKWebViewConfiguration *)config scriptMessageHandler:(id)handler __attribute__((deprecated("已过时！建议使用接口setAnalysysAgentHybrid")));
+
 /**
 AnalysysAgent方法注册
 
 @param config webview属性配置集合
-@param handler js消息处理对象
 */
-+ (void)setAnalysysAgentHybrid:(WKWebViewConfiguration *)config scriptMessageHandler:(id)handler;
-
-/**
-AnalysysAgent方法回调处理
-
-@param scriptMessage 从web拿到的回调信息
-*/
-+ (void)setAnalysysAgentHybridScriptMessage:(WKScriptMessage *)scriptMessage;
++ (void)setAnalysysAgentHybrid:(WKWebViewConfiguration *)config;
 
 /**
 AnalysysAgent方法注销
