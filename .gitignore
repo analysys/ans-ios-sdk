@@ -36,3 +36,5 @@ xcuserdata/
 #
 # Pods/
 AnalysysSDK/.DS_Store
+AnalysysSDK/Resources/.DS_Store
+*/.DS_Store
