@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "AnalysysAgent"
-  s.version      = "4.5.13"
+  s.version      = "4.5.14"
   s.summary      = "易观 iOS PaaS 版本SDK，集成方法参考相关版本SDK集成文档。"
   s.homepage     = "https://github.com/AnalysysSDK/Analysys_SDK_iOS"
   s.social_media_url = "https://ark.analysys.cn/"
