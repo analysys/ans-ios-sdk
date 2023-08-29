@@ -8,7 +8,7 @@
 
 
 // *****************************************
-// ***** 当前 SDK 版本号：4.5.20.2 **************
+// ***** 当前 SDK 版本号：4.5.21 **************
 // *****************************************
 
 #import <Foundation/Foundation.h>
@@ -18,6 +18,7 @@
 @class WKWebViewConfiguration;
 @class WKScriptMessage;
 @class WKWebView;
+@class AnalysysSSManagerAAABBB;
 /**
  * @protocol
  * 页面自动采集协议
@@ -284,12 +285,19 @@
  */
 + (void)setPageViewBlackListByPages:(NSSet<NSString *> *)controllers;
 
++ (void)setPageCloseBlackList:(NSSet<NSString *> *)controllers;
 /**
  设置页面统计黑名单
  
  @param controllers UIViewController类名字符串数组
  */
 + (void)setIgnoredAutomaticCollectionControllers:(NSArray<NSString *> *)controllers __attribute__((deprecated("已过时！建议使用setPageViewBlackListByPages:接口")));
+
+
+/**
+ 获取陀螺仪加速器类对象，调用相关方法
+ */
+
 
 #pragma mark - 全埋点功能模块接口
 
@@ -402,6 +410,16 @@
  @param superPropertyName 属性ekey
  */
 + (void)unRegisterSuperProperty:(NSString *)superPropertyName;
+
+/**
+ 添加单个预置事件属性
+*/
++ (void)registerPreeventProperty:(NSString *)propertyName value:(id)superPropertyValue;
+
+/**
+ 删除预置事件中某个通用属性
+*/
++ (void)unRegisterPreeventProperty:(NSString *)propertyName;
 
 /**
  清除所有通用属性
@@ -614,6 +632,14 @@ AnalysysAgent方法注销
  */
 + (void)trackCampaign:(id)userInfo isClick:(BOOL)isClick userCallback:(void(^)(id campaignInfo))userCallback;
 
++(void) setCacheDataLength:(int)length;
++(void) setCollectDataReverse:(BOOL)reverse;
++(void) setUseGravity:(BOOL)useGravity;
++(void) setRate:(float)rate;
+
++(void) setListenDuration:(int)duration;
++(void) startListen;
++(void) stopListen;
 
 @end
 

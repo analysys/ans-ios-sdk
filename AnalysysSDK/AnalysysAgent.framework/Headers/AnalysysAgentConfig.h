@@ -25,7 +25,6 @@
  */
 @interface AnalysysAgentConfig : NSObject
 
-
 /**
  获取 AnalysysConfig 对象
  
@@ -96,6 +95,8 @@
 
 //页面时长开关
 @property (nonatomic, assign) BOOL autoPageViewDuration;
+
+@property (nonatomic, assign) BOOL autoDeduplication;
 
 @end
 
