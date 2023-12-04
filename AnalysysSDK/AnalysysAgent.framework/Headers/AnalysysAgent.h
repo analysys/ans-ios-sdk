@@ -8,7 +8,7 @@
 
 
 // *****************************************
-// ***** 当前 SDK 版本号：4.5.21 **************
+// ***** 当前 SDK 版本号：4.5.21.3 **************
 // *****************************************
 
 #import <Foundation/Foundation.h>
@@ -595,6 +595,7 @@ AnalysysAgent方法注销
 
 + (void)setPushProvider:(AnalysysPushProvider)provider pushID:(NSString *)pushID __attribute__((deprecated("已过时！建议使用setPushID:provider:接口")));
 
+
 /**
 推送基本设置
 
@@ -640,6 +641,60 @@ AnalysysAgent方法注销
 +(void) setListenDuration:(int)duration;
 +(void) startListen;
 +(void) stopListen;
-
++ (void)setSensorDataLength:(int )length;
 @end
 
+@interface AnalysysAgent (XMGJYH)
+/**
+ 此部分属性将在所有触发事件中携带(仅Hybrid调用生效)
+
+ 约束信息：
+ 属性名：必须以字母或'$'开头，只能包含：字母、数字、下划线和$，字母不区分大小写，最大长度是 99 字符，不支持乱码和中文
+
+ 属性值：必须为以下类型：NSString/NSNumber/NSArray<NSString*>/NSSet<NSString*>/NSDate/NSURL
+
+ 当多个属性中的key相同时，属性优先级：自定义属性 > 通用属性 > SDK自动采集属性。
+ 如：track事件，通用属性 中都包含"userLevel"字段
+ registerSuperProperties: {@"userLevel":@"silver",@"userPhone":@"186***"}
+ track:properties: {@"userLevel":@"glod",@"goods":@"iPhone X"}
+ 则track上传数据为：{@"userLevel":@"glod",@"goods":@"iPhone X",@"userPhone":@"186***"}
+
+ @param superProperties 通用属性
+*/
++ (void)registerHybirdSuperProperties:(NSDictionary *)superProperties;
+
+/**
+ 删除某个通用属性(仅Hybrid调用生效)
+
+ @param superPropertyName 属性ekey
+*/
++ (void)unRegisterHybirdSuperProperty:(NSString *)superPropertyName;
+
+/**
+ 清除所有通用属性
+*/
++ (void)clearHybirdSuperProperties;
+
+/**
+ JS-SDK 从 iOS-SDK 端获取可视化埋点数据
+
+ @param web 加载html的WKWebView
+*/
++ (void)analysysAgentGetEventList:(WKWebView *)web;
+
+/**
+ JS-SDK 从 iOS-SDK 端获取可视化原生控件属性信息
+
+ @param web 加载html的WKWebView
+ @param params 交互参数
+*/
++ (void)analysysAgentGetProperty:(WKWebView *)web withParams:(NSArray *)params;
+
+/**
+ JS-SDK 通过 iOS-SDK 端进行数据上报
+
+ @param web 加载html的WKWebView
+ @param params 交互参数
+*/
++ (void)analysysAgentTrack:(WKWebView *)web withParams:(NSArray *)params;
+@end
